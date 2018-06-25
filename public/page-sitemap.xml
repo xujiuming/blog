@@ -8,42 +8,42 @@
     
     <url>
         <loc>http://www.xujiuming.com/tools.html</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://www.xujiuming.com/404.html</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>http://www.xujiuming.com/about/</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>http://www.xujiuming.com/categories/</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://www.xujiuming.com/tags/</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>http://www.xujiuming.com/project/</loc>
-        <lastmod>2018-05-29T07:16:48.190Z</lastmod>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://www.xujiuming.com/tags/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://www.xujiuming.com/404.html</loc>
+        <lastmod>2018-06-25T03:49:16.159Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

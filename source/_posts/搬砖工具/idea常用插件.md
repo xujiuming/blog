@@ -15,5 +15,4 @@ date: 2017-11-11 00:00:00
 |bashsupport|写bashshell脚本的插件||一般用途  shell脚本 不是很需要这个|
 |lombok|配合lombok.jar使用||lombok 很不错 能让代码看起来 更加干净整洁|
 |markdown support|书写markdown 文件的插件||还不错 用起来 和简书上差不多|
-|adb idea|查询快捷键的 插件 |ctrl+shift+a|非常好用,本身是一个安卓的插件 但是他的全局匹配插件也是蛮犀利的|
 |code glance|代码试图 | pgup pgon 上下翻屏||

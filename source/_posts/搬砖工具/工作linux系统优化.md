@@ -12,6 +12,21 @@ date: 2018-06-01 17:09:26
 用了n多版本的linux 什么arch、manjaro、centos系列的、debian系列的等等   
 最后还是觉得ubuntu用来做工作的系统最简单合适 而且少折腾    
 #### 初始化常用软件及工具
+
+##### 初始化额外的工具
+```
+#安装tmux
+sudo apt install tmux
+#安装 net tools 
+sudo apt install net-tools 
+#安装 traceroute
+sudo apt install traceroute 
+#安装vim
+sudo apt install vim 
+#安装google 浏览器
+sudo apt install chromium-browser
+```
+
 ##### 笔记所需的资源
 
 [笔记所需资源tar包](https://www.xujiuming.com/ming-asset/work-linux-tar.tar.gz)
@@ -126,19 +141,6 @@ export XMODIFIERS="@im=fcitx"
 
 ```
 sudo dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
-```
-##### 初始化额外的工具
-```
-#安装tmux
-sudo apt install tmux
-#安装 net tools 
-sudo apt install net-tools 
-#安装 traceroute
-sudo apt install traceroute 
-#安装vim
-sudo apt install vim 
-#安装google 浏览器
-sudo apt install chromium-browser
 ```
 
 ##### 初始化 oss-browser   

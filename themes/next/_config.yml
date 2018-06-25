@@ -95,10 +95,10 @@ menu:
   home: /index.html || home
   categories: /categories/index.html || th
   tags: /tags/index.html || tags
-  commonweal: /404.html || heartbeat
   about: /about/index.html || user
-  #project: /project/ || project
   archives: /archives/index.html || archive
+  #project: /project/ || project
+  commonweal: /404.html || heartbeat
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
 

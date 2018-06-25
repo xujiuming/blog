@@ -1,0 +1,19 @@
+---
+title: idea 常用插件
+categories: 工具
+tags:
+  - tools
+abbrlink: a365393a
+date: 2017-11-11 00:00:00
+---
+|名称|功能|快捷键|备注|
+|:-----|:-----|:--------|:------|
+|ace jump|文件中匹配字符串跳转|ctrl+;|常用在代码中匹配跳转|
+|vim |使用类似vim方式操作文件内容||vim控使用|
+|find bugs|查找代码中不符合他的规范的代码||略坑  但是有点用|
+|.ignore|git 配置忽略文件的插件||可以通过查看是否变灰 来确定配置是否生效|
+|bashsupport|写bashshell脚本的插件||一般用途  shell脚本 不是很需要这个|
+|lombok|配合lombok.jar使用||lombok 很不错 能让代码看起来 更加干净整洁|
+|markdown support|书写markdown 文件的插件||还不错 用起来 和简书上差不多|
+|adb idea|查询快捷键的 插件 |ctrl+shift+a|非常好用,本身是一个安卓的插件 但是他的全局匹配插件也是蛮犀利的|
+|code glance|代码试图 | pgup pgon 上下翻屏||

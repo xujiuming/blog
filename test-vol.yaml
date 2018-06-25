@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: test-vol
+  namespace: default
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        k8s-app: testvol
+    spec:
+      containers:
+      - image: nginx:1.13.8-alpine
+        name: nginx1
+        volumeMounts:
+        - name: app-vol
+          mountPath: /log
+      - image: nginx:1.13.8-alpine
+        name : nginx2
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: app-vol
+          mountPath: /usr/local/logs
+      volumes:
+      - name: app-vol
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-vol
+  labels:
+    app: test-vol
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  selector:
+    run: test-vol
+---

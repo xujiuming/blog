@@ -7,13 +7,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/categories/%E7%AC%94%E8%AE%B0/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/categories/%E9%AA%9A%E6%83%B3%E6%B3%95/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -22,13 +15,6 @@
 
     <url>
         <loc>http://www.xujiuming.com/categories/%E5%9D%91/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/categories/%E5%B7%A5%E5%85%B7/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -63,8 +49,22 @@
     </url>
 
     <url>
+        <loc>http://www.xujiuming.com/categories/%E5%B7%A5%E5%85%B7/</loc>
+        <lastmod>2018-06-25T06:55:35.454Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://www.xujiuming.com/categories/%E5%AE%9E%E6%88%98/</loc>
-        <lastmod>2018-06-25T06:45:48.748Z</lastmod>
+        <lastmod>2018-06-25T07:34:12.197Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/categories/%E7%AC%94%E8%AE%B0/</loc>
+        <lastmod>2018-06-26T08:37:38.354Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

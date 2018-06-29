@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.xujiuming.com/"/>
-  <updated>2018-06-26T08:37:38.354Z</updated>
+  <updated>2018-06-29T06:40:09.113Z</updated>
   <id>http://www.xujiuming.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>代码质量监控平台sonar使用笔记</title>
+    <link href="http://www.xujiuming.com/ming/8dcd7b21.html"/>
+    <id>http://www.xujiuming.com/ming/8dcd7b21.html</id>
+    <published>2018-06-28T06:21:19.000Z</published>
+    <updated>2018-06-29T06:40:09.113Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>最近写的代码 太多了 感觉质量有所下降<br>之前本地一直使用 alibaba的code插件 但是没有出团队版本的<br>干脆搞了一个 sonar 检测一波自己的代码质量</p><h4 id="sonar-docker-方式启动"><a href="#sonar-docker-方式启动" class="headerlink" title="sonar docker 方式启动"></a>sonar docker 方式启动</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#安装中文插件的 sonar </span><br><span class="line"></span><br><span class="line">sudo  docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 jiuming/sonar-qube-zh:1.0.0</span><br><span class="line">#原版 英文版本的</span><br><span class="line">#sudo  docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube</span><br></pre></td></tr></table></figure><p>sonar swarm stack配置<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">version: &apos;3.3&apos;</span><br><span class="line">services:</span><br><span class="line"> sonar:</span><br><span class="line">  image: jiuming/sonar-qube-zh:1.0.0</span><br><span class="line">  ports:</span><br><span class="line">   - 9000:9000</span><br><span class="line">   - 9092:9092</span><br><span class="line">  networks:</span><br><span class="line">    - sonar</span><br><span class="line">  deploy:</span><br><span class="line">   replicas: 1</span><br><span class="line">   update_config:</span><br><span class="line">    parallelism: 1</span><br><span class="line">    delay: 10s</span><br><span class="line">   restart_policy:</span><br><span class="line">    condition: on-failure</span><br><span class="line">networks:</span><br><span class="line">  sonar:</span><br><span class="line">   driver: overlay</span><br></pre></td></tr></table></figure><p></p><p>打开 <a href="http://localhost:9000" target="_blank" rel="noopener">http://localhost:9000</a>  默认账户:admin  默认密码:admin</p><ul><li>sonar qube 官方docker image 安装中文插件方法<br>登录 容器  docker exec -it <containerid> /bin/sh 执行如下命令<br>ps: sonar 中文插件版本 请按照<a href="https://github.com/SonarQubeCommunity/sonar-l10n-zh" target="_blank" rel="noopener">https://github.com/SonarQubeCommunity/sonar-l10n-zh</a> 文档去下载安装   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#安装 中文插件</span><br><span class="line">wget https://github.com/SonarQubeCommunity/sonar-l10n-zh/releases/download/sonar-l10n-zh-plugin-1.21/sonar-l10n-zh-plugin-1.21.jar  &amp;&amp; \</span><br><span class="line">mv /opt/sonarqube/sonar-l10n-zh-plugin-1.21.jar /opt/sonarqube/extensions/plugins</span><br></pre></td></tr></table></figure></containerid></li></ul><p>或者直接使用已经修改好的镜像jiuming/sonar-qube-zh:1.0.0 这个是基于 7.x的sonar</p><h4 id="maven-添加sonar-插件"><a href="#maven-添加sonar-插件" class="headerlink" title="maven 添加sonar 插件"></a>maven 添加sonar 插件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">        &lt;groupId&gt;org.sonarsource.scanner.maven&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;sonar-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;3.4.0.905&lt;/version&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure><h4 id="执行-sonar-任务"><a href="#执行-sonar-任务" class="headerlink" title="执行 sonar 任务"></a>执行 sonar 任务</h4><p>如果在另外一台机器上 加上-Dsonar.host.url=<a href="http://ip:port" target="_blank" rel="noopener">http://ip:port</a><br>如果使用了密钥 那么需要-Dsonar.login=xxxxxx<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mvn sonar:sonar \</span><br><span class="line">  -Dsonar.host.url=http://localhost:9000 </span><br><span class="line">#mvn sonar:sonar \</span><br><span class="line">#  -Dsonar.host.url=http://localhost:9000 \</span><br><span class="line">#  -Dsonar.login=5cb26b212d30530db172ff6adbfe5d2887698b8c</span><br></pre></td></tr></table></figure><p></p><h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><ul><li>报svn认证错误(git认证错误和这个差不多处理方法 )<br>svn: E170001: Authentication required for ‘<a href="https://xxxxxx:xxx" target="_blank" rel="noopener">https://xxxxxx:xxx</a> VisualSVN Server’ -<br>在配置&gt;通用设置&gt;scm&gt;配置svn的username、password或者配置密钥即可 </li></ul><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>大部分检测的规范 都差不多把  本地还是使用alibaba的规范比较和是 直接安装alibaba的code插件也不错<br>sonar 适合团队使用  统一代码风格、减少明显bug</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h4&gt;&lt;p&gt;最近写的代码 太多了 感觉质量有所下降&lt;br&gt;之前本地一直使用 alibaba的code插件 但是没有出团队版本的&lt;br&gt;干脆搞了一个 so
+      
+    
+    </summary>
+    
+      <category term="实战" scheme="http://www.xujiuming.com/categories/%E5%AE%9E%E6%88%98/"/>
+    
+    
+      <category term="代码质量" scheme="http://www.xujiuming.com/tags/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/"/>
+    
+      <category term="持续集成" scheme="http://www.xujiuming.com/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
+    
+  </entry>
   
   <entry>
     <title>stream集合操作符笔记</title>
@@ -459,31 +486,6 @@
   </entry>
   
   <entry>
-    <title>docker 运行秒退出解决办法</title>
-    <link href="http://www.xujiuming.com/ming/52ab603.html"/>
-    <id>http://www.xujiuming.com/ming/52ab603.html</id>
-    <published>2017-11-10T16:00:00.000Z</published>
-    <updated>2018-06-25T03:49:16.163Z</updated>
-    
-    <content type="html"><![CDATA[<p>###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器<br>解决方法:<br>在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如mysql这样的 需要让他在前台运行 mysqld.service</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器&lt;br&gt;解决方法:&lt;br&gt;在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如
-      
-    
-    </summary>
-    
-      <category term="坑" scheme="http://www.xujiuming.com/categories/%E5%9D%91/"/>
-    
-    
-      <category term="docker" scheme="http://www.xujiuming.com/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
     <title>iptables笔记</title>
     <link href="http://www.xujiuming.com/ming/5bcc860.html"/>
     <id>http://www.xujiuming.com/ming/5bcc860.html</id>
@@ -509,19 +511,19 @@
   </entry>
   
   <entry>
-    <title>alias笔记</title>
-    <link href="http://www.xujiuming.com/ming/d0a7cd2b.html"/>
-    <id>http://www.xujiuming.com/ming/d0a7cd2b.html</id>
+    <title>spring boot 项目打包docker image 插件方式</title>
+    <link href="http://www.xujiuming.com/ming/dbafeaad.html"/>
+    <id>http://www.xujiuming.com/ming/dbafeaad.html</id>
     <published>2017-11-10T16:00:00.000Z</published>
     <updated>2018-06-25T03:49:16.163Z</updated>
     
-    <content type="html"><![CDATA[<p>#####linux alias 别名设置</p><p>####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用<br>1:设定临时 alias 只能在当前shell可用 退出shell 失效<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alias  asliasNname=&apos;命令&apos;</span><br><span class="line">例如: alias psa = &apos;ps -aux&apos;</span><br></pre></td></tr></table></figure><p></p><p>2:设定永久 alias<br>只需要吧 alias 加入 环境变量配置文件中即可 例如加入 全局环境变量/etc/profile 或者当前用户的环境变量配置中 例如～/.bashrc<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tee -a /etc/profile</span><br><span class="line">alias psa=&apos;ps -aux&apos;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ctrl +c  结束录入后 应用 环境变量</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure><p></p><p>注意: psa = ‘ps -aux’ 这样不行 因为shell语法的格式问题 写python写多了 吗买皮</p><p>#####总结: linux别名 可以将一些常用的 但是直接输入 比较长的命令封装起来  向文件追加内容 不一定用tee  echo &gt;&gt; 也是可以的 cat都行 不局限命令 能达成功能即可</p>]]></content>
+    <content type="html"><![CDATA[<p>####spring boot 打包成docker image 会更加方便使用<br>1:配置编译jar选项<br>2:配置maven docker 插件<br>3:上传到私服<br>4:自动化脚本</p><p>####配置编译jar<br>如果是继承spring boot 的pom 直接如下配置即可<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure><p></p><p>然后  mvn package 即可  这个时候 打包的jar 里面带有main-class的默认配置 也会有需要的依赖包<br>可以直接 java -jar ming.jar 方式运行</p><p>####配置 maven docker 插件<br>这个插件略坑  在windows上 docker build比较操蛋  linux下docker又需要root权限运行 略坑<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;com.spotify&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;docker-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;maven.docker.version&#125;&lt;/version&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">        &lt;!--镜像名称--&gt;</span><br><span class="line">        &lt;imageName&gt;$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;&lt;/imageName&gt;</span><br><span class="line">        &lt;!--docker file位置--&gt;</span><br><span class="line">        &lt;dockerDirectory&gt;src/main/docker&lt;/dockerDirectory&gt;</span><br><span class="line">        &lt;resources&gt;</span><br><span class="line">            &lt;resource&gt;</span><br><span class="line">                &lt;!-- 编译jar路径 --&gt;</span><br><span class="line">                &lt;targetPath&gt;/&lt;/targetPath&gt;</span><br><span class="line">                &lt;!--编译jar 所在文件夹--&gt;</span><br><span class="line">                &lt;directory&gt;$&#123;project.build.directory&#125;&lt;/directory&gt;</span><br><span class="line">                &lt;!--编译的jar 名称--&gt;</span><br><span class="line">                &lt;include&gt;$&#123;project.build.finalName&#125;.jar&lt;/include&gt;</span><br><span class="line">            &lt;/resource&gt;</span><br><span class="line">        &lt;/resources&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure><p></p><p>然后使用 mvn package docker:build 编译构建即可  最好是在linux环境下 使用root 权限</p><p>####上传到私服<br>我这里选择的是上传到 aliyun 提供的镜像仓库<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker login --username=18120580001@163.com registry.cn-hangzhou.aliyuncs.com</span><br><span class="line">$ sudo docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/mingimages/ming:[镜像版本号]</span><br><span class="line">$ sudo docker push registry.cn-hangzhou.aliyuncs.com/mingimages/ming:[镜像版本号]</span><br></pre></td></tr></table></figure><p></p><p>####参考地址:<a href="https://github.com/xuxianyu/ming" target="_blank" rel="noopener">https://github.com/xuxianyu/ming</a></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;#####linux alias 别名设置&lt;/p&gt;&lt;p&gt;####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用&lt;br&gt;1:设定临时 alias 只能在当前shell可用 退出shell 失效&lt;br
+        &lt;p&gt;####spring boot 打包成docker image 会更加方便使用&lt;br&gt;1:配置编译jar选项&lt;br&gt;2:配置maven docker 插件&lt;br&gt;3:上传到私服&lt;br&gt;4:自动化脚本&lt;/p&gt;&lt;p&gt;####配置编译jar&lt;br&gt;如果是继承spring boot
       
     
     </summary>
@@ -529,24 +531,26 @@
       <category term="笔记" scheme="http://www.xujiuming.com/categories/%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="linux" scheme="http://www.xujiuming.com/tags/linux/"/>
+      <category term="spring" scheme="http://www.xujiuming.com/tags/spring/"/>
+    
+      <category term="docker" scheme="http://www.xujiuming.com/tags/docker/"/>
     
   </entry>
   
   <entry>
-    <title>linux操作文本相关命令笔记</title>
-    <link href="http://www.xujiuming.com/ming/5e3a8086.html"/>
-    <id>http://www.xujiuming.com/ming/5e3a8086.html</id>
+    <title>spring resourc笔记</title>
+    <link href="http://www.xujiuming.com/ming/d7cd3a26.html"/>
+    <id>http://www.xujiuming.com/ming/d7cd3a26.html</id>
     <published>2017-11-10T16:00:00.000Z</published>
     <updated>2018-06-25T03:49:16.163Z</updated>
     
-    <content type="html"><![CDATA[<p>#####Linux下 操作文本命令太多了 cat echo tee sed等</p><p>##sed:按行操作文本</p><p>######sed命令是处理文本的工具 属于管道命令 以行为单位 进行操作文本文件</p><h6 id="sed-nefri-‘command’-file"><a href="#sed-nefri-‘command’-file" class="headerlink" title="sed [-nefri] ‘command’ ./file"></a>sed [-nefri] ‘command’ ./file</h6><h6 id="command-类似-vim的指令"><a href="#command-类似-vim的指令" class="headerlink" title="command 类似 vim的指令"></a>command 类似 vim的指令</h6><p>command<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a∶新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～</span><br><span class="line">c∶取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！</span><br><span class="line">d∶删除，因为是删除啊，所以 d 后面通常不接任何咚咚；</span><br><span class="line">i∶插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；</span><br><span class="line">p∶列印，亦即将某个选择的资料印出。通常 p 会与参数 sed -n 一起运作～</span><br><span class="line">s∶取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！</span><br></pre></td></tr></table></figure><p></p><p>1:删除<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 删除第一行 </span><br><span class="line">sed &apos;1d&apos; ./file</span><br><span class="line"># 删除最后一行</span><br><span class="line">sed &apos;$d&apos; ./file</span><br><span class="line"># 删除 1 到最后一行</span><br><span class="line">sed &apos;1,$d&apos; ./file</span><br></pre></td></tr></table></figure><p></p><p>######其他用法 参考 man sed</p>]]></content>
+    <content type="html"><![CDATA[<p>##1:resource接口</p><h6 id="Resource是spring-中加载资源的顶级接口-主要方法有"><a href="#Resource是spring-中加载资源的顶级接口-主要方法有" class="headerlink" title="Resource是spring 中加载资源的顶级接口 主要方法有:"></a>Resource是spring 中加载资源的顶级接口 主要方法有:</h6><ul><li>boolean exists(); 是否存在资源</li><li>boolean isOpen(); 资源是否打开 是否开启</li><li>URL getURL(); 返回可抽象成url的资源的URL对象</li><li>FIle getFile()；返回底层资源的文件流</li><li>InputStream getInputStream;返回资源的输入流</li></ul><h6 id="resource接口关系图："><a href="#resource接口关系图：" class="headerlink" title="resource接口关系图："></a>resource接口关系图：</h6><p><img src="http://upload-images.jianshu.io/upload_images/3905525-b6f7babb70039c85.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><ul><li>WritableResource： 可写资源接口</li><li>ByteArrayResource:二进制数组表示资源</li><li>ClassPathResource:类路径下资源</li><li>FileSystemResource:文件系统中的资源(绝对路径)</li><li>InputStreamResource：用输入流返回表示资源</li><li>ServletContextResource: web容器上下文资源</li><li>UrlResource:能够访问任何能用URL表示的资源(文件系统、http、ftp等 )</li><li>PathResource:java7.0以上 能够访问任何通过URL、Path、系统文件路径表示的资源</li></ul><h6 id="spring可以通过资源地址的特殊标识符来访问相应资源如下表-支持Ant风格去描述资源地址"><a href="#spring可以通过资源地址的特殊标识符来访问相应资源如下表-支持Ant风格去描述资源地址" class="headerlink" title="spring可以通过资源地址的特殊标识符来访问相应资源如下表 支持Ant风格去描述资源地址"></a>spring可以通过资源地址的特殊标识符来访问相应资源如下表 支持Ant风格去描述资源地址</h6><p><img src="http://upload-images.jianshu.io/upload_images/3905525-c959b0858c8911c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">在项目中 会出现 &apos;classpath:*.xml&apos; 和&apos;classpath*:*.xml&apos;  在：之前有个* 这个意思是在所有的目录下面寻找  </span><br><span class="line">举个例子: 一个项目分为 a(web模块)、b(common模块)、core(核心模块)</span><br><span class="line">如果不带*  那么只会加载一个模块的配置  其它模块配置就没加载  </span><br><span class="line">所以 写的时候 带上*   比较合适</span><br></pre></td></tr></table></figure><p></p><h6 id="资源加载"><a href="#资源加载" class="headerlink" title="资源加载"></a>资源加载</h6><p>spring 提供一套加载资源的方法<br>如下图：<br><img src="http://upload-images.jianshu.io/upload_images/3905525-3da84466dc8b60e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><ul><li>通过ResourceLoader来加载Resource<br>有一个getResource(String location) 只支持按照特殊字符自动匹配 resource类型 但是不支持Ant风格</li><li>ResourcePatternResolver  扩展ResourceLoader<br>有一个getResources(String locationPattern) 支持按照特殊字符自动匹配、支持Ant匹配资源</li><li>PathMatchingResourcePatternResolver 是spring提供的实现类 如果有必要 可以自己实现 (我觉得自己实现的可能性很小、但是不排除坑爹的地方需要自己实现)<br>##总结:<h6 id="1-特殊字符-classpath、file这样的是spring-提供的-其中classpath-最好使用的时候带上-避免加载不到资源"><a href="#1-特殊字符-classpath、file这样的是spring-提供的-其中classpath-最好使用的时候带上-避免加载不到资源" class="headerlink" title="1:特殊字符 classpath、file这样的是spring 提供的 其中classpath 最好使用的时候带上* 避免加载不到资源"></a>1:特殊字符 classpath、file这样的是spring 提供的 其中classpath 最好使用的时候带上* 避免加载不到资源</h6><h6 id="2-Ant风格-其实就是"><a href="#2-Ant风格-其实就是" class="headerlink" title="2:Ant风格 其实就是"></a>2:Ant风格 其实就是</h6></li><li>‘ ? ‘代表一个任意字符 </li><li>‘ * ‘代表匹配文件中的任意多个字符  </li><li>‘ ** ‘ 代表匹配多层路径<h6 id="3-Resource-系列可以单独抽出来-当作加载资源的utils来用"><a href="#3-Resource-系列可以单独抽出来-当作加载资源的utils来用" class="headerlink" title="3: Resource 系列可以单独抽出来 当作加载资源的utils来用"></a>3: Resource 系列可以单独抽出来 当作加载资源的utils来用</h6><h6 id="4-Resource操作文件的时候-尽量使用getInputStream-因为getFile-不能加载到jar中的资源"><a href="#4-Resource操作文件的时候-尽量使用getInputStream-因为getFile-不能加载到jar中的资源" class="headerlink" title="4: Resource操作文件的时候 尽量使用getInputStream()  因为getFile()不能加载到jar中的资源"></a>4: Resource操作文件的时候 尽量使用getInputStream()  因为getFile()不能加载到jar中的资源</h6></li></ul>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;#####Linux下 操作文本命令太多了 cat echo tee sed等&lt;/p&gt;&lt;p&gt;##sed:按行操作文本&lt;/p&gt;&lt;p&gt;######sed命令是处理文本的工具 属于管道命令 以行为单位 进行操作文本文件&lt;/p&gt;&lt;h6 id=&quot;sed-nefri-‘command’
+        &lt;p&gt;##1:resource接口&lt;/p&gt;&lt;h6 id=&quot;Resource是spring-中加载资源的顶级接口-主要方法有&quot;&gt;&lt;a href=&quot;#Resource是spring-中加载资源的顶级接口-主要方法有&quot; class=&quot;headerlink&quot; title=&quot;Resourc
       
     
     </summary>
@@ -554,7 +558,7 @@
       <category term="笔记" scheme="http://www.xujiuming.com/categories/%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="linux" scheme="http://www.xujiuming.com/tags/linux/"/>
+      <category term="spring" scheme="http://www.xujiuming.com/tags/spring/"/>
     
   </entry>
   

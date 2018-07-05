@@ -46,6 +46,7 @@ package com.ming;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,44 @@ public class TestStream {
         System.out.println(countNum);
         Integer countNum1 = list.stream().map(T3::getNum).reduce(0, Integer::sum);
         System.out.println(countNum1);
+    }
+
+
+    /**
+     * 将List<T4>按照id 分组并且 累加price
+     * 分两种方案
+     * 一是先分组 然后map->reduce
+     * 二直接分组 进行reduce 取巧进行对象的累加
+     *
+     * @author ming
+     * @date 2018-07-05 09:58:01
+     */
+    @Test
+    public void testGroupByAndReduce() {
+        List<T4> list = new ArrayList<>();
+        list.add(new T4(1, BigDecimal.valueOf(1)));
+        list.add(new T4(1, BigDecimal.valueOf(10)));
+        list.add(new T4(2, BigDecimal.valueOf(1)));
+        list.add(new T4(2, BigDecimal.valueOf(10)));
+/*
+
+        //方案一 先分组 然后迭代处理
+        Map<Integer, BigDecimal> result = new HashMap<>();
+        list.stream().collect(Collectors.groupingBy(T4::getId, Collectors.toSet()))
+                .forEach((k, v) -> {
+                    result.put(k, v.stream().map(T4::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+                });
+        System.out.println(result);
+*/
+
+/*
+
+        //方案二 使用取巧的方案 进行对象累加  这样 分组id不变 而且内部的属性也可以按照自己的定义去计算
+        Map<Integer, T4> result = list.stream()
+                .collect(Collectors.groupingBy(T4::getId
+                        , Collectors.reducing(new T4(1, BigDecimal.ZERO), (o, item) -> new T4(o.getId(), o.getPrice().add(item.getPrice())))));
+        System.out.println(result);
+*/
     }
 
 }
@@ -217,6 +256,44 @@ class T3 {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+}
+
+
+class T4 {
+    private Integer id;
+    private BigDecimal price;
+
+    public T4() {
+    }
+
+    public T4(Integer id, BigDecimal price) {
+        this.id = id;
+        this.price = price;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "T4{" +
+                "id=" + id +
+                ", price=" + price +
+                '}';
     }
 }
 ```

@@ -114,20 +114,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/windows/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/vbox/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/spring-boot/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -156,7 +142,28 @@
     </url>
 
     <url>
+        <loc>http://www.xujiuming.com/tags/windows/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/vbox/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://www.xujiuming.com/tags/yml%E3%80%81yaml/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/%E4%B9%B1%E7%A0%81/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -192,13 +199,6 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/%E4%B9%B1%E7%A0%81/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -303,29 +303,8 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/tools/</loc>
-        <lastmod>2018-06-25T06:55:35.454Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/linux/</loc>
         <lastmod>2018-06-25T07:34:12.197Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/java/</loc>
-        <lastmod>2018-06-26T08:37:38.354Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/stream%E8%AE%A1%E7%AE%97/</loc>
-        <lastmod>2018-06-26T08:37:38.354Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -340,6 +319,41 @@
     <url>
         <loc>http://www.xujiuming.com/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/</loc>
         <lastmod>2018-06-29T06:40:09.113Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/tools/</loc>
+        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/git-lfs/</loc>
+        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/github/</loc>
+        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/java/</loc>
+        <lastmod>2018-07-05T02:43:34.885Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/stream%E8%AE%A1%E7%AE%97/</loc>
+        <lastmod>2018-07-05T02:43:34.885Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

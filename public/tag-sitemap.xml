@@ -170,20 +170,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/js/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8E%A8%E9%80%81/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/%E5%AE%89%E5%85%A8/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -192,6 +178,20 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E5%A4%B8%E5%9F%9F/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/js/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8E%A8%E9%80%81/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -247,20 +247,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/jenkins/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/groovy/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/cdn/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -283,6 +269,20 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E9%98%BF%E9%87%8C%E4%BA%91/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/jenkins/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/groovy/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -324,27 +324,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/tools/</loc>
-        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/git-lfs/</loc>
-        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/github/</loc>
-        <lastmod>2018-07-04T05:44:50.999Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/java/</loc>
         <lastmod>2018-07-05T02:43:34.885Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -354,6 +333,27 @@
     <url>
         <loc>http://www.xujiuming.com/tags/stream%E8%AE%A1%E7%AE%97/</loc>
         <lastmod>2018-07-05T02:43:34.885Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/tools/</loc>
+        <lastmod>2018-07-05T05:52:27.580Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/git-lfs/</loc>
+        <lastmod>2018-07-05T05:52:27.580Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/github/</loc>
+        <lastmod>2018-07-05T05:52:27.580Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

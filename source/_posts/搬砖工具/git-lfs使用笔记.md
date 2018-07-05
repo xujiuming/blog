@@ -55,7 +55,27 @@ Git LFS: (1 of 1 files) 9.18 KB / 9.18 KB
 对象计数中: 10, 完成.
 。。。。。。。。
 ```
-
+##### git lfs 卸载  
+* 卸载git lfs
+```
+sudo apt --purge remove git-lfs
+```
+* 删除lfs相关的filter
+```
+#查看 git的全局配置
+git config -l 
+#删除和lfs有关的配置
+## 查看lfs相关的配置
+git config -l|grep lfs
+##挨个删除
+git config --global --unset filter.lfs.clean
+git config --global --unset filter.lfs.smudge
+git config --global --unset filter.lfs.process
+git config --global --unset filter.lfs.required
+git config --global --unset filter.lfs.required
+#删除 lfs的仓库地址  按需删除
+git config --global --unset lfs.https://github.com/xuxianyu/blog.git/info/lfs.access
+```
 #### 总结
 git 的功能越来越吊了  现在能够好好的管理大文件了  
 git只是存储大文件的指针   不负责存储 还是保持了git的高效 易用 但是有能够管理大文件  6的一批

@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[git-lfs使用笔记]]></title>
     <url>%2Fming%2F68597cc5.html</url>
-    <content type="text"><![CDATA[前言一直想找个能够存储比较大的文件 而且又能像git一样操作方便快捷开始准备自建svn来达到需求的后来看github的一些文档看到了git lfs (Git Large File Storage)功能干脆了解了一下 顺便记录下这篇笔记 方便以后查阅常见的git 仓库网站都提供 git lfs 存储 例如github笔记中任何命令都在ubuntu中执行过实战安装 git lfsgit lfs支持直接二进制安装、各种包管理工具安装(apt、yum、pacman之类的)1234#安装 git lfs sudo apt install git-lfs # 初始化git lfs sudo git lfs install 配置lfs 管理的文件初始化 lfs的配置文件1git lfs track &quot;&lt;目录&gt;/*&quot; 执行上面的命令会在项目的根目录生成 .gitattributes内容大致如下1&lt;目录&gt;/* filter=lfs diff=lfs merge=lfs -text 添加lfs .gitattributes配置到仓库12sudo git add .gitattributes sudo commit -m &quot;init git lfs config&quot; 添加并且上传大文件将大文件复制到 &lt;目录&gt;123sudo git add &lt;目录&gt;/xxxsudo git commit -m &quot;update xxx&quot;sudo git push 基于git lfs 管理的文件更新会显示成123Git LFS: (1 of 1 files) 9.18 KB / 9.18 KB 对象计数中: 10, 完成.。。。。。。。。 总结git 的功能越来越吊了 现在能够好好的管理大文件了git只是存储大文件的指针 不负责存储 还是保持了git的高效 易用 但是有能够管理大文件 6的一批]]></content>
+    <content type="text"><![CDATA[前言一直想找个能够存储比较大的文件 而且又能像git一样操作方便快捷开始准备自建svn来达到需求的后来看github的一些文档看到了git lfs (Git Large File Storage)功能干脆了解了一下 顺便记录下这篇笔记 方便以后查阅常见的git 仓库网站都提供 git lfs 存储 例如github笔记中任何命令都在ubuntu中执行过实战安装 git lfsgit lfs支持直接二进制安装、各种包管理工具安装(apt、yum、pacman之类的)1234#安装 git lfs sudo apt install git-lfs # 初始化git lfs sudo git lfs install 配置lfs 管理的文件初始化 lfs的配置文件1git lfs track &quot;&lt;目录&gt;/*&quot; 执行上面的命令会在项目的根目录生成 .gitattributes内容大致如下1&lt;目录&gt;/* filter=lfs diff=lfs merge=lfs -text 添加lfs .gitattributes配置到仓库12sudo git add .gitattributes sudo commit -m &quot;init git lfs config&quot; 添加并且上传大文件将大文件复制到 &lt;目录&gt;123sudo git add &lt;目录&gt;/xxxsudo git commit -m &quot;update xxx&quot;sudo git push 基于git lfs 管理的文件更新会显示成123Git LFS: (1 of 1 files) 9.18 KB / 9.18 KB 对象计数中: 10, 完成.。。。。。。。。 git lfs 卸载 卸载git lfs 1sudo apt --purge remove git-lfs 删除lfs相关的filter 12345678910111213#查看 git的全局配置git config -l #删除和lfs有关的配置## 查看lfs相关的配置git config -l|grep lfs##挨个删除git config --global --unset filter.lfs.cleangit config --global --unset filter.lfs.smudgegit config --global --unset filter.lfs.processgit config --global --unset filter.lfs.requiredgit config --global --unset filter.lfs.required#删除 lfs的仓库地址 按需删除git config --global --unset lfs.https://github.com/xuxianyu/blog.git/info/lfs.access 总结git 的功能越来越吊了 现在能够好好的管理大文件了git只是存储大文件的指针 不负责存储 还是保持了git的高效 易用 但是有能够管理大文件 6的一批]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -219,6 +219,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[alias笔记]]></title>
+    <url>%2Fming%2Fd0a7cd2b.html</url>
+    <content type="text"><![CDATA[#####linux alias 别名设置####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用1:设定临时 alias 只能在当前shell可用 退出shell 失效12alias asliasNname=&apos;命令&apos;例如: alias psa = &apos;ps -aux&apos; 2:设定永久 alias只需要吧 alias 加入 环境变量配置文件中即可 例如加入 全局环境变量/etc/profile 或者当前用户的环境变量配置中 例如～/.bashrc123456tee -a /etc/profilealias psa=&apos;ps -aux&apos;# ctrl +c 结束录入后 应用 环境变量source /etc/profile 注意: psa = ‘ps -aux’ 这样不行 因为shell语法的格式问题 写python写多了 吗买皮 #####总结: linux别名 可以将一些常用的 但是直接输入 比较长的命令封装起来 向文件追加内容 不一定用tee echo &gt;&gt; 也是可以的 cat都行 不局限命令 能达成功能即可]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[linux操作文本相关命令笔记]]></title>
     <url>%2Fming%2F5e3a8086.html</url>
     <content type="text"><![CDATA[#####Linux下 操作文本命令太多了 cat echo tee sed等##sed:按行操作文本######sed命令是处理文本的工具 属于管道命令 以行为单位 进行操作文本文件sed [-nefri] ‘command’ ./filecommand 类似 vim的指令command123456a∶新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～c∶取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！d∶删除，因为是删除啊，所以 d 后面通常不接任何咚咚；i∶插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；p∶列印，亦即将某个选择的资料印出。通常 p 会与参数 sed -n 一起运作～s∶取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！ 1:删除123456# 删除第一行 sed &apos;1d&apos; ./file# 删除最后一行sed &apos;$d&apos; ./file# 删除 1 到最后一行sed &apos;1,$d&apos; ./file ######其他用法 参考 man sed]]></content>
@@ -230,9 +241,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[linux使用ss笔记]]></title>
-    <url>%2Fming%2F5624ab1d.html</url>
-    <content type="text"><![CDATA[由于有个朋友对于在linux上使用ss翻墙不会 特别写个简单的笔记、#######基于ubunut17.04、python3、####1:安装pip31sudo apt install pip3 ####2:通过pip3安装shadowsocks1sudo pip3 install shadowsocks ####3:设置shadowsocksServer属性配置123456789&#123; &quot;server&quot;:&quot;ss服务器ip&quot;, &quot;server_port&quot;:端口, &quot;local_address&quot;:&quot;127.0.0.1&quot;,(本地socks5地址) &quot;local_port&quot;:1080,(本地socks5端口) &quot;password&quot;:&quot;ss服务器密码&quot;, &quot;timeout&quot;:300,(超时时间 ms), “method”:&quot;aes-256-cfb&quot;(加密方式)尽量选择这个 &#125; ####4:启动本地ss1sudo sslocal -c 配置文件地址 ####5:设置代理这里设置代理有很多方式 先说两种常用的1:直接设置整个系统的代理 、通过gfwlist生成ip表 去判别国内国外网站选择性加速2:对某部分程序设置代理、如chrome浏览器 下载个switch代理工具 可以自己设定路由规则也可以通过gfwlist生成相应的ip表 ######总结:ss翻墙 总的来说就是 发起访问—&gt;从本地服务器代理访问、判断是否需要代理—&gt;需要代理的连接远程ssServer 进行代理—-&gt;访问gfw之外的内容]]></content>
+    <title><![CDATA[常用或者有趣的linux命令]]></title>
+    <url>%2Fming%2F5e1b0665.html</url>
+    <content type="text"><![CDATA[linux版本命令功能描述实例ubuntunautilusubuntu下面 从终端打开文件夹nautilus .*traceroute跟踪域名解析traceroute 域名*hexdump将文件转换成hex码hexdump 文件*tcpdump、wireshark抓包工具*sl一个会动的火车*nohup忽略退出终端信号nohup renwu &amp;*tmux将单个控制台页面切分的工具tmux 启动即可 功能巨强大 适合熟悉linux平台并且有一定的精分症的孩子使用 边编译源码边安装二进制包边解压 简直无敌*netstat查看端口占用情况 配合grep可以查看指定端口的占用情况sudo netstat -apn*top动态查看系统的相关状态如cpu占用等top*grep正则选取*cat输出某个文件内容 或者往某个文件写入内容cat /etc/profile*tee往某个文件中追加内容 以指定字符结尾 未指定 则是EOF结尾tee ./a.txt*alias命名别名alias psa=‘ps -aux’*sed按行操作文本sed ‘$d’ ./fileubuntugnome-screenshot -a局域截图]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -252,20 +263,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[常用或者有趣的linux命令]]></title>
-    <url>%2Fming%2F5e1b0665.html</url>
-    <content type="text"><![CDATA[linux版本命令功能描述实例ubuntunautilusubuntu下面 从终端打开文件夹nautilus .*traceroute跟踪域名解析traceroute 域名*hexdump将文件转换成hex码hexdump 文件*tcpdump、wireshark抓包工具*sl一个会动的火车*nohup忽略退出终端信号nohup renwu &amp;*tmux将单个控制台页面切分的工具tmux 启动即可 功能巨强大 适合熟悉linux平台并且有一定的精分症的孩子使用 边编译源码边安装二进制包边解压 简直无敌*netstat查看端口占用情况 配合grep可以查看指定端口的占用情况sudo netstat -apn*top动态查看系统的相关状态如cpu占用等top*grep正则选取*cat输出某个文件内容 或者往某个文件写入内容cat /etc/profile*tee往某个文件中追加内容 以指定字符结尾 未指定 则是EOF结尾tee ./a.txt*alias命名别名alias psa=‘ps -aux’*sed按行操作文本sed ‘$d’ ./fileubuntugnome-screenshot -a局域截图]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[前端包管理工具npm切换国内源]]></title>
-    <url>%2Fming%2F3ff0ec3c.html</url>
-    <content type="text"><![CDATA[##在学ng2的时候接触到npm管理包、插件的方式 但是npm默认的源是国外的如果懒的科学上网 又想快速使用 只能使用国内的镜像站点 例如aliyun####当安装npm 完成 可以通过如下的方法去修改npm的源####1.通过config命令npm config set registry https://registry.npm.taobao.orgnpm info underscore （如果上面配置正确这个命令会有字符串response）####2.命令行指定npm –registry https://registry.npm.taobao.org info underscore####3.编辑 ~/.npmrc 加入下面内容(linux 在你的用户目录下 没有就创建 windows在c盘下)registry = https://registry.npm.taobao.org]]></content>
+    <title><![CDATA[linux使用ss笔记]]></title>
+    <url>%2Fming%2F5624ab1d.html</url>
+    <content type="text"><![CDATA[由于有个朋友对于在linux上使用ss翻墙不会 特别写个简单的笔记、#######基于ubunut17.04、python3、####1:安装pip31sudo apt install pip3 ####2:通过pip3安装shadowsocks1sudo pip3 install shadowsocks ####3:设置shadowsocksServer属性配置123456789&#123; &quot;server&quot;:&quot;ss服务器ip&quot;, &quot;server_port&quot;:端口, &quot;local_address&quot;:&quot;127.0.0.1&quot;,(本地socks5地址) &quot;local_port&quot;:1080,(本地socks5端口) &quot;password&quot;:&quot;ss服务器密码&quot;, &quot;timeout&quot;:300,(超时时间 ms), “method”:&quot;aes-256-cfb&quot;(加密方式)尽量选择这个 &#125; ####4:启动本地ss1sudo sslocal -c 配置文件地址 ####5:设置代理这里设置代理有很多方式 先说两种常用的1:直接设置整个系统的代理 、通过gfwlist生成ip表 去判别国内国外网站选择性加速2:对某部分程序设置代理、如chrome浏览器 下载个switch代理工具 可以自己设定路由规则也可以通过gfwlist生成相应的ip表 ######总结:ss翻墙 总的来说就是 发起访问—&gt;从本地服务器代理访问、判断是否需要代理—&gt;需要代理的连接远程ssServer 进行代理—-&gt;访问gfw之外的内容]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -285,31 +285,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[前端包管理工具npm切换国内源]]></title>
+    <url>%2Fming%2F3ff0ec3c.html</url>
+    <content type="text"><![CDATA[##在学ng2的时候接触到npm管理包、插件的方式 但是npm默认的源是国外的如果懒的科学上网 又想快速使用 只能使用国内的镜像站点 例如aliyun####当安装npm 完成 可以通过如下的方法去修改npm的源####1.通过config命令npm config set registry https://registry.npm.taobao.orgnpm info underscore （如果上面配置正确这个命令会有字符串response）####2.命令行指定npm –registry https://registry.npm.taobao.org info underscore####3.编辑 ~/.npmrc 加入下面内容(linux 在你的用户目录下 没有就创建 windows在c盘下)registry = https://registry.npm.taobao.org]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[分屏工具tmux使用笔记]]></title>
     <url>%2Fming%2F885dd8c4.html</url>
     <content type="text"><![CDATA[linux中 经常使用 终端 一次打开多个终端 很麻烦 不好用 有个很强悍的工具 tmux 很出名的分屏工具ubuntu安装1sudo apt install tmux 然后 在终端输入1tmux 这个时候 终端已经启动tmux 默认是ctrl+b 是快捷键 就是进入tmux切换操作的命令中 例如将当前终端水平分屏 进入 tmux操作 按下双引号1ctrl+b ----&gt;“ 垂直分屏幕 进入tmux 按下%1ctrl+b----&gt;% 可以启动多个不同的窗口 每个窗口可以按照水平垂直分成不同的窗体窗体之间 切换1ctrl+b ----&gt;方向键 改变窗体的大小1ctrl+b----&gt;按住ctrl 然后方向键改变 #####其他操作 请查阅 man tmux]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[树莓派链接wifi]]></title>
-    <url>%2Fming%2F8634a6bb.html</url>
-    <content type="text"><![CDATA[####买回来好久 一直都是被舍友拿去垫电脑去了 今天有时间 拿出来把wifi模块启动起来 以后 就算垫桌子 也能用起来#####前提条件1:pi能正常启动2:能链接pi的shell3:pi的版本必须由无线网卡 pi 3b版本 带了无线网卡了#####具体操作1:登录shell2:查看 附近wifi (多个无线网卡的大兄弟 请使用 ifconfig 查看选择一个网卡) 一般一个无线网卡 是wlan01sudo iwlist wlan0 scan 每一个cell都是一个wifi热点 essid 是名字(中文的wifi名字是显示的\xSS这种忽略即可 反正设置的时候直接输入中文即可) 注意:如果由中文的wifi热点名字 会转成其他格式的字符串 会出现\xAs\xDD….这样的 如果你需要转换成相应的中文 可以尝试用python来转看看具体操作如下: 打开python控制台 输入12str=b&apos;乱码的字符串&apos;print (str.decode(&apos;utf-8&apos;)) 3:编辑 wifi模块的配置文件 /etc/wpa_supplicant/wpa_supoplicant.conf12345##设置network中的参数 network=&#123; ssid=&quot;wifi热点名称(中文直接输入 不需要转码)&quot; psk=&quot;wifi密码&quot; &#125; 4:重启12#重启shutdown -r now 5:还是先用线链接pi的shell 然后查看 network的信息1ifconfig 123456789101112131415161718192021222324eth0 Link encap:Ethernet HWaddr b8:27:eb:43:64:4d UP BROADCAST MULTICAST MTU:1500 Metric:1 RX packets:224 errors:0 dropped:0 overruns:0 frame:0 TX packets:166 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1000 RX bytes:20583 (20.1 KiB) TX bytes:23454 (22.9 KiB)lo Link encap:Local Loopback inet addr:127.0.0.1 Mask:255.0.0.0 inet6 addr: ::1/128 Scope:Host UP LOOPBACK RUNNING MTU:65536 Metric:1 RX packets:136 errors:0 dropped:0 overruns:0 frame:0 TX packets:136 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1 RX bytes:11472 (11.2 KiB) TX bytes:11472 (11.2 KiB)wlan0 Link encap:Ethernet HWaddr b8:27:eb:16:31:18 inet addr:192.168.3.111 Bcast:192.168.3.255 Mask:255.255.255.0 inet6 addr: fe80::bd80:706f:310d:a21b/64 Scope:Link UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1 RX packets:89315 errors:0 dropped:31 overruns:0 frame:0 TX packets:63804 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1000 RX bytes:125457894 (119.6 MiB) TX bytes:6884073 (6.5 MiB) 无线网卡的ip是 wlan0中的 第二行 inet addr:192.168.3.111这个时候可以拔掉网线使用 wlan0中的ip链接pi了 ####总结:树莓派 3b版本中已经集成了wifi模块 只需要配置wifi热点信息重启就行了]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[树莓派vnc链接]]></title>
-    <url>%2Fming%2F52f5e4f0.html</url>
-    <content type="text"><![CDATA[###树莓派开启wifi模块后 想看看树莓派的桌面 然后就开启了vnc服务 玩玩####安装vnc服务1sudo apt-get install tightvncserver ####设置vnc链接的密码（最长只能8位 超过的截取前8位）1vncpasswd ####添加开机启动1sudo vim /etc/init.d/vncserver 内容:12345678910111213141516171819202122#!/bin/sh#如果不是 pi用户 请 改这里的user 登录的时候 也用这里的userexport USER=&apos;pi&apos; eval cd ~$USER case &quot;$1&quot; in start) # 启动命令行。此处自定义分辨率、控制台号码或其它参数。 su $USER -c &apos;/usr/bin/vncserver -depth 16 -geometry 1024x768 :1&apos; echo &quot;Starting VNC server for $USER &quot; ;; stop) # 终止命令行。此处控制台号码与启动一致。 su $USER -c &apos;/usr/bin/vncserver -kill :1&apos; echo &quot;vncserver stopped&quot; ;; *) echo &quot;Usage: /etc/init.d/vncserver &#123;start|stop&#125;&quot; exit 1 ;;esacexit 0 添加执行权限 更新开机启动12sudo chmod 755 /etc/init.d/vncserversudo update-rc.d vncserver defaults ###登录通过vnc工具登录账户 pi(脚本中的user)密码 设置的vnc密码 不是ssh密码 ###多个桌面开启默认是端口:5900 如果第一个窗口推荐在5900+1。。。以此类推 不要用默认的 有坑 ####总结: vnc链接树莓派的桌面 感觉卡卡的 玛格及]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -329,14 +318,25 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring bean 加载顺序解决办法]]></title>
-    <url>%2Fming%2F50d1ed2b.html</url>
-    <content type="text"><![CDATA[在使用SpringBeanManager工具类的时候 发现 spring boot 是根据目录取扫描装配bean 的由于我把 这个工具类放在com.ming.core.utils下 导致 这个加载顺序在一些初始化服务之后看了一下相关资料有四种解决方法在配置中调整顺序先加载的 写在最上面 但是呢 我懒的写配置文件123&lt;!--bean声明--&gt; &lt;bean class=&quot;com.ming.core.utils.SpringBeanManager&quot;/&gt; &lt;bean class=&quot;com.ming.base.init.SystemInit&quot; init-method=&quot;init&quot; destroy-method=&quot;destroy&quot; /&gt; 使用@Autowired 注入到所需的服务中其实就是跟在配置中写 ref差不多的功能 spring 会解析到这个会依赖springBeanManager 所以会先加载springBeanManager这种方式 有点丑 但是可以解决问题 123456789101112131415161718@Componentpublic class SystemInit &#123; /** * 使 SpringBeanManager在SystemInit之前初始化 * * @author ming * @date 2017-11-09 17:52 */ @Autowired private SpringBeanManager springBeanManager; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用DependsOn这个是要配置一个或者多个 注册的bean的名称 而不是类的名称 123456789101112// 等待springBeanManager 装载完毕 初始化本类@DependsOn(value = &quot;springBeanManager&quot;)@Componentpublic class SystemInit &#123; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用@Order注解此方式 在spring boot 中暂时无法使用 等找到相关文档 再看看是什么原因 无法使用####总结：一般来说 对于加载顺序有强烈要求的地方 不是很多 如果有 使用DependsOn 基本能解决了]]></content>
+    <title><![CDATA[树莓派vnc链接]]></title>
+    <url>%2Fming%2F52f5e4f0.html</url>
+    <content type="text"><![CDATA[###树莓派开启wifi模块后 想看看树莓派的桌面 然后就开启了vnc服务 玩玩####安装vnc服务1sudo apt-get install tightvncserver ####设置vnc链接的密码（最长只能8位 超过的截取前8位）1vncpasswd ####添加开机启动1sudo vim /etc/init.d/vncserver 内容:12345678910111213141516171819202122#!/bin/sh#如果不是 pi用户 请 改这里的user 登录的时候 也用这里的userexport USER=&apos;pi&apos; eval cd ~$USER case &quot;$1&quot; in start) # 启动命令行。此处自定义分辨率、控制台号码或其它参数。 su $USER -c &apos;/usr/bin/vncserver -depth 16 -geometry 1024x768 :1&apos; echo &quot;Starting VNC server for $USER &quot; ;; stop) # 终止命令行。此处控制台号码与启动一致。 su $USER -c &apos;/usr/bin/vncserver -kill :1&apos; echo &quot;vncserver stopped&quot; ;; *) echo &quot;Usage: /etc/init.d/vncserver &#123;start|stop&#125;&quot; exit 1 ;;esacexit 0 添加执行权限 更新开机启动12sudo chmod 755 /etc/init.d/vncserversudo update-rc.d vncserver defaults ###登录通过vnc工具登录账户 pi(脚本中的user)密码 设置的vnc密码 不是ssh密码 ###多个桌面开启默认是端口:5900 如果第一个窗口推荐在5900+1。。。以此类推 不要用默认的 有坑 ####总结: vnc链接树莓派的桌面 感觉卡卡的 玛格及]]></content>
       <categories>
-        <category>坑</category>
+        <category>笔记</category>
       </categories>
       <tags>
-        <tag>spring</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派链接wifi]]></title>
+    <url>%2Fming%2F8634a6bb.html</url>
+    <content type="text"><![CDATA[####买回来好久 一直都是被舍友拿去垫电脑去了 今天有时间 拿出来把wifi模块启动起来 以后 就算垫桌子 也能用起来#####前提条件1:pi能正常启动2:能链接pi的shell3:pi的版本必须由无线网卡 pi 3b版本 带了无线网卡了#####具体操作1:登录shell2:查看 附近wifi (多个无线网卡的大兄弟 请使用 ifconfig 查看选择一个网卡) 一般一个无线网卡 是wlan01sudo iwlist wlan0 scan 每一个cell都是一个wifi热点 essid 是名字(中文的wifi名字是显示的\xSS这种忽略即可 反正设置的时候直接输入中文即可) 注意:如果由中文的wifi热点名字 会转成其他格式的字符串 会出现\xAs\xDD….这样的 如果你需要转换成相应的中文 可以尝试用python来转看看具体操作如下: 打开python控制台 输入12str=b&apos;乱码的字符串&apos;print (str.decode(&apos;utf-8&apos;)) 3:编辑 wifi模块的配置文件 /etc/wpa_supplicant/wpa_supoplicant.conf12345##设置network中的参数 network=&#123; ssid=&quot;wifi热点名称(中文直接输入 不需要转码)&quot; psk=&quot;wifi密码&quot; &#125; 4:重启12#重启shutdown -r now 5:还是先用线链接pi的shell 然后查看 network的信息1ifconfig 123456789101112131415161718192021222324eth0 Link encap:Ethernet HWaddr b8:27:eb:43:64:4d UP BROADCAST MULTICAST MTU:1500 Metric:1 RX packets:224 errors:0 dropped:0 overruns:0 frame:0 TX packets:166 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1000 RX bytes:20583 (20.1 KiB) TX bytes:23454 (22.9 KiB)lo Link encap:Local Loopback inet addr:127.0.0.1 Mask:255.0.0.0 inet6 addr: ::1/128 Scope:Host UP LOOPBACK RUNNING MTU:65536 Metric:1 RX packets:136 errors:0 dropped:0 overruns:0 frame:0 TX packets:136 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1 RX bytes:11472 (11.2 KiB) TX bytes:11472 (11.2 KiB)wlan0 Link encap:Ethernet HWaddr b8:27:eb:16:31:18 inet addr:192.168.3.111 Bcast:192.168.3.255 Mask:255.255.255.0 inet6 addr: fe80::bd80:706f:310d:a21b/64 Scope:Link UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1 RX packets:89315 errors:0 dropped:31 overruns:0 frame:0 TX packets:63804 errors:0 dropped:0 overruns:0 carrier:0 collisions:0 txqueuelen:1000 RX bytes:125457894 (119.6 MiB) TX bytes:6884073 (6.5 MiB) 无线网卡的ip是 wlan0中的 第二行 inet addr:192.168.3.111这个时候可以拔掉网线使用 wlan0中的ip链接pi了 ####总结:树莓派 3b版本中已经集成了wifi模块 只需要配置wifi热点信息重启就行了]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -351,20 +351,20 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot 监控模块 actuator笔记]]></title>
-    <url>%2Fming%2F1a1c1aa1.html</url>
-    <content type="text"><![CDATA[###actuator 是spring boot 提供的一个监控的工具直接访问 相应端点(rest 接口)端点分为三种:应用配置类/autoconfig 获取应用的自动配置相关参数/beans 获取应用的所有bean/configprops 应用中配置的属性信息 设置enabled = false 关闭这个端点/env 获取应用可以用的环境信息/mappings 返回 mvc控制器 映射关系 也就是接口的信息/info 返回自定义信息 设置 info.app.name=ming info返回ming度量指标类/metrics 返回各类重要的度量指标 内存、线程、垃圾回收信息 通过使用 counterServices 来自定义 信息/metrics/{name} 获取指定的信息/health 获取各类健康的指标 磁盘、数据库链接是否可以用、rabbit、solr、redis是否可用/dump 项目线程信息/trace 返回基本http跟踪 保留100条操作控制类/shutdown 关闭应用 post请求 需要设定开启endpoints.shutdown.enabled: true]]></content>
+    <title><![CDATA[spring bean 加载顺序解决办法]]></title>
+    <url>%2Fming%2F50d1ed2b.html</url>
+    <content type="text"><![CDATA[在使用SpringBeanManager工具类的时候 发现 spring boot 是根据目录取扫描装配bean 的由于我把 这个工具类放在com.ming.core.utils下 导致 这个加载顺序在一些初始化服务之后看了一下相关资料有四种解决方法在配置中调整顺序先加载的 写在最上面 但是呢 我懒的写配置文件123&lt;!--bean声明--&gt; &lt;bean class=&quot;com.ming.core.utils.SpringBeanManager&quot;/&gt; &lt;bean class=&quot;com.ming.base.init.SystemInit&quot; init-method=&quot;init&quot; destroy-method=&quot;destroy&quot; /&gt; 使用@Autowired 注入到所需的服务中其实就是跟在配置中写 ref差不多的功能 spring 会解析到这个会依赖springBeanManager 所以会先加载springBeanManager这种方式 有点丑 但是可以解决问题 123456789101112131415161718@Componentpublic class SystemInit &#123; /** * 使 SpringBeanManager在SystemInit之前初始化 * * @author ming * @date 2017-11-09 17:52 */ @Autowired private SpringBeanManager springBeanManager; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用DependsOn这个是要配置一个或者多个 注册的bean的名称 而不是类的名称 123456789101112// 等待springBeanManager 装载完毕 初始化本类@DependsOn(value = &quot;springBeanManager&quot;)@Componentpublic class SystemInit &#123; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用@Order注解此方式 在spring boot 中暂时无法使用 等找到相关文档 再看看是什么原因 无法使用####总结：一般来说 对于加载顺序有强烈要求的地方 不是很多 如果有 使用DependsOn 基本能解决了]]></content>
       <categories>
-        <category>笔记</category>
+        <category>坑</category>
       </categories>
       <tags>
         <tag>spring</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring cloud 注册中心模块笔记]]></title>
-    <url>%2Fming%2F4c352ff0.html</url>
-    <content type="text"><![CDATA[eureka客户端:服务注册相关配置 注册的中心、心跳、注册信息缓存时间 org.springframework.cloud.netflix.eureka.EurekaClientConfigBean服务实列配置信息 服务实列的名称、地址、健康检查路径 org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBeaneureka服务端:配置相关检测 eureka.server中配置 org.springframework.cloud.netflix.eureka.server.EurekaServerConfigBean 服务端相关配置配置名称说明备注eureka.client.register-with-eureka=true是否向注册中心注册自己true=注册，false=不注册eureka.instance.lease-renewal-interval-in-seconds=30续约服务间隔 心跳间隔心跳间隔 30seureka.instance.lease-expiration-duration-in-seconds=90服务失效时间，当90s后没有成功续约，服务失效默认失效时间 90seureka.client.registry-fetch-interval-seconds=30注册信息缓存时间默认30seureka.instance.hostname=nameeureka服务地址域名或者ipeureka.server.enable-self-preservation=false是否开启自我保护 默认trueeureka server自我保护机制: 十五分钟内心跳失败低于85% 出现 自我保护机制eureka.client.serviceUrl.defaultZone指定默认zone(可用区)如果没有为region(区域)配置zone(可用区)那么使用默认zone(可用区) 多个用,分割,带安全校验的格式(http://:@localhost:10000/eureka)eureka.client.availability-zoneszone(可用区)列表region一个对应多个zone(可用区) 一个区域可以有多个可用区eureka.instance.instanceId=${spring.application.name}:${random.int}设定 客户端的明名规则防止冲突和server.port=0结合使用management.context-path设置 上下文前缀如果设置了这个 需要再eurekaclient相应设置/health 和/info端点 否则eureka server端无法获取 客户端的健康情况eureka.instance.statusPageUrlPath=${management.context-path}/info设置info端点如果客户端修改了端点相应信息 必须要设置这个eureka.instance.healthCheckUrlPath=${}/health设置health端点如果客户端修改了端点相应信息 必须要设置这个]]></content>
+    <title><![CDATA[spring boot 监控模块 actuator笔记]]></title>
+    <url>%2Fming%2F1a1c1aa1.html</url>
+    <content type="text"><![CDATA[###actuator 是spring boot 提供的一个监控的工具直接访问 相应端点(rest 接口)端点分为三种:应用配置类/autoconfig 获取应用的自动配置相关参数/beans 获取应用的所有bean/configprops 应用中配置的属性信息 设置enabled = false 关闭这个端点/env 获取应用可以用的环境信息/mappings 返回 mvc控制器 映射关系 也就是接口的信息/info 返回自定义信息 设置 info.app.name=ming info返回ming度量指标类/metrics 返回各类重要的度量指标 内存、线程、垃圾回收信息 通过使用 counterServices 来自定义 信息/metrics/{name} 获取指定的信息/health 获取各类健康的指标 磁盘、数据库链接是否可以用、rabbit、solr、redis是否可用/dump 项目线程信息/trace 返回基本http跟踪 保留100条操作控制类/shutdown 关闭应用 post请求 需要设定开启endpoints.shutdown.enabled: true]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -385,6 +385,28 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[spring cloud 注册中心模块笔记]]></title>
+    <url>%2Fming%2F4c352ff0.html</url>
+    <content type="text"><![CDATA[eureka客户端:服务注册相关配置 注册的中心、心跳、注册信息缓存时间 org.springframework.cloud.netflix.eureka.EurekaClientConfigBean服务实列配置信息 服务实列的名称、地址、健康检查路径 org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBeaneureka服务端:配置相关检测 eureka.server中配置 org.springframework.cloud.netflix.eureka.server.EurekaServerConfigBean 服务端相关配置配置名称说明备注eureka.client.register-with-eureka=true是否向注册中心注册自己true=注册，false=不注册eureka.instance.lease-renewal-interval-in-seconds=30续约服务间隔 心跳间隔心跳间隔 30seureka.instance.lease-expiration-duration-in-seconds=90服务失效时间，当90s后没有成功续约，服务失效默认失效时间 90seureka.client.registry-fetch-interval-seconds=30注册信息缓存时间默认30seureka.instance.hostname=nameeureka服务地址域名或者ipeureka.server.enable-self-preservation=false是否开启自我保护 默认trueeureka server自我保护机制: 十五分钟内心跳失败低于85% 出现 自我保护机制eureka.client.serviceUrl.defaultZone指定默认zone(可用区)如果没有为region(区域)配置zone(可用区)那么使用默认zone(可用区) 多个用,分割,带安全校验的格式(http://:@localhost:10000/eureka)eureka.client.availability-zoneszone(可用区)列表region一个对应多个zone(可用区) 一个区域可以有多个可用区eureka.instance.instanceId=${spring.application.name}:${random.int}设定 客户端的明名规则防止冲突和server.port=0结合使用management.context-path设置 上下文前缀如果设置了这个 需要再eurekaclient相应设置/health 和/info端点 否则eureka server端无法获取 客户端的健康情况eureka.instance.statusPageUrlPath=${management.context-path}/info设置info端点如果客户端修改了端点相应信息 必须要设置这个eureka.instance.healthCheckUrlPath=${}/health设置health端点如果客户端修改了端点相应信息 必须要设置这个]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[spring cloud ribbon 负载均衡笔记]]></title>
+    <url>%2Fming%2F878fb6fb.html</url>
+    <content type="text"><![CDATA[###ribbon负载均衡必须存在12345@Bean@LoadBalanced//通过再restTemplate中添加拦截器 实现负载均衡、重写uri等功能RestTemplate restTemplate()&#123; return new RestTemplate();&#125; ServiceInstanceChooser 服务实例选择choose 根据serviceId选择一个实例 ####LoadBalancerClient extends ServiceInstanceChooser 负载均衡客户端execute 获取负载均衡后的实例、服务id之后 执行请求reconstructURI 根据实例重写uri 获取服务实例后 重写uri ####LoadBalancerAutoConfiguration 自动配置类 必须存在 restTemplate 通过http请求 添加拦截器来实现负载均衡 必须存在 LoadBalancerClient 的实现核心功能:static class LoadBalancerInterceptorConfig通过这个配置类 配置负载均衡拦截器 向restTemplate添加负载均衡功能ribbonInterceptor(LoadBalancerClient loadBalancerClient,LoadBalancerRequestFactory loadBalancerRequestFactory); 创建 负载均衡拦截器restTemplateCustomizer(LoadBalancerInterceptor loadBalancerInterceptor);为restTemplate设置负载均衡拦截器通过执行 负载均衡器的execute方法来选择实例和重写uri、执行请求 static class RetryAutoConfiguration 自动重试机制配置也是通过创建重试拦截器 添加到restTemplate中 来设置自动重试 ####ILoadBalancer获取服务实例不是采用serviceInstancerChooser获取的，而是 netflix ribbon中的ILoadBalancer查看 ribbon实现的LoadBalancerClient的getServer方法 就看得到addServers 添加实例chooseServer 根据负载均衡策略获取一个实例markServerDown 标记实例不可用getReachableServers 获取可用实例getAllServers 获取所有实例里面主要就是维护实例列表和获取列表方法、server类定义了一个服务节点的基本信息实现类： AbstractLoadBalancer implements ILoadBalancer 负载均衡器 抽象类抽象定义:serverGroup：ALL(所有)、STATUS_UP(可用)、STATUS_NOT_UP(不可用)实现的方法：chooseServer 调用接口的chooseServer(null) 选择实例的时候忽略key的条件判断抽象方法:abstract getServerList(serverGroup) 根据实例组 枚举来获取 相应实例列表abstract getLoadBalancerStats() 获取负载均衡 统计数据 NoOpLoadBalancer extends AbstractLoadBalancer BaseLoadBalancer extends AbstractLoadBalancer 实现了基本的负载均衡器定义可用实例集合 allServerList 、upServerList定义负载均衡统计信息 LoadBalancerStats定义 IPing=null 需要注入定义 IPingStrategy iping执行策略 默认使用 BaseLoadBalancer中的SerialPingStrategy 线性执行策略 通过重写IPingStrategy 来使用更高效率的 ping策略定义 IRule 负载均衡处理规则 默认使用RoundRobinRule 线性负载均衡规则启动 ping任务 默认pingIntervalSeconds=10s 使用Timer 执行定时任务 maxTotalPingTimeSeconds=5s最大执行时间实现 ILoadBalancer 基本操作 addServers 、chooseServer、markServerDown、getReachAbleServers、getAllServers定义 其他附加的的信息 例如 IClientConfig、changeListeners、serverStatusListeners等 DynamicServerListLoadBalancer extends AbstractLoadBalancer 动态实例负载均衡器定义 isSecure = false 默认不使用https定义 useTunnel =false 是否使用隧道 估计是是否使用pptp协议隧道的意思定义 ServerList serverListsImpl 实例列表 serverList 有获取初始化服务列表和获取更新的服务列表两个方法 查看实现类 org.springframework.cloud.netflix.ribbon.eureka.EurekaRibbonClientConfiguration#ribbonServerList DiscoveryEnabledNIWSServerList–》DomainExtractingServerList来构建默认的serverList 获取初始化服务方法、更新服务方法 通过#obtainServersViaDiscovery 方法实现 这个是客户端 获取服务端注册信息 转换成本地缓存 serverList方法定义 ServerListFilter filter 过滤器 根据过滤条件过滤实例定义 ServerListUpdater.UpdateAction 服务更新器具体实现定义 ServerListUpdater 服务更新器 通过updateListOfServers 先获取要更新的列表–》根据过滤条件 过滤 –》 添加到serverListServerListUpdater 接口:start 启动服务更新器stop 关闭服务更新器getLastUpdate 获取最后更新时间戳getDurationSinceLastUpdateMs 获取上一次到现在的时间间隔getNumberMissedCycles 获取错过的更新期数getCoreThreads 获取核心线程数PollingServerListUpdater实现类:默认实现 使用定时任务 定时从eureka server 拉取EurekaNotificationServerListUpdater实现类:通过eureka事件监听 来驱动 ZoneAwareLoadBalancer extends DynamicServerListLoadBalancer 区域感知负载均衡器 RibbonClientConfiguration ribbon 客户端配置ribbonClientConfig 设置ribbonClient 配置ribbonRule 设置负载均衡 处理规则 实现ribbonPing 设置负载均衡 ping 方式实现ribbonServerList 设置实例列表static RestClientRibbonConfiguration 配置ribbon的restClient相关参数 ribbonRestClient 根据ribbon相关配置 获取 restClientribbonLoadBalancer 获取负载均衡器ribbonServerListFilter 设置负载均衡服务的过滤器ribbonLoadBalancerContext 负载均衡器上下文retryHandler 重试处理serverIntrospector 实例拦截器ServiceInstance 服务实例存储实例的 serviceId 、host、port、isSecure(是否使用https)、uri、metaData(元数据map)]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[spring boot data jpa 扩充JpsRepository]]></title>
     <url>%2Fming%2F19f1b366.html</url>
     <content type="text"><![CDATA[#####jpa扩充jpaRepository接口的方法1:定义一个接口 继承于 JpaRepository2:定义接口实现类3:定义 接口加载工厂方法4:repository 继承自定义接口5:启动类使用 自定义加载工厂####1:定义扩充方法接口123456789101112131415161718/** * 基于jpa的默认jpaRepository实现自己的repository接口 * NoRepositoryBean 不会创建接口的实例 必须要加这个注解 * * @author ming * @date 2017-08-28 11点 */@NoRepositoryBeanpublic interface BaseRepository&lt;T, ID extends Serializable&gt; extends JpaRepository&lt;T, ID&gt; &#123; /** * 使用原生sql 查询 list列表 * * @author ming * @date 2017-08-29 16点 */ List&lt;T&gt; findListByNativeSql(String sql, Class&lt;T&gt; clzss);&#125; 2:定义这个接口的实现类12345678910111213141516public class BaseRepositoryImpl&lt;T, TD extends Serializable&gt; extends SimpleJpaRepository&lt;T, TD&gt; implements BaseRepository&lt;T, TD&gt; &#123; private final EntityManager entityManager; //父类没有不带参数的构造方法，这里手动构造父类 public BaseRepositoryImpl(Class&lt;T&gt; domainClass, EntityManager entityManager) &#123; super(domainClass, entityManager); this.entityManager = entityManager; &#125; @Override @SuppressWarnings(&quot;unchecked&quot;) public List&lt;T&gt; findListByNativeSql(String sql, Class&lt;T&gt; clzss) &#123; return entityManager.createNativeQuery(sql, clzss).getResultList(); &#125;&#125; 3: 定义加载自定义repository接口工厂12345678910111213141516171819202122232425262728293031323334353637public class BaseRepositoryFactoryBean&lt;R extends JpaRepository&lt;T, ID&gt;, T, ID extends Serializable&gt; extends JpaRepositoryFactoryBean&lt;R, T, ID&gt; &#123; public BaseRepositoryFactoryBean(Class&lt;? extends R&gt; repositoryInterface) &#123; super(repositoryInterface); &#125; @Override protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) &#123; return new BaseRepositoryFactory(entityManager); &#125; //创建一个内部类，该类不用在外部访问 private static class BaseRepositoryFactory&lt;T, ID extends Serializable&gt; extends JpaRepositoryFactory &#123; private final EntityManager em; public BaseRepositoryFactory(EntityManager em) &#123; super(em); this.em = em; &#125; //设置具体的实现类是BaseRepositoryImpl @SuppressWarnings(&quot;unchecked&quot;) @Override protected Object getTargetRepository(RepositoryInformation information) &#123; return new BaseRepositoryImpl&lt;T, ID&gt;((Class&lt;T&gt;) information.getDomainType(), em); &#125; //设置具体的实现类的class @Override protected Class&lt;?&gt; getRepositoryBaseClass(RepositoryMetadata metadata) &#123; return BaseRepositoryImpl.class; &#125; &#125;&#125; 4:repository继承自定义接口123@Repositorypublic interface UserRepository extends BaseRepository&lt;User, Long&gt; &#123;&#125; 5:启动类使用自定义加载工厂12345678910111213141516/** * 启动类 要位于最顶层包 他只会扫描 同级包和子包 * * @author ming * @date 2017-06-17 */@SpringBootApplication(scanBasePackages = &quot;com.ming&quot;, excludeName = &#123;&quot;classpath*:application.yml&quot;, &quot;classpath*:application-aliyun.yml&quot;&#125;)// jpa使用自定义加载工厂@EnableJpaRepositories(repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)public class Start &#123; public static void main(String[] args) &#123; SpringApplication.run(Start.class, args); &#125;&#125; 总结:和之前spring中使用jpa差不多套路 主要是自定义一个加载工厂 有点变化]]></content>
@@ -399,17 +421,6 @@
     <title><![CDATA[spring resourc笔记]]></title>
     <url>%2Fming%2Fd7cd3a26.html</url>
     <content type="text"><![CDATA[##1:resource接口Resource是spring 中加载资源的顶级接口 主要方法有:boolean exists(); 是否存在资源boolean isOpen(); 资源是否打开 是否开启URL getURL(); 返回可抽象成url的资源的URL对象FIle getFile()；返回底层资源的文件流InputStream getInputStream;返回资源的输入流resource接口关系图：WritableResource： 可写资源接口ByteArrayResource:二进制数组表示资源ClassPathResource:类路径下资源FileSystemResource:文件系统中的资源(绝对路径)InputStreamResource：用输入流返回表示资源ServletContextResource: web容器上下文资源UrlResource:能够访问任何能用URL表示的资源(文件系统、http、ftp等 )PathResource:java7.0以上 能够访问任何通过URL、Path、系统文件路径表示的资源spring可以通过资源地址的特殊标识符来访问相应资源如下表 支持Ant风格去描述资源地址1234在项目中 会出现 &apos;classpath:*.xml&apos; 和&apos;classpath*:*.xml&apos; 在：之前有个* 这个意思是在所有的目录下面寻找 举个例子: 一个项目分为 a(web模块)、b(common模块)、core(核心模块)如果不带* 那么只会加载一个模块的配置 其它模块配置就没加载 所以 写的时候 带上* 比较合适 资源加载spring 提供一套加载资源的方法如下图： 通过ResourceLoader来加载Resource有一个getResource(String location) 只支持按照特殊字符自动匹配 resource类型 但是不支持Ant风格 ResourcePatternResolver 扩展ResourceLoader有一个getResources(String locationPattern) 支持按照特殊字符自动匹配、支持Ant匹配资源 PathMatchingResourcePatternResolver 是spring提供的实现类 如果有必要 可以自己实现 (我觉得自己实现的可能性很小、但是不排除坑爹的地方需要自己实现)##总结:1:特殊字符 classpath、file这样的是spring 提供的 其中classpath 最好使用的时候带上* 避免加载不到资源2:Ant风格 其实就是 ‘ ? ‘代表一个任意字符 ‘ * ‘代表匹配文件中的任意多个字符 ‘ ** ‘ 代表匹配多层路径3: Resource 系列可以单独抽出来 当作加载资源的utils来用4: Resource操作文件的时候 尽量使用getInputStream() 因为getFile()不能加载到jar中的资源]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[spring cloud ribbon 负载均衡笔记]]></title>
-    <url>%2Fming%2F878fb6fb.html</url>
-    <content type="text"><![CDATA[###ribbon负载均衡必须存在12345@Bean@LoadBalanced//通过再restTemplate中添加拦截器 实现负载均衡、重写uri等功能RestTemplate restTemplate()&#123; return new RestTemplate();&#125; ServiceInstanceChooser 服务实例选择choose 根据serviceId选择一个实例 ####LoadBalancerClient extends ServiceInstanceChooser 负载均衡客户端execute 获取负载均衡后的实例、服务id之后 执行请求reconstructURI 根据实例重写uri 获取服务实例后 重写uri ####LoadBalancerAutoConfiguration 自动配置类 必须存在 restTemplate 通过http请求 添加拦截器来实现负载均衡 必须存在 LoadBalancerClient 的实现核心功能:static class LoadBalancerInterceptorConfig通过这个配置类 配置负载均衡拦截器 向restTemplate添加负载均衡功能ribbonInterceptor(LoadBalancerClient loadBalancerClient,LoadBalancerRequestFactory loadBalancerRequestFactory); 创建 负载均衡拦截器restTemplateCustomizer(LoadBalancerInterceptor loadBalancerInterceptor);为restTemplate设置负载均衡拦截器通过执行 负载均衡器的execute方法来选择实例和重写uri、执行请求 static class RetryAutoConfiguration 自动重试机制配置也是通过创建重试拦截器 添加到restTemplate中 来设置自动重试 ####ILoadBalancer获取服务实例不是采用serviceInstancerChooser获取的，而是 netflix ribbon中的ILoadBalancer查看 ribbon实现的LoadBalancerClient的getServer方法 就看得到addServers 添加实例chooseServer 根据负载均衡策略获取一个实例markServerDown 标记实例不可用getReachableServers 获取可用实例getAllServers 获取所有实例里面主要就是维护实例列表和获取列表方法、server类定义了一个服务节点的基本信息实现类： AbstractLoadBalancer implements ILoadBalancer 负载均衡器 抽象类抽象定义:serverGroup：ALL(所有)、STATUS_UP(可用)、STATUS_NOT_UP(不可用)实现的方法：chooseServer 调用接口的chooseServer(null) 选择实例的时候忽略key的条件判断抽象方法:abstract getServerList(serverGroup) 根据实例组 枚举来获取 相应实例列表abstract getLoadBalancerStats() 获取负载均衡 统计数据 NoOpLoadBalancer extends AbstractLoadBalancer BaseLoadBalancer extends AbstractLoadBalancer 实现了基本的负载均衡器定义可用实例集合 allServerList 、upServerList定义负载均衡统计信息 LoadBalancerStats定义 IPing=null 需要注入定义 IPingStrategy iping执行策略 默认使用 BaseLoadBalancer中的SerialPingStrategy 线性执行策略 通过重写IPingStrategy 来使用更高效率的 ping策略定义 IRule 负载均衡处理规则 默认使用RoundRobinRule 线性负载均衡规则启动 ping任务 默认pingIntervalSeconds=10s 使用Timer 执行定时任务 maxTotalPingTimeSeconds=5s最大执行时间实现 ILoadBalancer 基本操作 addServers 、chooseServer、markServerDown、getReachAbleServers、getAllServers定义 其他附加的的信息 例如 IClientConfig、changeListeners、serverStatusListeners等 DynamicServerListLoadBalancer extends AbstractLoadBalancer 动态实例负载均衡器定义 isSecure = false 默认不使用https定义 useTunnel =false 是否使用隧道 估计是是否使用pptp协议隧道的意思定义 ServerList serverListsImpl 实例列表 serverList 有获取初始化服务列表和获取更新的服务列表两个方法 查看实现类 org.springframework.cloud.netflix.ribbon.eureka.EurekaRibbonClientConfiguration#ribbonServerList DiscoveryEnabledNIWSServerList–》DomainExtractingServerList来构建默认的serverList 获取初始化服务方法、更新服务方法 通过#obtainServersViaDiscovery 方法实现 这个是客户端 获取服务端注册信息 转换成本地缓存 serverList方法定义 ServerListFilter filter 过滤器 根据过滤条件过滤实例定义 ServerListUpdater.UpdateAction 服务更新器具体实现定义 ServerListUpdater 服务更新器 通过updateListOfServers 先获取要更新的列表–》根据过滤条件 过滤 –》 添加到serverListServerListUpdater 接口:start 启动服务更新器stop 关闭服务更新器getLastUpdate 获取最后更新时间戳getDurationSinceLastUpdateMs 获取上一次到现在的时间间隔getNumberMissedCycles 获取错过的更新期数getCoreThreads 获取核心线程数PollingServerListUpdater实现类:默认实现 使用定时任务 定时从eureka server 拉取EurekaNotificationServerListUpdater实现类:通过eureka事件监听 来驱动 ZoneAwareLoadBalancer extends DynamicServerListLoadBalancer 区域感知负载均衡器 RibbonClientConfiguration ribbon 客户端配置ribbonClientConfig 设置ribbonClient 配置ribbonRule 设置负载均衡 处理规则 实现ribbonPing 设置负载均衡 ping 方式实现ribbonServerList 设置实例列表static RestClientRibbonConfiguration 配置ribbon的restClient相关参数 ribbonRestClient 根据ribbon相关配置 获取 restClientribbonLoadBalancer 获取负载均衡器ribbonServerListFilter 设置负载均衡服务的过滤器ribbonLoadBalancerContext 负载均衡器上下文retryHandler 重试处理serverIntrospector 实例拦截器ServiceInstance 服务实例存储实例的 serviceId 、host、port、isSecure(是否使用https)、uri、metaData(元数据map)]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -462,25 +473,26 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot 自定义mvc MessageConverter 笔记]]></title>
-    <url>%2Fming%2Fde4fca49.html</url>
-    <content type="text"><![CDATA[指定前后端传输数据格式在前后分离项目中 最麻烦的应该就是 前后端工程师对接后端通过添加mvc消息转换器 返回更加符合前端的数据格式这个数据格式 不是说返回的格式 而是 某些类型的数据的处理 例如 date 可以转换成Long类型的时间戳返回直接继承实现即可 如果是继承WebMvcConfigurerAdapter 实现的mvc 相关配置 可以不用管 这样 它自己会添加到转换器链中如果是继承WebMvcConfigurationSupport 那么 需要重写configureMessageConverters() 手动添加到转换器链中1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/** * 返回数数据格式转换器 * * @author ming * @date 2017-11-10 13:57 */public class MessageConverter extends AbstractHttpMessageConverter&lt;Object&gt; &#123; /** * date 转换为 时间戳 * * @author ming * @date 2017-11-10 13:56 */ ValueFilter filter = (obj, s, v) -&gt; &#123; if (v instanceof Date) &#123; return ((Date) v).getTime(); &#125; return v; &#125;; public MessageConverter() &#123; super(MediaType.ALL); &#125; @Override protected boolean supports(Class&lt;?&gt; clazz) &#123; return true; &#125; @Override protected Object readInternal(Class&lt;?&gt; aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException &#123; return null; &#125; @Override public boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType) &#123; return this.supports(clazz) &amp;&amp; this.canWrite(mediaType); &#125; @Override protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException &#123; FileCopyUtils.copy(JSON.toJSONString(o, filter, SerializerFeature.DisableCircularReferenceDetect).getBytes(), httpOutputMessage.getBody()); &#125;&#125; 这个只是返回数据中数据的类型的格式化 如果是要对返回数据格式进行格式化需要利用对ResponseBodyAdvice进行继承 进行控制器增强处理返回数据格式]]></content>
+    <title><![CDATA[guava-basic笔记]]></title>
+    <url>%2Fming%2Fd9ddd520.html</url>
+    <content type="text"><![CDATA[##guava basic 基本工具避免null optional如果是jdk1.8以上直接使用optional 1.8以下需要使用guava basic工具包前置检查 Preconditions方法声明（不包括额外参数）描述检查失败时抛出的异常checkArgument(boolean)检查boolean是否为true，用来检查传递给方法的参数。IllegalArgumentExceptioncheckNotNull(T)检查value是否为null，该方法直接返回value，因此可以内嵌使用checkNotNull。NullPointerExceptioncheckState(boolean)用来检查对象的某些状态。IllegalStateExceptioncheckElementIndex(int index, int size)检查index作为索引值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;size *IndexOutOfBoundsExceptioncheckPositionIndex(int index, int size)检查index作为位置值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;=size *IndexOutOfBoundsExceptioncheckPositionIndexes(int start, int end, int size)检查[start, end]表示的位置范围对某个列表、字符串或数组是否有效*IndexOutOfBoundsExceptionobject方法 Objectsjdk1.7 后提供了相应的方法 可以不用guava提供比较链 ComparisonChain排序 Ordering排序器方法描述natural()对可排序类型做自然排序，如数字按大小，日期按先后排序usingToString()按对象的字符串形式做字典排序[lexicographical ordering]from(Comparator)把给定的Comparator转化为排序器链式调用方法描述reverse()|获取语义相反的排序器nullsFirst()|使用当前排序器，但额外把null值排到最前面。nullsLast()|使用当前排序器，但额外把null值排到最后面。compound(Comparator)|合成另一个比较器，以处理当前排序器中的相等情况。lexicographical()|基于处理类型T的排序器，返回该类型的可迭代对象Iterable的排序器。onResultOf(Function)|对集合中元素调用Function，再按返回值用当前排序器排序。排序器方法描述greatestOf(Iterable iterable, int k)|获取可迭代对象中最大的k个元素。|leastOfisOrdered(Iterable)|判断可迭代对象是否已按排序器排序：允许有排序值相等的元素。|isStrictlyOrderedsortedCopy(Iterable)|判断可迭代对象是否已严格按排序器排序：不允许排序值相等的元素。|immutableSortedCopymin(E, E)|返回两个参数中最小的那个。如果相等，则返回第一个参数。|max(E, E)min(E, E, E, E…)|返回多个参数中最小的那个。如果有超过一个参数都最小，则返回第一个最小的参数。|max(E, E, E, E…)min(Iterable)|返回迭代器中最小的元素。如果可迭代对象中没有元素，则抛出NoSuchElementException。|max(Iterable), min(Iterator), max(Iterator)总结: guava的基本工具类用的多的可能就是 Preconditions 来检查参数了 optional jdk8 已经包含了 比较的方法 也有 或者 jdk8中stream集合提供更加强大的 宝马都有了 还用个毛的guava的自行车]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>guava</tag>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[springboot-thymeleaf模版实现类似jsp的sitemesh]]></title>
+    <url>%2Fming%2F12183fd8.html</url>
+    <content type="text"><![CDATA[####thymeleaf虽然现在大部分项目 更加倾向于前后端分离 但是有时候身为后端工程师 总想手贱写点小东西但是jsp 又比较老 而且需要web容器支撑 spring boot 支持性太差所以还是用spring boot 推荐的thymeleaf可是 jsp中的siteMesh装饰器真的好用 苦于thymeleaf没有这个东西在国外博客看到别人实现了类似功能 特此写这篇笔记 方便后续查阅1:建立layout注解用这个注解标识 那些接口需要被装饰123456789101112131415161718192021222324import java.lang.annotation.*;/** * 样式装饰器 注解 在controller中注解 * * @author ming * @date 2017-08-28 11点 */@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)@Retention(RetentionPolicy.RUNTIME)@Documentedpublic @interface Layout &#123; /** * no layout will be used */ String none = &quot;none&quot;; /** * default layout will be used */ String defaultLayOut = &quot;default&quot;; String value() default defaultLayOut;&#125; 2:建立 thymeleaf 处理拦截器这个拦截器 就是用来根据layout注解处理相关组装页面的123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566/** * thymeleaf样式拦截器 实现类似 jsp的sitemesh 装饰器功能 * * @author ming * @date 2017-08-28 11点 */public class ThymeleafLayoutInterceptor extends HandlerInterceptorAdapter &#123; private static final String DEFAULT_LAYOUT = &quot;layouts/default&quot;; private static final String DEFAULT_VIEW_ATTRIBUTE_NAME = &quot;view&quot;; private String defaultLayout = DEFAULT_LAYOUT; private String viewAttributeName = DEFAULT_VIEW_ATTRIBUTE_NAME; public void setDefaultLayout(String defaultLayout) &#123; Assert.hasLength(defaultLayout, &quot;默认样式不存在!&quot;); this.defaultLayout = defaultLayout; &#125; public void setViewAttributeName(String viewAttributeName) &#123; Assert.hasLength(defaultLayout, &quot;默认样式不存在!&quot;); this.viewAttributeName = viewAttributeName; &#125; @Override public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception &#123; if (modelAndView == null || !modelAndView.hasView()) &#123; return; &#125; String originalViewName = modelAndView.getViewName(); if (isRedirectOrForward(originalViewName)) &#123; return; &#125; String layoutName = getLayoutName(handler); if (Layout.none.equals(layoutName)) &#123; return; &#125; modelAndView.setViewName(layoutName); modelAndView.addObject(this.viewAttributeName, originalViewName); &#125; private boolean isRedirectOrForward(String viewName) &#123; return viewName.startsWith(&quot;redirect:&quot;) || viewName.startsWith(&quot;forward:&quot;); &#125; private String getLayoutName(Object handler) &#123; if (handler instanceof HandlerMethod) &#123; HandlerMethod handlerMethod = (HandlerMethod) handler; Layout layout = getMethodOrTypeAnnotation(handlerMethod); if (layout != null) &#123; return layout.value(); &#125; &#125; return this.defaultLayout; &#125; private Layout getMethodOrTypeAnnotation(HandlerMethod handlerMethod) &#123; Layout layout = handlerMethod.getMethodAnnotation(Layout.class); if (layout == null) &#123; return handlerMethod.getBeanType().getAnnotation(Layout.class); &#125; return layout; &#125;&#125; 3:建立样式装饰页面在项目静态页面路径下 创建 layouts文件夹在文件夹目录下建立 装饰配置html 例如default.html12345678910111213&lt;!DOCTYPE html&gt;&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot; lang=&quot;en&quot;&gt;&lt;head&gt; &lt;meta charset=&quot;utf-8&quot;/&gt; &lt;title&gt;ming thymeleaf site mesh&lt;/title&gt;&lt;/head&gt;&lt;body&gt; &lt;div id=&quot;menu-container&quot;&gt; &lt;div class=&quot;container&quot; th:replace=&quot;$&#123;view&#125; :: content&quot;&gt;加载中。。。。。&lt;/div&gt; &lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 4:在controller中应用layout默认是使用default的 这个看layout实现即可这样 index.html就会嵌入到default.html中 那个th:replace=“{view}”那个位置1234567891011121314151617181920import com.ming.base.annotations.Layout;import org.springframework.stereotype.Controller;import org.springframework.web.bind.annotation.GetMapping;/** * 首页 控制器 * * @author ming * @date 2017-11-08 10:33 */@Controller@Layoutpublic class IndexController &#123; @GetMapping(value = &#123;&quot;&quot;, &quot;/&quot;, &quot;/index&quot;&#125;) public String index() &#123; return &quot;index&quot;; &#125;&#125; ####总结：thymeleaf 总的来说 还行 毕竟简单粗暴 但是有几个比较坑的地方 1:必须是标在的xml结构的html 也就是必须符合xml规范 2：由于技术用的人可能不太多 编辑器支持不是很好 不能做到 jsp 那样可以直接追踪到controller中]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
         <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[java1.8笔记]]></title>
-    <url>%2Fming%2F3e07ee0e.html</url>
-    <content type="text"><![CDATA[####最近一直在看 jdk8的书 觉得jdk8和之前的jdk变化还是挺大####主要多了如下一些东西####1:lambda表达式支持(方法引用 )jdk8增加lambda表达式的支持 可以通过‘-&gt;’ 来传递代码片段和匿名方法很像 但是有一点细微区别java.util.function包下 提供很多常用的function接口方法引用其实也是lambda表达式的一种语法糖####2:stream集合这种集合 主要是为了计算 一个是有多种操作符可以很轻松的实现一些数据操作、过滤、扁平化、收集等任务如果条件合适 很方便的实现并行计算 转换成并行stream集合####3:新的future实现(completableFuture)新增了一中新的future实现 相应的工具类中 提供很工厂方法去方便将普通任务包装成异步执行的 future任务 可以自定义线程池之类的 来根据不同的环境优化####4:新的time包jdk8之前的时间包比较混乱 例如 java.util.Date java.sql.Date 各有各的地方 看起来贼混乱 jdk8 从新整理的time相关的类、包 提供对之前的java.util.Date这样的互相转换方法####5:interface default方法java的提供的方法是一直演进的 一般像之前的方法提供兼容性都是从代码上进行兼容 一个是比较麻烦 二个是有点混乱 现在jdk8提供接口中default方法 可以很方便的去兼容之前的代码 但是这个dufault方法 是很麻烦的 各种实现、继承之间的规则变的比较复杂了 相当于换了一种方式实现了多继承 也会遇到其它支持多继承语言中的坑 例如 菱形继承####6: Optional这个是学习scala中的optional 可以通过它来实现优雅的防御性编程从设计上来说 是否用optional包装 可以用来表明这个值是否可以为nulloptional也提供map、flatmap、filter几种操作符 功能类似stream中的用法 其中flatmap用的比较多####7:优化自定义注解主要是可重复注解#####总结:工作中使用上jdk8的代码 看起来还是蛮骚的 就是出问题 排查难度会上升一点 特别是lambda中出现问题 stream在做一些对集合中数据进行处理的时候 非常方便 性能也强 如果条件允许还可以很方便的使用并行stream集合、但是直接用并行流的话 效率比不上自己优化过线程池的多线程解决方案]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
       </tags>
   </entry>
   <entry>
@@ -518,6 +530,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[java1.8笔记]]></title>
+    <url>%2Fming%2F3e07ee0e.html</url>
+    <content type="text"><![CDATA[####最近一直在看 jdk8的书 觉得jdk8和之前的jdk变化还是挺大####主要多了如下一些东西####1:lambda表达式支持(方法引用 )jdk8增加lambda表达式的支持 可以通过‘-&gt;’ 来传递代码片段和匿名方法很像 但是有一点细微区别java.util.function包下 提供很多常用的function接口方法引用其实也是lambda表达式的一种语法糖####2:stream集合这种集合 主要是为了计算 一个是有多种操作符可以很轻松的实现一些数据操作、过滤、扁平化、收集等任务如果条件合适 很方便的实现并行计算 转换成并行stream集合####3:新的future实现(completableFuture)新增了一中新的future实现 相应的工具类中 提供很工厂方法去方便将普通任务包装成异步执行的 future任务 可以自定义线程池之类的 来根据不同的环境优化####4:新的time包jdk8之前的时间包比较混乱 例如 java.util.Date java.sql.Date 各有各的地方 看起来贼混乱 jdk8 从新整理的time相关的类、包 提供对之前的java.util.Date这样的互相转换方法####5:interface default方法java的提供的方法是一直演进的 一般像之前的方法提供兼容性都是从代码上进行兼容 一个是比较麻烦 二个是有点混乱 现在jdk8提供接口中default方法 可以很方便的去兼容之前的代码 但是这个dufault方法 是很麻烦的 各种实现、继承之间的规则变的比较复杂了 相当于换了一种方式实现了多继承 也会遇到其它支持多继承语言中的坑 例如 菱形继承####6: Optional这个是学习scala中的optional 可以通过它来实现优雅的防御性编程从设计上来说 是否用optional包装 可以用来表明这个值是否可以为nulloptional也提供map、flatmap、filter几种操作符 功能类似stream中的用法 其中flatmap用的比较多####7:优化自定义注解主要是可重复注解#####总结:工作中使用上jdk8的代码 看起来还是蛮骚的 就是出问题 排查难度会上升一点 特别是lambda中出现问题 stream在做一些对集合中数据进行处理的时候 非常方便 性能也强 如果条件允许还可以很方便的使用并行stream集合、但是直接用并行流的话 效率比不上自己优化过线程池的多线程解决方案]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[java操控excel相关(poi,jxl)笔记]]></title>
     <url>%2Fming%2Fd3259856.html</url>
     <content type="text"><![CDATA[poi和jxl介绍poi和jxl操作excel不同点poi读写excel实例jxl读写excel实例poi读写word实例poi和jxl选择1:poi和jxl介绍1.1:poipoi是对所有office资源进行读写的一套工具包、属于apache开源组织。 1.2:jxljxl只能对excel进行操作的一套工具包。 2:两者操作excel不同点poi和jxl都是封装了对excel操作方法; poi是把整个文件的属性都封装在HSSFWorkbook 中; 通过HSSFWorkbook来操作单个工作薄。然后通过工作薄来操作行; 在通过行来操控单元格。这样一级一级的分拆下来; HSSFWorkbook----&gt;HSSFSheet-----&gt;HSSFRow----&gt;HSSFCell; 由于是基于HSSFWorkbook对象一步步创建起来的。所以不用把创建好的单元格添加进这个对象中、 如果需要对部分表格进行设置样式什么的。就可以创立HSSFCellStyle对象来进行设定样式; jxl是把整个文件封装在Workbook相关对象中; 通过Workbook去创建sheet工作薄;但是和poi不一样的地方是 jxl是通过向sheet中使用label(单元格)来进行读取写入; Workbook-----&gt;sheet------&gt;label ; jxl是先创建一个工作区域、然后区创立单元格、单元格包含这个单元格的位置、内容等信息;然后把这个单元格加入工作区; ###3：poi读写excel文件的实例(代码中fileURL是你存放路径)123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051//写入public void poiWriteExcel() &#123; //创建excel工作薄 HSSFWorkbook hssfWorkbook = new HSSFWorkbook(); //在里面创建一个sheet 名字为工作薄1 HSSFSheet hssfSheet = hssfWorkbook.createSheet(&quot;工作薄1&quot;); //在索引为o的位置创建行 也就是第一行 HSSFRow oneRow = hssfSheet.createRow(0); //创建红色字体 HSSFFont font = hssfWorkbook.createFont(); font.setColor(HSSFFont.COLOR_RED); //创建格式、 HSSFCellStyle cellStyle = hssfWorkbook.createCellStyle(); cellStyle.setFont(font); //在第o行创建第一个单元格 HSSFCell cell = oneRow.createCell(0); //使用单元格格式 cell.setCellStyle(cellStyle); //在第一个单元格输入内容 cell.setCellValue(&quot;xu&quot;); //创建一个第十行 HSSFRow tenRow = hssfSheet.createRow(9); //创建输出流 try &#123; FileOutputStream fileOutputStream = new FileOutputStream(fileURL + &quot;xianyu.xls&quot;); //存储工作博 hssfWorkbook.write(fileOutputStream); fileOutputStream.flush(); fileOutputStream.close(); &#125; catch (IOException e) &#123; System.out.println(&quot;无法写入&quot;); e.printStackTrace(); &#125; &#125;//读取public void poiReadExcel() &#123; HSSFWorkbook hssfWorkBook = null; try &#123; hssfWorkBook = new HSSFWorkbook(new FileInputStream(fileURL + &quot;xianyu.xls&quot;)); //获取第一个工作薄 HSSFSheet hssfSheet = hssfWorkBook.getSheetAt(0); //获取第一行 HSSFRow row = hssfSheet.getRow(0); System.out.println(row.getCell(0)); &#125; catch (IOException e) &#123; System.out.println(&quot;无法读取&quot;); e.printStackTrace(); &#125; &#125; ###4:jxl读写excel123456789101112131415161718192021222324252627282930313233343536//写入public void jxlWriteExcel() &#123; try &#123; //创建xls WritableWorkbook wwb = Workbook.createWorkbook( new FileOutputStream(fileURL + &quot;xianyujxl.xls&quot;)); //添加工作薄 WritableSheet sheet = wwb.createSheet(&quot;工作薄1&quot;, 0); //添加单元格 Label(x,y,z) x=列 y=行 z=内容 Label label = new Label(0, 0, &quot;xu&quot;); //添加进工作薄 sheet.addCell(label); // 写数据 wwb.write(); wwb.close(); &#125; catch (IOException e) &#123; System.out.println(&quot;写入失败&quot;); e.printStackTrace(); &#125; catch (WriteException e) &#123; e.printStackTrace(); &#125; &#125;//读取public void jxlReadExcel() &#123; try &#123; //获取excel Workbook wb = Workbook.getWorkbook( new FileInputStream(fileURL + &quot;xianyujxl.xls&quot;)); //获取sheet工作薄 Sheet sheet = wb.getSheet(0); System.out.println(sheet.getCell(0, 0).getContents()); &#125; catch (IOException | BiffException e) &#123; e.printStackTrace(); &#125; &#125; ###5:poi读写word12345678910111213141516171819202122232425262728293031//写入public void poiWriteWord() &#123; try &#123; //创建word文件 XWPFDocument xwpfDocument = new XWPFDocument(); //新建段落 XWPFParagraph xwpfP = xwpfDocument.createParagraph(); //创建文本 XWPFRun xwpfR = xwpfP.createRun(); xwpfR.setText(&quot;xu&quot;); xwpfDocument.write(new FileOutputStream(fileURL + &quot;xianyu.doc&quot;)); &#125; catch (IOException e) &#123; System.out.println(&quot;无法写入&quot;); e.printStackTrace(); &#125; &#125;//读取public void poiReadWord() &#123; //获取doc对象 XWPFDocument xwpfDocument; try &#123; xwpfDocument = new XWPFDocument(new FileInputStream(fileURL + &quot;xianyu.doc&quot;)); //获取段落并且遍历 xwpfDocument.getParagraphs().forEach(xwpfParagraph -&gt; System.out.println(xwpfParagraph.getText())); &#125; catch (IOException e) &#123; System.out.println(&quot;无法读取&quot;); e.printStackTrace(); &#125; &#125; 6：poi和jxl选择不用想了、肯定poi 因为jxl很久不更新了。poi现在是apache的项目、前景好、文档全]]></content>
@@ -527,18 +550,6 @@
       <tags>
         <tag>tools</tag>
         <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[spring boot (一)笔记]]></title>
-    <url>%2Fming%2F1d0e6366.html</url>
-    <content type="text"><![CDATA[##步骤1:安装spring boot cli2:利用spring boot cli初始化项目3:写一个helloworld控制器##1:安装spring boot clispring boot cli是spring boot的一个操作工具 可以直接利用这个工具去生成 管理spribg boot项目在这里去寻找合适的版本下载解压 添加到系统路径http://repo.spring.io/release/org/springframework/boot/spring-boot-cli/安装方式有两种1:类似jdk安装方法 下载spring boot cli 解压包 将目录下的bin添加到系统路径中2:利用gvm(Groovy的工具去管理):安装gvm 之后12gvm install springbootspring --version ##2:利用spring boot cli 初始化项目spring boot cli 初始化项目 是从网络上下载一个基本demo来初始化的1spring init -dweb,data-jpa,h2,thymeleaf 会初始化spring mvc jpa h2 等 组成一个基本的spring +mvc+jpa+h2数据库的一个基本项目 默认是maven 如果需要gradle来进行项目管理 在语句后加上 –build gradle即可 ##3:hellwworld控制器就是写个spring mvc的控制器12345678@RestControllerpublic class TestController &#123; @RequestMapping(&quot;/test&quot;) public String test()&#123; return &quot;test springboot&quot;; &#125;&#125; 控制器访问地址为:http://localhost:8080/test ###总结:spring boot 就是spring 等相关框架一个快速版 默认设置已经够用 自定义配置覆盖默认配置]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>spring</tag>
       </tags>
   </entry>
   <entry>
@@ -553,9 +564,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot (三)笔记]]></title>
-    <url>%2Fming%2F241784d.html</url>
-    <content type="text"><![CDATA[###spring boot中 在某些配置的时候肯定是需要自定义配置的 spring boot 默认显示配置覆盖默认配置 所以只需要符合spring boot的配置环境###能够覆盖默认配置的配置位置1:命令行参数(如直接命令行启动某个jar 后面附带的命令)2:jndi配置3:jvm配置4:操作系统环境变量5:随机生成带random.*的属性(并不是很明白 以后看懂了 在更新)6:应用程序的application.properties 或者 application.yml7:通过@PropertySource注解标注的bean######按照顺序覆盖 优先级从1-7 依次降低 就是说 当命令行指定了某个配置 后面在怎么写 也无法改变 因为 命令行的参数优先级最高######如果 有的配置上述几个位置没有配置则采用spring boot 的默认配置###application文件位置1:外置 应用程序的运行目录的/config目录2:外置 应用程序运行目录3:内置 jar或者war的/config目录内4:内置 jar或者war的根目录######也是从1-4 优先级依次降低、yml配置 覆盖 properties中的配置###在程序中使用配置中的参数@ConfigurationProperties这个注解可以去配置中寻找某些前缀的参数如 配置中有12my.name=xianyumy.sex=boy 那么可以在某个bean中注入 通过setter注入···@ConfigurationProperties(prefix=”my”)public class myProperties{ private String name;private String sex;setter.getter 。。。。}···]]></content>
+    <title><![CDATA[spring boot (一)笔记]]></title>
+    <url>%2Fming%2F1d0e6366.html</url>
+    <content type="text"><![CDATA[##步骤1:安装spring boot cli2:利用spring boot cli初始化项目3:写一个helloworld控制器##1:安装spring boot clispring boot cli是spring boot的一个操作工具 可以直接利用这个工具去生成 管理spribg boot项目在这里去寻找合适的版本下载解压 添加到系统路径http://repo.spring.io/release/org/springframework/boot/spring-boot-cli/安装方式有两种1:类似jdk安装方法 下载spring boot cli 解压包 将目录下的bin添加到系统路径中2:利用gvm(Groovy的工具去管理):安装gvm 之后12gvm install springbootspring --version ##2:利用spring boot cli 初始化项目spring boot cli 初始化项目 是从网络上下载一个基本demo来初始化的1spring init -dweb,data-jpa,h2,thymeleaf 会初始化spring mvc jpa h2 等 组成一个基本的spring +mvc+jpa+h2数据库的一个基本项目 默认是maven 如果需要gradle来进行项目管理 在语句后加上 –build gradle即可 ##3:hellwworld控制器就是写个spring mvc的控制器12345678@RestControllerpublic class TestController &#123; @RequestMapping(&quot;/test&quot;) public String test()&#123; return &quot;test springboot&quot;; &#125;&#125; 控制器访问地址为:http://localhost:8080/test ###总结:spring boot 就是spring 等相关框架一个快速版 默认设置已经够用 自定义配置覆盖默认配置]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -577,6 +588,18 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[spring boot (三)笔记]]></title>
+    <url>%2Fming%2F241784d.html</url>
+    <content type="text"><![CDATA[###spring boot中 在某些配置的时候肯定是需要自定义配置的 spring boot 默认显示配置覆盖默认配置 所以只需要符合spring boot的配置环境###能够覆盖默认配置的配置位置1:命令行参数(如直接命令行启动某个jar 后面附带的命令)2:jndi配置3:jvm配置4:操作系统环境变量5:随机生成带random.*的属性(并不是很明白 以后看懂了 在更新)6:应用程序的application.properties 或者 application.yml7:通过@PropertySource注解标注的bean######按照顺序覆盖 优先级从1-7 依次降低 就是说 当命令行指定了某个配置 后面在怎么写 也无法改变 因为 命令行的参数优先级最高######如果 有的配置上述几个位置没有配置则采用spring boot 的默认配置###application文件位置1:外置 应用程序的运行目录的/config目录2:外置 应用程序运行目录3:内置 jar或者war的/config目录内4:内置 jar或者war的根目录######也是从1-4 优先级依次降低、yml配置 覆盖 properties中的配置###在程序中使用配置中的参数@ConfigurationProperties这个注解可以去配置中寻找某些前缀的参数如 配置中有12my.name=xianyumy.sex=boy 那么可以在某个bean中注入 通过setter注入···@ConfigurationProperties(prefix=”my”)public class myProperties{ private String name;private String sex;setter.getter 。。。。}···]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[git glow 笔记]]></title>
     <url>%2Fming%2Fc67df015.html</url>
     <content type="text"><![CDATA[###gitflow 代码提交规范如下图：master:线上分支 这个分支 就是线上代码所在的分支 每个点就是软件的一个版本 打上tagdevelop:当代码在开发分支上开发完毕经过基本测试 即可推送合并到develop上 这个是一个比较稳定的一个版本了 合并到develop分支上的功能 代表这个是必须上线的一个功能feature:开发分支 这个可以开多个 多个项目组 并行开发 在合适的时机 合并到develop 或者 新的feature分支 进行功能合并release:测试分支 develop上的代码 分开一个release分支进行测试 当测试阶段性完成 就合并到develop分支 当整个测试完成 就将测试完成的代码合并到develop 和master分支上hotfixes:线上bug修复分支 主要处理 master 也就是线上的bug 开的临时分支 当bug处理完成 则将代码推送到develop和master分支这几种分支中 develop占用主要地位 几乎所有的分支度基于这个分支 不管是 feature、release、hotfixes、master 度与develop分支有关]]></content>
@@ -585,18 +608,6 @@
       </categories>
       <tags>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[web service笔记]]></title>
-    <url>%2Fming%2Fa451f549.html</url>
-    <content type="text"><![CDATA[##web service 三要素 soap、wsdl、uddi###soap(Simple Object Access Protocol) 简单对象访问协议soap是一种对象访问通信协议 基于xml的协议 用来访问结构化和固化的信息主要特点 制定程序之间的通信、消息格式; 独立平台、语言;基于xml;允许绕过防火墙;w3c标准######soap消息是一个xml文档:必须包含Envelope元素 (标识此xml文档为soap消息)必须包含Body元素(包含所有调用和响应的信息)可选Header元素(头部信息)、Fault(处理此消息发生的错误信息)语法规则:soap消息必须是xmlsoap消息必须使用soap Envelope、soap Encoding 命名空间来保证规范soap消息不能包含DTDsoap不能包含xml处理指令123456789&lt;?xml version=&quot;1.0&quot;&gt;&lt;soap:Envelopexmlns:soap=&quot;http://www.w3.org/2001/12/soap-envelope&quot;soap:encodingStyle=&quot;http://www.w3.org/2001/12/soap-encoding&quot;&gt;&lt;soap:Body&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt; soap消息的xml文档 一般包含Header、Body、Fault等三个元素 具体直接查询w3c文档 ###wsdl(Web Services Description Language )网络服务描述语言wsdl也是xml文档 用来描述网络服务 不是w3c标准主要元素:portType：web service 执行的操作message：web service 使用消息types：web service使用数据类型binding：web service 使用的通信协议 ######portType端口提供四种类型客户端主动One-way:接受消息 不返回Request-response：此服务接受请求返回响应服务端主动Solicit-response:此服务发送请求等待响应Notiication：此服务发送一个请求 不等待响应 ######Request-response类型1234567891011121314&lt;message name=&quot;myRequest“&gt; &lt;part name=&quot;param&quot; type=”xs:string&quot;/&gt;&lt;/message&gt;&lt;message name=&quot;myResponse&quot;&gt; &lt;part name=&quot;value&quot; type=&quot;xs:string&quot;/&gt;&lt;/message&gt;&lt;portType name=&quot;myService&quot;&gt; &lt;operation name=&quot;myRequestResponse&gt; &lt;input message=&quot;myRequest&quot;/&gt; &lt;output message=&quot;myResponse&quot;/&gt; &lt;/operation&gt;&lt;/portType&gt; 上述例子 一个服务myService 定义了一个名字是myRequestResponse的操作myRequestResponse接受一个myRequest的输入消息，返回一个myResponse消息 ######binding（并不是特别明白 只知道是seb service 具体细节的 以后明白了在补上) ###uddi(Universal Description, Discovery and Integration) 描述、发现、集成服务看的不是特别明白 感觉就是一个列表 这个列表 里面存在大量的wsdl等相关信息 用来提供给其他调用方看的 ##总结:web service 三要素 soap消息、wsdl、uddi soap定义了消息的格式xml文档、wsdl定义了服务调用的xml文档、uddi整理归纳wsdl等相关文档]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>web service</tag>
       </tags>
   </entry>
   <entry>
@@ -609,6 +620,18 @@
       <tags>
         <tag>java</tag>
         <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[web service笔记]]></title>
+    <url>%2Fming%2Fa451f549.html</url>
+    <content type="text"><![CDATA[##web service 三要素 soap、wsdl、uddi###soap(Simple Object Access Protocol) 简单对象访问协议soap是一种对象访问通信协议 基于xml的协议 用来访问结构化和固化的信息主要特点 制定程序之间的通信、消息格式; 独立平台、语言;基于xml;允许绕过防火墙;w3c标准######soap消息是一个xml文档:必须包含Envelope元素 (标识此xml文档为soap消息)必须包含Body元素(包含所有调用和响应的信息)可选Header元素(头部信息)、Fault(处理此消息发生的错误信息)语法规则:soap消息必须是xmlsoap消息必须使用soap Envelope、soap Encoding 命名空间来保证规范soap消息不能包含DTDsoap不能包含xml处理指令123456789&lt;?xml version=&quot;1.0&quot;&gt;&lt;soap:Envelopexmlns:soap=&quot;http://www.w3.org/2001/12/soap-envelope&quot;soap:encodingStyle=&quot;http://www.w3.org/2001/12/soap-encoding&quot;&gt;&lt;soap:Body&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt; soap消息的xml文档 一般包含Header、Body、Fault等三个元素 具体直接查询w3c文档 ###wsdl(Web Services Description Language )网络服务描述语言wsdl也是xml文档 用来描述网络服务 不是w3c标准主要元素:portType：web service 执行的操作message：web service 使用消息types：web service使用数据类型binding：web service 使用的通信协议 ######portType端口提供四种类型客户端主动One-way:接受消息 不返回Request-response：此服务接受请求返回响应服务端主动Solicit-response:此服务发送请求等待响应Notiication：此服务发送一个请求 不等待响应 ######Request-response类型1234567891011121314&lt;message name=&quot;myRequest“&gt; &lt;part name=&quot;param&quot; type=”xs:string&quot;/&gt;&lt;/message&gt;&lt;message name=&quot;myResponse&quot;&gt; &lt;part name=&quot;value&quot; type=&quot;xs:string&quot;/&gt;&lt;/message&gt;&lt;portType name=&quot;myService&quot;&gt; &lt;operation name=&quot;myRequestResponse&gt; &lt;input message=&quot;myRequest&quot;/&gt; &lt;output message=&quot;myResponse&quot;/&gt; &lt;/operation&gt;&lt;/portType&gt; 上述例子 一个服务myService 定义了一个名字是myRequestResponse的操作myRequestResponse接受一个myRequest的输入消息，返回一个myResponse消息 ######binding（并不是特别明白 只知道是seb service 具体细节的 以后明白了在补上) ###uddi(Universal Description, Discovery and Integration) 描述、发现、集成服务看的不是特别明白 感觉就是一个列表 这个列表 里面存在大量的wsdl等相关信息 用来提供给其他调用方看的 ##总结:web service 三要素 soap消息、wsdl、uddi soap定义了消息的格式xml文档、wsdl定义了服务调用的xml文档、uddi整理归纳wsdl等相关文档]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>web service</tag>
       </tags>
   </entry>
   <entry>
@@ -625,19 +648,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[xml和json的区别及其使用范围笔记]]></title>
-    <url>%2Fming%2Fd61f2d28.html</url>
-    <content type="text"><![CDATA[###老是有人问我xml和json区别、 特写此篇记录来列出xml和json区别，懒得每次都解释、网络中很多博客都没提到关键的区别点 自述性、规范性;其他什么解析方法、啥啥的都不是最重要的最主要的就是xml能够由很强的自述性、规范性###相同点:1231:都是一种数据传输格式2:都和平台没有关系 xml和json都是对平台没有限制 只需要按照他们的规则进行解析即可3:只要是能序列化和反序列化的数据都能传输 例如图片完全可以转成二进制或者16进制字符串传输然后反序列化成图片 （不推荐这样玩 容易损坏） ###不同点:123451:xml具有自述性 就是可以包含自我描述的元数据 例如&lt;name type=&quot;string&quot;&gt;xianyu&lt;/name&gt;这个就描述了name的值是xianyu类型是stringjson就无法这样直观的表述 这样就用来写配置及其方便、准确 用json也能写配置只要你不怕看的头疼2:xml具有很强的规范性 你可以自己制定xml schema 来制定规范 json则没有这样的规范 只能间接的通过额外的json来为json定义格式 不方便而且麻烦 ##如何选择121:当需要传输具有元数据的数据的时候就肯定要用xml，2:当需要节省流量、简化数据解析的时候要用json ##解析难度12345xml有sax和dom两种解析方式 都差不多 sax是把xml模拟成一个流然后对其中需要的字段进行解析 这种方法不能修改dom是按照xml的元素结构进行解析 一般都是直接把xml加载到内存进行分析 可以修改 json就是把它当作字符串进行基于json格式的解析 ##总结: ###xml和json都由各自适用的范围不能说那个替代那个 json在做数据传输方面比xml好一点 毕竟没xml冗杂，但是在传输那种能需要自述性、和严格规范的数据的时候xml是无可替代的 在做webservice的时候 两种都会用]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>xml</tag>
-        <tag>json</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[重写eq 必须重写hashcode的必要性]]></title>
     <url>%2Fming%2F605805fa.html</url>
     <content type="text"><![CDATA[重写eq 必须重写hashCode的原因之前唆代码 每次都单独重写 eq 方法 hashCode从来不重写 这次遇到一个 Set的内容比较 一直返回的不是理想的结果查看源码 发现 其实 最开始是直接使用 == 方式比较 到最后才会用eq方法比较然后顺手写了一波实例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116/** * @author ming * @date 2017-10-31 11:30 */public class Test &#123; @org.junit.Test public void test() &#123; Set&lt;A&gt; aSet1 = new HashSet&lt;&gt;(); aSet1.add(new A(&quot;a&quot;, 1)); Set&lt;A&gt; aSet2 = new HashSet&lt;&gt;(); aSet2.add(new A(&quot;a&quot;, 1)); System.out.println(&quot;未重写 eq 和hashCode---------&quot;); System.out.println(aSet1.equals(aSet2)); System.out.println(); Set&lt;B&gt; bSet1 = new HashSet&lt;&gt;(); bSet1.add(new B(&quot;b&quot;, 1)); Set&lt;B&gt; bSet2 = new HashSet&lt;&gt;(); bSet2.add(new B(&quot;b&quot;, 1)); System.out.println(&quot;重写 eq ----------&quot;); System.out.println(bSet1.equals(bSet2)); System.out.println(); Set&lt;C&gt; cSet1 = new HashSet&lt;&gt;(); cSet1.add(new C(&quot;c&quot;, 1)); Set&lt;C&gt; cSet2 = new HashSet&lt;&gt;(); cSet2.add(new C(&quot;c&quot;, 1)); System.out.println(&quot;重写 hashCode ------&quot;); System.out.println(cSet1.equals(cSet2)); System.out.println(); Set&lt;D&gt; dSet1 = new HashSet&lt;&gt;(); dSet1.add(new D(&quot;d&quot;, 1)); Set&lt;D&gt; dSet2 = new HashSet&lt;&gt;(); dSet2.add(new D(&quot;d&quot;, 1)); System.out.println(&quot;重写 eq 和hashCode----&quot;); System.out.println(dSet1.equals(dSet2)); &#125;&#125;@Getter@Setter@NoArgsConstructor@AllArgsConstructorclass A &#123; private String aName; private Integer aNum;&#125;@Getter@Setter@NoArgsConstructor@AllArgsConstructorclass B &#123; private String bName; private Integer bNum; @Override public boolean equals(Object o) &#123; if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; B b = (B) o; if (bName != null ? !bName.equals(b.bName) : b.bName != null) return false; return bNum != null ? bNum.equals(b.bNum) : b.bNum == null; &#125;&#125;@Getter@Setter@NoArgsConstructor@AllArgsConstructorclass C &#123; private String cName; private Integer cNum; @Override public int hashCode() &#123; int result = cName != null ? cName.hashCode() : 0; result = 31 * result + (cNum != null ? cNum.hashCode() : 0); return result; &#125;&#125;@Getter@Setter@NoArgsConstructor@AllArgsConstructorclass D &#123; private String dName; private Integer dNum; @Override public boolean equals(Object o) &#123; if (this == o) return true; if (o == null || getClass() != o.getClass()) return false; D d = (D) o; if (dName != null ? !dName.equals(d.dName) : d.dName != null) return false; return dNum != null ? dNum.equals(d.dNum) : d.dNum == null; &#125; @Override public int hashCode() &#123; int result = dName != null ? dName.hashCode() : 0; result = 31 * result + (dNum != null ? dNum.hashCode() : 0); return result; &#125;&#125; 此实例看出 对于比较对象是否相同来说 单纯的重写 eq或者 hashCode都是没卵用很多方法底层是包含 == 和eq方法比较的 除非非常熟悉 只用单独写eq或者HashCode否则 都应该重写 避免达不到预期结果]]></content>
@@ -649,15 +659,14 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[jsp 自定义标签]]></title>
-    <url>%2Fming%2Fdd01bc67.html</url>
-    <content type="text"><![CDATA[###在做jsp项目中除了一些框架的标签如spring、jstl、shiro等标签 可能还需要自定义一些常用标签 如page等###自定义jsp标签有两种方式1:java bean+ tld1通过tld来调用java中的代码 这种写法 参考http://www.runoob.com/jsp/jsp-custom-tags.html 2:tag文件123456789101112131415161718直接定义一个后缀为tag的文件 这种方式比 java bean+tld 简单方便 容易使用和定义tag文件头 如下设置 其他按照jsp使用即可 可以导入其他标签库、java代码、等//定义tag的编码集合&lt;%@tag pageEncoding=&quot;UTF-8&quot; %&gt;//定义一个名字为str 类型为string的必须元素&lt;%@attribute name=&quot;str&quot; required=&quot;true&quot; type=&quot;java.lang.String&quot; %&gt;//定义一个名字为flag 类型为boolean 的非必须元素&lt;%@attribute name=&quot;flag&quot; required=&quot;false&quot; type=&quot;java.lang.Boolean&quot; %&gt;。。。。。省略业务代码 这里就跟写jsp一样调用:在jsp头部加上这个标签所在的文件夹 是文件夹不是单个标签 &lt;%--自定义的标签位置--%&gt;&lt;%@taglib prefix=&quot;tags&quot; tagdir=&quot;/WEB-INF/tags&quot; %&gt;然后使用即可 例如实例代码文件名为 test.tag &lt;tags:test str=&quot;test&quot;&gt;&lt;/tags:test&gt;]]></content>
+    <title><![CDATA[中文写java]]></title>
+    <url>%2Fming%2Fe8ebc393.html</url>
+    <content type="text"><![CDATA[###偶然间发现java底层是采用utf16做编码集的 突发奇想 既然是utf16做底层编码 拿起不是可以拿非英文开发 毕竟编译器可以识别中文那么肯定也可以编译中文###代码尝试：12345678910111213class 垃圾&#123; public void 一个垃圾方法()&#123; System.out.println(&quot;真的垃圾&quot;); &#125; public void 两个垃圾方法(String 垃圾参数)&#123; System.out.println(&quot;第二个垃圾方法的垃圾参数:&quot;+垃圾参数); &#125; public static void main(String[] args) &#123; 垃圾 垃圾的实例=new 垃圾(); 垃圾的实例.一个垃圾方法(); 垃圾的实例.两个垃圾方法(&quot;啦等等单打独斗&quot;); &#125;&#125; ####总结:java真的贼几把神奇、这样看来几乎可以用任何utf16包含的语言去编写java了]]></content>
       <categories>
-        <category>笔记</category>
+        <category>骚想法</category>
       </categories>
       <tags>
         <tag>java基础</tag>
-        <tag>jsp</tag>
       </tags>
   </entry>
   <entry>
@@ -695,17 +704,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[docker 运行秒退出解决办法]]></title>
-    <url>%2Fming%2F52ab603.html</url>
-    <content type="text"><![CDATA[###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器解决方法:在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如mysql这样的 需要让他在前台运行 mysqld.service]]></content>
-      <categories>
-        <category>坑</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[接口签名笔记]]></title>
     <url>%2Fming%2F5e68a67b.html</url>
     <content type="text"><![CDATA[####由于开放型的短信接口受到不明来源的恶意访问 大佬们紧急对整个项目的接口进行加密原理:密钥+参数生成 md5 签名 客户端保存好密钥即可 之前对接苏宁易购的那个支付平台的时候 也是选择这种方式进行访问加密1:生成密钥这个随机定义 例如我选择使用 appId + salt 生成md5 截取前12位作为 指定app应用的密钥 如果发生泄漏 可以通过改变salt 来生成新的密钥2:客户端密钥 存储客户端 拿到密钥不能明文存储 例如 12位 可以拆分三段 然后分别进行偏移 这样如果别人要识别 必须反编译源码 并且读懂相关规则3:签名规则除开签名以外所有参数 按照排序规则排序 然后拼接上密钥 通过md5 或者类似的算法生成md5签名4：服务端验证规则除开签名 也按照客户端同样的排序规则排序 拼接密钥 通过相同的算法生成服务端签名 通过比较客户端签名 和服务端签名 来验证服务是否可靠、生成签名 方法示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100#!/usr/bin/env groovy/** groovy 生成md5 签名的算法 * * @author ming * @date 2017-11-15 12:45 */import java.nio.charset.Charsetimport java.security.MessageDigestimport java.security.NoSuchAlgorithmExceptionimport org.apache.commons.codec.binary.Hex;static void main(String[] args) &#123; Map&lt;String, String[]&gt; map = new HashMap&lt;&gt;() map.put(&quot;sign&quot;, [&quot;mkasfasfds&quot;] as String[]) map.put(&quot;param&quot;, [&quot;ming&quot;] as String[]) map.put(&quot;b&quot;, [&quot;b&quot;] as String[]) map.put(&quot;a&quot;, [&quot;a&quot;] as String[]) print(getSign(&quot;ming&quot;, map))&#125;/** * 生成签名 * @param accessSecretKey 密钥 * @param parameterMap 参数map 集合 * @author ming * @date 2017-11-15 11:42 */String getSign(String accessSecretKey, Map&lt;String, String[]&gt; parameterMap) &#123; //拼接参数 StringBuffer allNotEncryptString = new StringBuffer(); String signature = parameterMap.get(&quot;sign&quot;)[0]; // 获取未加密的请求参数 String notEncryptString = getRequestParameterString(parameterMap); if (notEncryptString == null || notEncryptString.length() == 0) &#123; throw new NullPointerException(&quot; 请求参数拼接为空&quot;) &#125; // 组合所有加密的字符穿 allNotEncryptString.append(notEncryptString); allNotEncryptString.append(&quot;secret&quot; + accessSecretKey); // 本地加密 String localSignature = md5(allNotEncryptString.toString(), Charset.forName(&quot;UTF-8&quot;)).toLowerCase(); return localSignature;&#125;/** * 取得未加密的请求参数字符串&lt;br/&gt; * 注：1.该字符串的组成规则为： * 1.1 请求参数 &apos;key&apos;+&apos;value&apos;成对 * 1.2 依据字母顺序表：a--&gt;b--&gt;c--&gt;...--&gt;y--&gt;z 对‘请求参数key’排序 * 2.该字符串中不包括signature * */static String getRequestParameterString(Map&lt;String, String[]&gt; parameterMap) &#123; if (parameterMap == null || parameterMap.size() == 0) &#123; return null; &#125; List&lt;String&gt; parameterNameList = new ArrayList&lt;&gt;(parameterMap.keySet()); // 对请求的key 排序 parameterNameList.sort &#123; a, b -&gt; (a &lt;=&gt; b) &#125;; StringBuffer strBuffer = new StringBuffer(); for (String parameterName : parameterNameList) &#123; //排除签名 if (parameterName == &quot;sign&quot;) &#123; continue; &#125; String[] values = parameterMap.get(parameterName); if (values != null) &#123; if (values.length == 1) &#123; strBuffer.append(parameterName + values[0]); &#125; else &#123; //此处规则 省略。。。。 &#125; &#125; &#125; return strBuffer.toString();&#125;/*** * MD5加密 生成32位md5码 * * @param inStr 待加密字符串 * @return 返回32位md5码 */ static String md5(String inStr, Charset charset) &#123; MessageDigest messageDigest = null; try &#123; messageDigest = MessageDigest.getInstance(&quot;MD5&quot;); &#125; catch (NoSuchAlgorithmException e) &#123; e.printStackTrace(); &#125; if (messageDigest == null) &#123; throw new NullPointerException(); &#125; messageDigest.update(inStr.getBytes(charset)); byte[] digestBytes = messageDigest.digest(); return Hex.encodeHexString(digestBytes);&#125;]]></content>
@@ -729,20 +727,21 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式(一)-六大基本原则]]></title>
-    <url>%2Fming%2Fae7599d.html</url>
-    <content type="text"><![CDATA[开闭原则(open close princlple)“对扩展开发,对修改关闭”,当程序需要扩展的时候不能去修改源代码，要实现一个热插拔效果。通过使用接口和抽象类去设计。这样在以后替换方法实现算法的时候只需要实现接口使用这个类就可以了开闭原则关键步骤是抽象例如:sf4j 和log4j之间 sf4j定义了日志框架的大部分接口。log4j只是实现sf4j其中一种。里氏替换原则(liskov substitution princlple)任何基础类可以出现的地方.他的子类一定可以出现。只有当派生类可以替换基本类。并且软件不受到影响，基础类才能被真正的复用。里氏替换原则 对抽象化的具体步骤实现的规范 。补充了开闭原则例如hinernate中orm名称映射规则。如果需要自己制定规则 只需要继承或者实现已有的基础类 就可以把这个类设置成hibernate的orm替换规则例如:数据库表要求全部是以T开头 后面采用下划线方式命名 但是entity采用去除T 并且采用驼峰式命名这个时候就实现hibernate的转换接口然后设置成自定义的类就行了##依赖倒转原则(dependence lnversion princlple)针对抽象出来的结构编程。依赖抽象出来的类或者接口编程。不依赖具体实现就是面向接口编程 例子： list 我可以用arraylist 也可以用linkedlist 但是他们都是list接口的方法接口隔离原则(interface segregation prinalple)使用多个隔离的接口比使用单个接口好,降低接口和实现类之间的耦合迪米特法则(demeter princlple) 最少知道法则一个类尽量少知道和其它实体之间的相互作用 让系统模块相对独立合成复用原则(composite reuse princlple)尽量使用合成和聚合 尽量少使用继承就是一个复杂类应当由很多小类合成聚合而来 不是继承一个类去做增加##总结####设计模式就是依赖这些基本法则的最佳实现#设计模式笔记参考:http://www.runoob.com/design-pattern/design-pattern-tutorial.html]]></content>
+    <title><![CDATA[jsp 自定义标签]]></title>
+    <url>%2Fming%2Fdd01bc67.html</url>
+    <content type="text"><![CDATA[###在做jsp项目中除了一些框架的标签如spring、jstl、shiro等标签 可能还需要自定义一些常用标签 如page等###自定义jsp标签有两种方式1:java bean+ tld1通过tld来调用java中的代码 这种写法 参考http://www.runoob.com/jsp/jsp-custom-tags.html 2:tag文件123456789101112131415161718直接定义一个后缀为tag的文件 这种方式比 java bean+tld 简单方便 容易使用和定义tag文件头 如下设置 其他按照jsp使用即可 可以导入其他标签库、java代码、等//定义tag的编码集合&lt;%@tag pageEncoding=&quot;UTF-8&quot; %&gt;//定义一个名字为str 类型为string的必须元素&lt;%@attribute name=&quot;str&quot; required=&quot;true&quot; type=&quot;java.lang.String&quot; %&gt;//定义一个名字为flag 类型为boolean 的非必须元素&lt;%@attribute name=&quot;flag&quot; required=&quot;false&quot; type=&quot;java.lang.Boolean&quot; %&gt;。。。。。省略业务代码 这里就跟写jsp一样调用:在jsp头部加上这个标签所在的文件夹 是文件夹不是单个标签 &lt;%--自定义的标签位置--%&gt;&lt;%@taglib prefix=&quot;tags&quot; tagdir=&quot;/WEB-INF/tags&quot; %&gt;然后使用即可 例如实例代码文件名为 test.tag &lt;tags:test str=&quot;test&quot;&gt;&lt;/tags:test&gt;]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
-        <tag>设计模式</tag>
+        <tag>java基础</tag>
+        <tag>jsp</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式笔记(七)：创建型-原型模式]]></title>
-    <url>%2Fming%2F5a9f0461.html</url>
-    <content type="text"><![CDATA[##原型模式：（Prototype Pattern）####意图用原型实例来指定创建对象的种类，并且通过拷贝这些原型创建新的对象####主要解决在运行期建立和删除原型####何时使用1：当一个系统应该独立于它产品创建构成和表示的时候。2：当要实例化的类是在运行时刻指定的时候 ，例如动态装载3：为了避免创建一个与产品类层次平行的工厂类层次4：当一个类的实例智能有几个不同状态组合中的一种时候，建立相应数目的原型并克隆他们 比每次用合适的状态的手工实例化该 类更方便一些####如何解决利用已有的一个原型对象，快速生成和原型对象一样的实例####关键代码1：实现克隆操作 利用Cloneable 重写clone(),2:原型模式同样用于隔离类对象使用者和具体类型（易变类）之间耦合关系，要求易变类拥有稳定的接口####实例1：细胞分裂2：java object clone() 方法####优点1：提高性能2：避免构造函数约束####缺点1：配备克隆方法需要对类的功能进行通盘考虑，对于全新的类不麻烦，但是对于已经有的类不容易实现，特别是一个类引用不支持串行化的间接对象或者引用含有循环结构的适合2：必须实现Cloneable接口3：逃避构造函数约束####使用场景1：资源优化2：类初始化需要很多资源，3：性能和安全要求场景4：通过new产生对象需要非常繁琐的数据准备或者访问权限5：一个对象多个修改者6：一个对象需要提供给其他对象访问，并且多个调用者都需要修改其值，7：实际项目中原型模式常根工厂模式一起，通过clone创建一个对象，如何由工厂方法提供给调用者，####注意和对一个类来实例化创建对象不同的是，原型模式是通过一个现有的对象生成一个新的对象，浅拷贝通过Cloneable ，深拷贝通过Serializable读取二进制流####总结：通过实现cloneable的clone（） 方法来实现浅克隆 通过序列化获取二进制流 来进行深度克隆 就是自行创建一个可靠安全的原型 通过克隆方式获得该对象####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/Prototype]]></content>
+    <title><![CDATA[设计模式(一)-六大基本原则]]></title>
+    <url>%2Fming%2Fae7599d.html</url>
+    <content type="text"><![CDATA[开闭原则(open close princlple)“对扩展开发,对修改关闭”,当程序需要扩展的时候不能去修改源代码，要实现一个热插拔效果。通过使用接口和抽象类去设计。这样在以后替换方法实现算法的时候只需要实现接口使用这个类就可以了开闭原则关键步骤是抽象例如:sf4j 和log4j之间 sf4j定义了日志框架的大部分接口。log4j只是实现sf4j其中一种。里氏替换原则(liskov substitution princlple)任何基础类可以出现的地方.他的子类一定可以出现。只有当派生类可以替换基本类。并且软件不受到影响，基础类才能被真正的复用。里氏替换原则 对抽象化的具体步骤实现的规范 。补充了开闭原则例如hinernate中orm名称映射规则。如果需要自己制定规则 只需要继承或者实现已有的基础类 就可以把这个类设置成hibernate的orm替换规则例如:数据库表要求全部是以T开头 后面采用下划线方式命名 但是entity采用去除T 并且采用驼峰式命名这个时候就实现hibernate的转换接口然后设置成自定义的类就行了##依赖倒转原则(dependence lnversion princlple)针对抽象出来的结构编程。依赖抽象出来的类或者接口编程。不依赖具体实现就是面向接口编程 例子： list 我可以用arraylist 也可以用linkedlist 但是他们都是list接口的方法接口隔离原则(interface segregation prinalple)使用多个隔离的接口比使用单个接口好,降低接口和实现类之间的耦合迪米特法则(demeter princlple) 最少知道法则一个类尽量少知道和其它实体之间的相互作用 让系统模块相对独立合成复用原则(composite reuse princlple)尽量使用合成和聚合 尽量少使用继承就是一个复杂类应当由很多小类合成聚合而来 不是继承一个类去做增加##总结####设计模式就是依赖这些基本法则的最佳实现#设计模式笔记参考:http://www.runoob.com/design-pattern/design-pattern-tutorial.html]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -762,9 +761,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式笔记(三)：创建型-工厂模式]]></title>
-    <url>%2Fming%2F80d0f7f9.html</url>
-    <content type="text"><![CDATA[##工厂模式(factory pattern):####意图定义一个创建对象的接口。让其子类决定实例化那一个工程类，工厂模式将其创建过程延迟到子类中####主要解决主要解决接口选择问题。####何时使用在不同条件下创建不同实例。####如何解决让其子类实现工厂接口，返回的也是一个抽象的产品。关键代码创建过程在其子类中执行。####优点1,一个调用者创建一个对象。只要知道对象名旧可以 。2,扩展性高，想增加一个产品，扩展一个工厂类就可以。3,屏蔽产品实现。调用者只需要知道产品接口。####缺点每次增加产品，都需要增减一个实现类和对象实现工厂，增加系统复杂度。增加系统具体类依赖####使用场景1，日志记录，记录可能记录到硬盘，数据库，用户可以选择记录到哪里2,数据库访问，当用户不知道访问什么类型数据库的时候，hibernate方言就是这3,设计链接服务器的框架，需要三个协议“pop3”，“imap”，“http” 设计成产品类，共同实现一个接口。####注意事项当需要生成一个复杂对象的时候使用。如果是简单对象。不要使用工厂模式。会增加系统复杂度####个人总结：工厂模式适合在那些大体相同。但是细节不同的相似对象。例如hibernate方言。为了能自动选择方言编写的自动方言工厂类，但是工厂模式不适用于简单对象。####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/factory]]></content>
+    <title><![CDATA[设计模式笔记(七)：创建型-原型模式]]></title>
+    <url>%2Fming%2F5a9f0461.html</url>
+    <content type="text"><![CDATA[##原型模式：（Prototype Pattern）####意图用原型实例来指定创建对象的种类，并且通过拷贝这些原型创建新的对象####主要解决在运行期建立和删除原型####何时使用1：当一个系统应该独立于它产品创建构成和表示的时候。2：当要实例化的类是在运行时刻指定的时候 ，例如动态装载3：为了避免创建一个与产品类层次平行的工厂类层次4：当一个类的实例智能有几个不同状态组合中的一种时候，建立相应数目的原型并克隆他们 比每次用合适的状态的手工实例化该 类更方便一些####如何解决利用已有的一个原型对象，快速生成和原型对象一样的实例####关键代码1：实现克隆操作 利用Cloneable 重写clone(),2:原型模式同样用于隔离类对象使用者和具体类型（易变类）之间耦合关系，要求易变类拥有稳定的接口####实例1：细胞分裂2：java object clone() 方法####优点1：提高性能2：避免构造函数约束####缺点1：配备克隆方法需要对类的功能进行通盘考虑，对于全新的类不麻烦，但是对于已经有的类不容易实现，特别是一个类引用不支持串行化的间接对象或者引用含有循环结构的适合2：必须实现Cloneable接口3：逃避构造函数约束####使用场景1：资源优化2：类初始化需要很多资源，3：性能和安全要求场景4：通过new产生对象需要非常繁琐的数据准备或者访问权限5：一个对象多个修改者6：一个对象需要提供给其他对象访问，并且多个调用者都需要修改其值，7：实际项目中原型模式常根工厂模式一起，通过clone创建一个对象，如何由工厂方法提供给调用者，####注意和对一个类来实例化创建对象不同的是，原型模式是通过一个现有的对象生成一个新的对象，浅拷贝通过Cloneable ，深拷贝通过Serializable读取二进制流####总结：通过实现cloneable的clone（） 方法来实现浅克隆 通过序列化获取二进制流 来进行深度克隆 就是自行创建一个可靠安全的原型 通过克隆方式获得该对象####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/Prototype]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -773,9 +772,20 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式笔记(八)：结构型-适配器模式]]></title>
-    <url>%2Fming%2F6cd7a67e.html</url>
-    <content type="text"><![CDATA[##适配器模式(Adapter Pattern)####意图当一个类的接口转换成客户希望的另外一个接口的适合，适配器模式使得原本由于接口不兼容不能一起工作的类可以在一起工作####主要解决在系统中常常要将一些现存的对象放到新环境中，而新环境接口是现存对象不能满足的####何时使用1：系统需要使用现有的类，但是这个类的接口不满足系统需要2：想要建立一个可以重复使用的类，用于一些批次之间没有太大关联的一些类，包括一些可能在将来引进的类一起工作，这些源类不一定有一致的即可3：通过接口转换，将一个类插入到另一个类系中，（比如老虎和飞禽，现在多了一个能飞的老虎，在不增加实体需求下 增加一个适配器，里面包含虎对象，实现飞接口）####如何解决继承或者依赖####关键代码适配器继承或者依赖已经有的对象，实现想要的目标接口####实例1：美国电器110v 中国220v 需要一个适配器来转换2：jdk1.1提供Enumeration接口 现在1.2中提供了iterator接口 ，想要使用1.2jdk 就要把一起系统的Rnumeration接口转换iterator接口3：linux上运行windows程序4：jvm就是一个类似适配器的一个虚拟机####优点1：可以让两个没有关联的类一起运行，2：提高类的复用3：增加类的透明4：灵活####缺点1：过多使用适配器，让系统显得凌乱 ，不容易把握整体，比如明明调用的是a接口但是内部适配成b接口的实现，一个系统中出现太多这种情况会爆炸，如果不是很有必要不适用适配器，而是对系统重构2：由于java只能继承一个类，所以最多只能适配一个适配类，而且目标类必须是抽象类####使用场景有动机的修改一个运行正常的系统接口####注意适配器不是详细设计时候设计的 而是解决在系统上线过程中出现问题####总结：通过一个中间适配器类来增加已有类的功能，这个只是补救方式 最好的方式还是重构项目####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/structural/adapter]]></content>
+    <title><![CDATA[设计模式笔记(九)：结构型-桥接模式]]></title>
+    <url>%2Fming%2Fca9f8bd1.html</url>
+    <content type="text"><![CDATA[##桥接模式(Bridge Pattern)####意图将抽象部分和实现部分分离，使他们可以独立变化####主要解决在多种可能变化的情况下，用继承会造成类爆炸的问题，不好扩展####何时使用实现系统可以有多个角度分类，每一个角度都可能变化####如何解决把这种多角度分类分离出来，让他们独立变化，减少之间的耦合####关键代码抽象类依赖实现类####应用实例1：猪八戒从天蓬元帅投胎到猪转世投胎机制将尘世划分为肉体和灵魂 ，前者相当于实现化，后者相当于抽象化，生灵通过功能委派，调用肉体对象，2：开关####优点1：抽象和实现分离2：优秀扩展能力3：实现细节对客户透明####缺点桥接模式会增加系统理解和设计难度，由于聚合关联关系在抽象层，需要开发者对抽象进行设计和编程####使用场景1：如果一个系统需要在组件抽象化角色和具体化角色之间有更多的灵活性，避免在两个层次之间建立静态继承关系，通过桥接模式可以使他们在抽象层建立一个关联关系2：对于不希望因为使用继承或者因为多层次继承导致类中个数急剧增加的系统3：一个类存在两个独立变化的维度 ，并且两个维度都需要进行扩展####注意对于两个独立变化的维度 使用桥接模式最合适####总结：利用一个中间接口来把多种不同状态的类进行分离####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/structural/bridge]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[设计模式笔记(三)：创建型-工厂模式]]></title>
+    <url>%2Fming%2F80d0f7f9.html</url>
+    <content type="text"><![CDATA[##工厂模式(factory pattern):####意图定义一个创建对象的接口。让其子类决定实例化那一个工程类，工厂模式将其创建过程延迟到子类中####主要解决主要解决接口选择问题。####何时使用在不同条件下创建不同实例。####如何解决让其子类实现工厂接口，返回的也是一个抽象的产品。关键代码创建过程在其子类中执行。####优点1,一个调用者创建一个对象。只要知道对象名旧可以 。2,扩展性高，想增加一个产品，扩展一个工厂类就可以。3,屏蔽产品实现。调用者只需要知道产品接口。####缺点每次增加产品，都需要增减一个实现类和对象实现工厂，增加系统复杂度。增加系统具体类依赖####使用场景1，日志记录，记录可能记录到硬盘，数据库，用户可以选择记录到哪里2,数据库访问，当用户不知道访问什么类型数据库的时候，hibernate方言就是这3,设计链接服务器的框架，需要三个协议“pop3”，“imap”，“http” 设计成产品类，共同实现一个接口。####注意事项当需要生成一个复杂对象的时候使用。如果是简单对象。不要使用工厂模式。会增加系统复杂度####个人总结：工厂模式适合在那些大体相同。但是细节不同的相似对象。例如hibernate方言。为了能自动选择方言编写的自动方言工厂类，但是工厂模式不适用于简单对象。####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/factory]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -795,9 +805,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式笔记(九)：结构型-桥接模式]]></title>
-    <url>%2Fming%2Fca9f8bd1.html</url>
-    <content type="text"><![CDATA[##桥接模式(Bridge Pattern)####意图将抽象部分和实现部分分离，使他们可以独立变化####主要解决在多种可能变化的情况下，用继承会造成类爆炸的问题，不好扩展####何时使用实现系统可以有多个角度分类，每一个角度都可能变化####如何解决把这种多角度分类分离出来，让他们独立变化，减少之间的耦合####关键代码抽象类依赖实现类####应用实例1：猪八戒从天蓬元帅投胎到猪转世投胎机制将尘世划分为肉体和灵魂 ，前者相当于实现化，后者相当于抽象化，生灵通过功能委派，调用肉体对象，2：开关####优点1：抽象和实现分离2：优秀扩展能力3：实现细节对客户透明####缺点桥接模式会增加系统理解和设计难度，由于聚合关联关系在抽象层，需要开发者对抽象进行设计和编程####使用场景1：如果一个系统需要在组件抽象化角色和具体化角色之间有更多的灵活性，避免在两个层次之间建立静态继承关系，通过桥接模式可以使他们在抽象层建立一个关联关系2：对于不希望因为使用继承或者因为多层次继承导致类中个数急剧增加的系统3：一个类存在两个独立变化的维度 ，并且两个维度都需要进行扩展####注意对于两个独立变化的维度 使用桥接模式最合适####总结：利用一个中间接口来把多种不同状态的类进行分离####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/structural/bridge]]></content>
+    <title><![CDATA[设计模式笔记(八)：结构型-适配器模式]]></title>
+    <url>%2Fming%2F6cd7a67e.html</url>
+    <content type="text"><![CDATA[##适配器模式(Adapter Pattern)####意图当一个类的接口转换成客户希望的另外一个接口的适合，适配器模式使得原本由于接口不兼容不能一起工作的类可以在一起工作####主要解决在系统中常常要将一些现存的对象放到新环境中，而新环境接口是现存对象不能满足的####何时使用1：系统需要使用现有的类，但是这个类的接口不满足系统需要2：想要建立一个可以重复使用的类，用于一些批次之间没有太大关联的一些类，包括一些可能在将来引进的类一起工作，这些源类不一定有一致的即可3：通过接口转换，将一个类插入到另一个类系中，（比如老虎和飞禽，现在多了一个能飞的老虎，在不增加实体需求下 增加一个适配器，里面包含虎对象，实现飞接口）####如何解决继承或者依赖####关键代码适配器继承或者依赖已经有的对象，实现想要的目标接口####实例1：美国电器110v 中国220v 需要一个适配器来转换2：jdk1.1提供Enumeration接口 现在1.2中提供了iterator接口 ，想要使用1.2jdk 就要把一起系统的Rnumeration接口转换iterator接口3：linux上运行windows程序4：jvm就是一个类似适配器的一个虚拟机####优点1：可以让两个没有关联的类一起运行，2：提高类的复用3：增加类的透明4：灵活####缺点1：过多使用适配器，让系统显得凌乱 ，不容易把握整体，比如明明调用的是a接口但是内部适配成b接口的实现，一个系统中出现太多这种情况会爆炸，如果不是很有必要不适用适配器，而是对系统重构2：由于java只能继承一个类，所以最多只能适配一个适配类，而且目标类必须是抽象类####使用场景有动机的修改一个运行正常的系统接口####注意适配器不是详细设计时候设计的 而是解决在系统上线过程中出现问题####总结：通过一个中间适配器类来增加已有类的功能，这个只是补救方式 最好的方式还是重构项目####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/structural/adapter]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -840,11 +850,58 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[xml和json的区别及其使用范围笔记]]></title>
+    <url>%2Fming%2Fd61f2d28.html</url>
+    <content type="text"><![CDATA[###老是有人问我xml和json区别、 特写此篇记录来列出xml和json区别，懒得每次都解释、网络中很多博客都没提到关键的区别点 自述性、规范性;其他什么解析方法、啥啥的都不是最重要的最主要的就是xml能够由很强的自述性、规范性###相同点:1231:都是一种数据传输格式2:都和平台没有关系 xml和json都是对平台没有限制 只需要按照他们的规则进行解析即可3:只要是能序列化和反序列化的数据都能传输 例如图片完全可以转成二进制或者16进制字符串传输然后反序列化成图片 （不推荐这样玩 容易损坏） ###不同点:123451:xml具有自述性 就是可以包含自我描述的元数据 例如&lt;name type=&quot;string&quot;&gt;xianyu&lt;/name&gt;这个就描述了name的值是xianyu类型是stringjson就无法这样直观的表述 这样就用来写配置及其方便、准确 用json也能写配置只要你不怕看的头疼2:xml具有很强的规范性 你可以自己制定xml schema 来制定规范 json则没有这样的规范 只能间接的通过额外的json来为json定义格式 不方便而且麻烦 ##如何选择121:当需要传输具有元数据的数据的时候就肯定要用xml，2:当需要节省流量、简化数据解析的时候要用json ##解析难度12345xml有sax和dom两种解析方式 都差不多 sax是把xml模拟成一个流然后对其中需要的字段进行解析 这种方法不能修改dom是按照xml的元素结构进行解析 一般都是直接把xml加载到内存进行分析 可以修改 json就是把它当作字符串进行基于json格式的解析 ##总结: ###xml和json都由各自适用的范围不能说那个替代那个 json在做数据传输方面比xml好一点 毕竟没xml冗杂，但是在传输那种能需要自述性、和严格规范的数据的时候xml是无可替代的 在做webservice的时候 两种都会用]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>xml</tag>
+        <tag>json</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker 运行秒退出解决办法]]></title>
+    <url>%2Fming%2F52ab603.html</url>
+    <content type="text"><![CDATA[###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器解决方法:在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如mysql这样的 需要让他在前台运行 mysqld.service]]></content>
+      <categories>
+        <category>坑</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[spring boot + quartz实现 动态定时任务笔记及其想法]]></title>
+    <url>%2Fming%2Fb7d64853.html</url>
+    <content type="text"><![CDATA[quartz 集成 到spring boot 中有个偷懒的方法 直接引用 这个 但是这个不是spring组织搞 的1:gradle 依赖配置12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061buildscript &#123; ext &#123; springBootVersion = &apos;1.5.8.RELEASE&apos; &#125; repositories &#123; mavenCentral() &#125; dependencies &#123; classpath(&quot;org.springframework.boot:spring-boot-gradle-plugin:$&#123;springBootVersion&#125;&quot;) &#125;&#125;apply plugin: &apos;java&apos;apply plugin: &apos;eclipse&apos;apply plugin: &apos;org.springframework.boot&apos;group = &apos;com.ming&apos;version = &apos;1.0&apos;sourceCompatibility = 1.8targetCompatibility = 1.8jar &#123; //指定 main class manifest&#123; attributes &apos;Main-Class&apos;: &apos;com.ming.StartMing&apos; &#125;&#125;repositories &#123; maven &#123; url &quot;http://maven.aliyun.com/nexus/content/groups/public/&quot; &#125; maven &#123; url &quot;http://repo.maven.apache.org/maven2&quot; &#125; mavenCentral()&#125;dependencies &#123; compile(&apos;org.springframework.boot:spring-boot-starter-actuator&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-aop&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-data-jpa&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-mail&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-thymeleaf&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-validation&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-web&apos;) runtime(&apos;org.springframework.boot:spring-boot-devtools&apos;) runtime(&apos;mysql:mysql-connector-java&apos;) //lombok http://blog.csdn.net/victor_cindy1/article/details/72772841 compile(&apos;org.projectlombok:lombok&apos;) testCompile(&apos;org.springframework.boot:spring-boot-starter-test&apos;) compile group: &apos;de.chandre.quartz&apos;, name: &apos;spring-boot-starter-quartz&apos;, version: &apos;1.0.1&apos; compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-spring&apos;, version: &apos;1.4.0&apos; compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-core&apos;, version: &apos;1.4.0&apos; compile group: &apos;com.google.guava&apos;, name: &apos;guava&apos;, version: &apos;22.0&apos; compile group: &apos;com.alibaba&apos;, name: &apos;fastjson&apos;, version: &apos;1.2.33&apos; compile group: &apos;org.apache.commons&apos;, name: &apos;commons-lang3&apos;, version: &apos;3.6&apos; compile group: &apos;org.apache.httpcomponents&apos;, name: &apos;httpcore&apos;, version: &apos;4.4.6&apos; compile(group: &apos;org.apache.httpcomponents&apos;, name: &apos;httpclient&apos;, version: &apos;4.5.3&apos;) &#123; exclude(module: &apos;commons-logging&apos;) &#125; compile group: &apos;commons-io&apos;, name: &apos;commons-io&apos;, version: &apos;2.5&apos; compile group: &apos;commons-codec&apos;, name: &apos;commons-codec&apos;, version: &apos;1.8&apos;&#125; 2:指明 quartz 配置文件这个是那个starter-quartz中的配置12quartz: properties-config-location: classpath:/config/application-quatrz.properties 3:配置 quartz就是从 quartz 中copy出来的 改成jdbc 存储12345678910111213141516171819org.quartz.scheduler.instanceName:DefaultQuartzSchedulerorg.quartz.scheduler.rmi.export:falseorg.quartz.scheduler.rmi.proxy:falseorg.quartz.scheduler.wrapJobExecutionInUserTransaction:falseorg.quartz.threadPool.class:org.quartz.simpl.SimpleThreadPoolorg.quartz.threadPool.threadCount:10org.quartz.threadPool.threadPriority:5org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread:trueorg.quartz.jobStore.misfireThreshold:60000#org.quartz.jobStore.class: org.quartz.simpl.RAMJobStore# jdbcorg.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTXorg.quartz.jobStore.tablePrefix=QRTZ_org.quartz.jobStore.dataSource=qzDSorg.quartz.dataSource.qzDS.driver=com.mysql.jdbc.Driverorg.quartz.dataSource.qzDS.URL=jdbc:mysql://localhost:3306/ming?useUnicode=true&amp;characterEncoding=UTF-8org.quartz.dataSource.qzDS.user=rootorg.quartz.dataSource.qzDS.password=ming1234org.quartz.dataSource.qzDS.maxConnections=10 4:重头戏 代理job 使用spring bean 中定义的job先声明 这个是抄袭的 加上我自己的一点点想法原方案 只能支持spring bean 的 我扩展了一波 可使用groovy 来扩充配置、扩充bean前几个步骤都是集成进来 这一步 是将 quartz 的job 代理执行 使用注册在spring 中的job bean 执行 任务 方便管理 可以使用 groovy 动态注入配置,job 方便嵌入其他业务 如日志 等等4.1:继承spring中QuartzJobBean 实现基础的job抽象类通过建立抽象方法doExecute 将任务执行内容代理到实现这个抽象方法的job中 123456789101112131415161718192021222324252627282930313233343536import org.quartz.DisallowConcurrentExecution;import org.quartz.JobExecutionContext;import org.quartz.JobExecutionException;import org.quartz.PersistJobDataAfterExecution;import org.springframework.scheduling.quartz.QuartzJobBean;import java.io.Serializable;/** * 基础job 抽象类 * * @author ming * @date 2017-11-09 16:32 *///表示 Quartz 将会在成功执行 execute() 方法后（没有抛出异常）更新 JobDetail 的 JobDataMap，下一次执行相同的任务（JobDetail）将会得到更新后的值，而不是原始的值。@PersistJobDataAfterExecution//禁止 并发执行 job@DisallowConcurrentExecutionpublic abstract class BaseJob extends QuartzJobBean implements Serializable &#123; @Override protected void executeInternal(JobExecutionContext context) throws JobExecutionException &#123; doExecute(context); &#125; /** * 使用代理执行 * * @param context * @throws JobExecutionException * @author ming * @date 2017-11-09 16:08 */ protected abstract void doExecute(JobExecutionContext context) throws JobExecutionException;&#125; 4.2：建立代理执行类实现doExecute 方法第一 指定 job实例来源于spring 容器第二 可以插入其他业务 例如日志 之类的123456789101112131415161718192021222324252627282930313233343536373839/** * 代理执行 job 前后处理日志 * * @author ming * @date 2017-11-09 16:11 */@Slf4jpublic class ProxyJob extends BaseJob &#123; @Override protected void doExecute(JobExecutionContext context) throws JobExecutionException &#123; /* if (schedulerManageDao == null) &#123; schedulerManageDao = applicationContext.getBean(SchedulerManageDao.class); &#125;*/ // 执行 JobDetail jobDetail = context.getJobDetail(); String jobName = jobDetail.getKey().getName(); BaseProxyJob job; Date beginTime = new Date(); // Long dispatchId = schedulerManageDao.addDispatchLog(ApplicationConfig.SCHEDULER_CLUSTER_NAME, ApplicationConfig.SCHEDULER_INSTANCE_NAME, beginTime.getTime(), 0L, jobName, ScheduleExecuteLog.STATUS_BEGIN, 0L, &quot;&quot;); try &#123; job = SpringBeanManager.getbeanByNameAndType(jobName, BaseProxyJob.class); job.execute(); log.info(&quot;[执行成功]&quot; + jobName); Date endTime = new Date(); // 记录任务完成 //schedulerManageDao.updateDispatchLogById(dispatchId, ScheduleExecuteLog.STATUS_SUCCESS, endTime.getTime(), endTime.getTime() - beginTime.getTime(), null); &#125; catch (Exception e) &#123; log.error(&quot;[执行异常]&quot; + jobName + &quot;:::&quot; + e.getMessage()); Date endTime = new Date(); // 打印异常并发送异常 // String exceptionMessage = ExceptionUtils.getStackTrace(e); //logger.error(&quot;[doProcess][job(&#123;&#125;) 异常：&#123;&#125;]&quot;, jobName, exceptionMessage); //if (dispatchId != null) &#123; // schedulerManageDao.updateDispatchLogById(dispatchId, ScheduleExecuteLog.STATUS_FAILURE, endTime.getTime(), endTime.getTime() - beginTime.getTime(), exceptionMessage); //&#125; &#125; &#125;&#125; 4.3:建立基础代理job抽象类12345678910111213141516171819202122232425262728293031323334353637383940import lombok.extern.slf4j.Slf4j;/** * 定时器具体任务实现任务基类。所有子类需要继承它. * &lt;pre&gt; * 2. 使用&#123;@link #setMemo(String)&#125;可以设置任务结束后备注 * 3. 当任务出现异常时，会被记录到日志里并标记任务失败。所以任务的异常需要抛出来，不要catch掉不抛出。 * 4. 记得实现类加&#123;@link org.springframework.stereotype.Service&#125;注解，让它可以被spring扫描到 * &lt;/pre&gt; * * @author ming * @date 2017-11-09 16:32 */@Slf4jpublic abstract class BaseProxyJob &#123; /** * 任务执行完之后的备注 */ private String memo; /** * 实现 */ public abstract void execute(); public String getMemo() &#123; return memo; &#125; /** * 设置执行后备注 * * @param memo 备注 */ public void setMemo(String memo) &#123; this.memo = memo; &#125;&#125; 4.4:细分job类型这个是在上面的基础上继续细化job的来源类型方便针对不同的job来进行处理 例如 groovy 脚本写的抽象类 需要从数据库中读取相关数据 动态注入到spring 容器中所有的来自groovy 脚本的job抽象类12345678/** * groovy job 实现这个接口 * * @author ming * @date 2017-11-08 16:59 */public abstract class BaseScriptJob extends BaseProxyJob &#123;&#125; 所有直接java写的编译好的job抽象类123456789/** * java 实现的 实现这个接口 * * @author ming * @date 2017-11-08 16:59 */public abstract class BaseSimpleJob extends BaseProxyJob &#123;&#125; 具体demo请参考:http://github.xujiuming.com 下mingqz项目 ####总结:通过编写抽象类 将 具体要执行的业务 代理执行掉 这样 就可以利用spring 的特性 去用groovy 做动态job 避免每次变更 都要从新部署]]></content>
+      <categories>
+        <category>骚想法</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+        <tag>quartz</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[rocketmq使用docker运行出现重复消费]]></title>
     <url>%2Fming%2F814d8f0a.html</url>
     <content type="text"><![CDATA[最近公司网docker切换 现在开发 测试环境切换 我们发现docker环境下 多节点的rocketmq存在一个重复消费的问题 一个消息 被多次消费了@author 欢总rocketmq 版本 3.2.6问题描述：测试环境在docker内部署了两个mq consumer，集群消费模式下，消息理应被平均消费，实际情况是每条消息都被消费了两次。线上环境是同样的配置，没有出现这个问题。关掉dokcer内一个consumer节点，本地再启动一个节点，发现也是正常的。猜想是mq consumer instanceName引起的，如果instanceName一样会重复消费，因为集群消费模式是按instanceName做为唯一消费实例的。翻了下源码发现，如果没有指定instanceName默认会把pid做为instanceName12345678910111213if (this.instanceName.equals(&quot;DEFAULT&quot;)) &#123; this.instanceName = String.valueOf(UtilAll.getPid());&#125;public static int getPid() &#123; RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean(); String name = runtime.getName(); // format: &quot;pid@hostname&quot; try &#123; return Integer.parseInt(name.substring(0, name.indexOf(&apos;@&apos;))); &#125; catch (Exception e) &#123; return -1; &#125;&#125; 查看dokcer内consumer的pid发现都是1（由于每台容器都是干净的，只跑一个程序，所以pid都是1），所以导致了重复消费，一般情况下跑在物理机上pid是不一样的（这里略坑，如果真碰巧一样就惨了），所以不会有问题。有两种解决方案：1.手动设置instanceName,使每个consumer节点instanceName不一样2.修改docker容器配置，使它运行时使用宿主机的pid ####总结:这个问题 略坑 mmp 大佬果然厉害 一个是rocketmq 如果没有instanceName会使用pid 做instanceName####一个是 docker容器都是纯净的会导致pid相同]]></content>
       <categories>
         <category>坑</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker配置daemon.json(加速、http访问私服仓库)]]></title>
+    <url>%2Fming%2F3022b6f9.html</url>
+    <content type="text"><![CDATA[daemon.jsondaemon.json 在linux下呢一般在/etc/docker/daemon.json 目录这个配置主要配置 docker守护进程的相关参数 例如代理、私服仓库、相关网络配置避免直接配置docker.service官方文档地址:https://docs.docker.com/engine/reference/commandline/dockerd/#examples参考国内博客:http://blog.51cto.com/nosmoking/1881034####常用配置1:aliyun的docker加速是可以个人申请一个加速节点的 以下是我自己的加速点做为实例当docker版本超过1.10的时候通过修改daemon配置文件/etc/docker/daemon.json来使用加速器：12345678sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;&#123; &quot;registry-mirrors&quot;: [&quot;https://o4omo0yw.mirror.aliyuncs.com&quot;]&#125;EOFsudo systemctl daemon-reloadsudo systemctl restart docker 2：配置私服仓库地址这个配置 可以避免私服仓库没有https访问导致无法使用的问题12345678sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;&#123; &quot;insecure-registries&quot;:[&quot;&lt;private repository url&gt;&quot;]&#125;EOFsudo systemctl daemon-reloadsudo systemctl restart docker]]></content>
+      <categories>
+        <category>实战</category>
       </categories>
       <tags>
         <tag>docker</tag>
@@ -862,66 +919,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot + quartz实现 动态定时任务笔记及其想法]]></title>
-    <url>%2Fming%2Fb7d64853.html</url>
-    <content type="text"><![CDATA[quartz 集成 到spring boot 中有个偷懒的方法 直接引用 这个 但是这个不是spring组织搞 的1:gradle 依赖配置12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061buildscript &#123; ext &#123; springBootVersion = &apos;1.5.8.RELEASE&apos; &#125; repositories &#123; mavenCentral() &#125; dependencies &#123; classpath(&quot;org.springframework.boot:spring-boot-gradle-plugin:$&#123;springBootVersion&#125;&quot;) &#125;&#125;apply plugin: &apos;java&apos;apply plugin: &apos;eclipse&apos;apply plugin: &apos;org.springframework.boot&apos;group = &apos;com.ming&apos;version = &apos;1.0&apos;sourceCompatibility = 1.8targetCompatibility = 1.8jar &#123; //指定 main class manifest&#123; attributes &apos;Main-Class&apos;: &apos;com.ming.StartMing&apos; &#125;&#125;repositories &#123; maven &#123; url &quot;http://maven.aliyun.com/nexus/content/groups/public/&quot; &#125; maven &#123; url &quot;http://repo.maven.apache.org/maven2&quot; &#125; mavenCentral()&#125;dependencies &#123; compile(&apos;org.springframework.boot:spring-boot-starter-actuator&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-aop&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-data-jpa&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-mail&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-thymeleaf&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-validation&apos;) compile(&apos;org.springframework.boot:spring-boot-starter-web&apos;) runtime(&apos;org.springframework.boot:spring-boot-devtools&apos;) runtime(&apos;mysql:mysql-connector-java&apos;) //lombok http://blog.csdn.net/victor_cindy1/article/details/72772841 compile(&apos;org.projectlombok:lombok&apos;) testCompile(&apos;org.springframework.boot:spring-boot-starter-test&apos;) compile group: &apos;de.chandre.quartz&apos;, name: &apos;spring-boot-starter-quartz&apos;, version: &apos;1.0.1&apos; compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-spring&apos;, version: &apos;1.4.0&apos; compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-core&apos;, version: &apos;1.4.0&apos; compile group: &apos;com.google.guava&apos;, name: &apos;guava&apos;, version: &apos;22.0&apos; compile group: &apos;com.alibaba&apos;, name: &apos;fastjson&apos;, version: &apos;1.2.33&apos; compile group: &apos;org.apache.commons&apos;, name: &apos;commons-lang3&apos;, version: &apos;3.6&apos; compile group: &apos;org.apache.httpcomponents&apos;, name: &apos;httpcore&apos;, version: &apos;4.4.6&apos; compile(group: &apos;org.apache.httpcomponents&apos;, name: &apos;httpclient&apos;, version: &apos;4.5.3&apos;) &#123; exclude(module: &apos;commons-logging&apos;) &#125; compile group: &apos;commons-io&apos;, name: &apos;commons-io&apos;, version: &apos;2.5&apos; compile group: &apos;commons-codec&apos;, name: &apos;commons-codec&apos;, version: &apos;1.8&apos;&#125; 2:指明 quartz 配置文件这个是那个starter-quartz中的配置12quartz: properties-config-location: classpath:/config/application-quatrz.properties 3:配置 quartz就是从 quartz 中copy出来的 改成jdbc 存储12345678910111213141516171819org.quartz.scheduler.instanceName:DefaultQuartzSchedulerorg.quartz.scheduler.rmi.export:falseorg.quartz.scheduler.rmi.proxy:falseorg.quartz.scheduler.wrapJobExecutionInUserTransaction:falseorg.quartz.threadPool.class:org.quartz.simpl.SimpleThreadPoolorg.quartz.threadPool.threadCount:10org.quartz.threadPool.threadPriority:5org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread:trueorg.quartz.jobStore.misfireThreshold:60000#org.quartz.jobStore.class: org.quartz.simpl.RAMJobStore# jdbcorg.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTXorg.quartz.jobStore.tablePrefix=QRTZ_org.quartz.jobStore.dataSource=qzDSorg.quartz.dataSource.qzDS.driver=com.mysql.jdbc.Driverorg.quartz.dataSource.qzDS.URL=jdbc:mysql://localhost:3306/ming?useUnicode=true&amp;characterEncoding=UTF-8org.quartz.dataSource.qzDS.user=rootorg.quartz.dataSource.qzDS.password=ming1234org.quartz.dataSource.qzDS.maxConnections=10 4:重头戏 代理job 使用spring bean 中定义的job先声明 这个是抄袭的 加上我自己的一点点想法原方案 只能支持spring bean 的 我扩展了一波 可使用groovy 来扩充配置、扩充bean前几个步骤都是集成进来 这一步 是将 quartz 的job 代理执行 使用注册在spring 中的job bean 执行 任务 方便管理 可以使用 groovy 动态注入配置,job 方便嵌入其他业务 如日志 等等4.1:继承spring中QuartzJobBean 实现基础的job抽象类通过建立抽象方法doExecute 将任务执行内容代理到实现这个抽象方法的job中 123456789101112131415161718192021222324252627282930313233343536import org.quartz.DisallowConcurrentExecution;import org.quartz.JobExecutionContext;import org.quartz.JobExecutionException;import org.quartz.PersistJobDataAfterExecution;import org.springframework.scheduling.quartz.QuartzJobBean;import java.io.Serializable;/** * 基础job 抽象类 * * @author ming * @date 2017-11-09 16:32 *///表示 Quartz 将会在成功执行 execute() 方法后（没有抛出异常）更新 JobDetail 的 JobDataMap，下一次执行相同的任务（JobDetail）将会得到更新后的值，而不是原始的值。@PersistJobDataAfterExecution//禁止 并发执行 job@DisallowConcurrentExecutionpublic abstract class BaseJob extends QuartzJobBean implements Serializable &#123; @Override protected void executeInternal(JobExecutionContext context) throws JobExecutionException &#123; doExecute(context); &#125; /** * 使用代理执行 * * @param context * @throws JobExecutionException * @author ming * @date 2017-11-09 16:08 */ protected abstract void doExecute(JobExecutionContext context) throws JobExecutionException;&#125; 4.2：建立代理执行类实现doExecute 方法第一 指定 job实例来源于spring 容器第二 可以插入其他业务 例如日志 之类的123456789101112131415161718192021222324252627282930313233343536373839/** * 代理执行 job 前后处理日志 * * @author ming * @date 2017-11-09 16:11 */@Slf4jpublic class ProxyJob extends BaseJob &#123; @Override protected void doExecute(JobExecutionContext context) throws JobExecutionException &#123; /* if (schedulerManageDao == null) &#123; schedulerManageDao = applicationContext.getBean(SchedulerManageDao.class); &#125;*/ // 执行 JobDetail jobDetail = context.getJobDetail(); String jobName = jobDetail.getKey().getName(); BaseProxyJob job; Date beginTime = new Date(); // Long dispatchId = schedulerManageDao.addDispatchLog(ApplicationConfig.SCHEDULER_CLUSTER_NAME, ApplicationConfig.SCHEDULER_INSTANCE_NAME, beginTime.getTime(), 0L, jobName, ScheduleExecuteLog.STATUS_BEGIN, 0L, &quot;&quot;); try &#123; job = SpringBeanManager.getbeanByNameAndType(jobName, BaseProxyJob.class); job.execute(); log.info(&quot;[执行成功]&quot; + jobName); Date endTime = new Date(); // 记录任务完成 //schedulerManageDao.updateDispatchLogById(dispatchId, ScheduleExecuteLog.STATUS_SUCCESS, endTime.getTime(), endTime.getTime() - beginTime.getTime(), null); &#125; catch (Exception e) &#123; log.error(&quot;[执行异常]&quot; + jobName + &quot;:::&quot; + e.getMessage()); Date endTime = new Date(); // 打印异常并发送异常 // String exceptionMessage = ExceptionUtils.getStackTrace(e); //logger.error(&quot;[doProcess][job(&#123;&#125;) 异常：&#123;&#125;]&quot;, jobName, exceptionMessage); //if (dispatchId != null) &#123; // schedulerManageDao.updateDispatchLogById(dispatchId, ScheduleExecuteLog.STATUS_FAILURE, endTime.getTime(), endTime.getTime() - beginTime.getTime(), exceptionMessage); //&#125; &#125; &#125;&#125; 4.3:建立基础代理job抽象类12345678910111213141516171819202122232425262728293031323334353637383940import lombok.extern.slf4j.Slf4j;/** * 定时器具体任务实现任务基类。所有子类需要继承它. * &lt;pre&gt; * 2. 使用&#123;@link #setMemo(String)&#125;可以设置任务结束后备注 * 3. 当任务出现异常时，会被记录到日志里并标记任务失败。所以任务的异常需要抛出来，不要catch掉不抛出。 * 4. 记得实现类加&#123;@link org.springframework.stereotype.Service&#125;注解，让它可以被spring扫描到 * &lt;/pre&gt; * * @author ming * @date 2017-11-09 16:32 */@Slf4jpublic abstract class BaseProxyJob &#123; /** * 任务执行完之后的备注 */ private String memo; /** * 实现 */ public abstract void execute(); public String getMemo() &#123; return memo; &#125; /** * 设置执行后备注 * * @param memo 备注 */ public void setMemo(String memo) &#123; this.memo = memo; &#125;&#125; 4.4:细分job类型这个是在上面的基础上继续细化job的来源类型方便针对不同的job来进行处理 例如 groovy 脚本写的抽象类 需要从数据库中读取相关数据 动态注入到spring 容器中所有的来自groovy 脚本的job抽象类12345678/** * groovy job 实现这个接口 * * @author ming * @date 2017-11-08 16:59 */public abstract class BaseScriptJob extends BaseProxyJob &#123;&#125; 所有直接java写的编译好的job抽象类123456789/** * java 实现的 实现这个接口 * * @author ming * @date 2017-11-08 16:59 */public abstract class BaseSimpleJob extends BaseProxyJob &#123;&#125; 具体demo请参考:http://github.xujiuming.com 下mingqz项目 ####总结:通过编写抽象类 将 具体要执行的业务 代理执行掉 这样 就可以利用spring 的特性 去用groovy 做动态job 避免每次变更 都要从新部署]]></content>
-      <categories>
-        <category>骚想法</category>
-      </categories>
-      <tags>
-        <tag>spring</tag>
-        <tag>quartz</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[docker配置daemon.json(加速、http访问私服仓库)]]></title>
-    <url>%2Fming%2F3022b6f9.html</url>
-    <content type="text"><![CDATA[daemon.jsondaemon.json 在linux下呢一般在/etc/docker/daemon.json 目录这个配置主要配置 docker守护进程的相关参数 例如代理、私服仓库、相关网络配置避免直接配置docker.service官方文档地址:https://docs.docker.com/engine/reference/commandline/dockerd/#examples参考国内博客:http://blog.51cto.com/nosmoking/1881034####常用配置1:aliyun的docker加速是可以个人申请一个加速节点的 以下是我自己的加速点做为实例当docker版本超过1.10的时候通过修改daemon配置文件/etc/docker/daemon.json来使用加速器：12345678sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;&#123; &quot;registry-mirrors&quot;: [&quot;https://o4omo0yw.mirror.aliyuncs.com&quot;]&#125;EOFsudo systemctl daemon-reloadsudo systemctl restart docker 2：配置私服仓库地址这个配置 可以避免私服仓库没有https访问导致无法使用的问题12345678sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &lt;&lt;-&apos;EOF&apos;&#123; &quot;insecure-registries&quot;:[&quot;&lt;private repository url&gt;&quot;]&#125;EOFsudo systemctl daemon-reloadsudo systemctl restart docker]]></content>
-      <categories>
-        <category>实战</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[alias笔记]]></title>
-    <url>%2Fming%2Fd0a7cd2b.html</url>
-    <content type="text"><![CDATA[#####linux alias 别名设置####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用1:设定临时 alias 只能在当前shell可用 退出shell 失效12alias asliasNname=&apos;命令&apos;例如: alias psa = &apos;ps -aux&apos; 2:设定永久 alias只需要吧 alias 加入 环境变量配置文件中即可 例如加入 全局环境变量/etc/profile 或者当前用户的环境变量配置中 例如～/.bashrc123456tee -a /etc/profilealias psa=&apos;ps -aux&apos;# ctrl +c 结束录入后 应用 环境变量source /etc/profile 注意: psa = ‘ps -aux’ 这样不行 因为shell语法的格式问题 写python写多了 吗买皮 #####总结: linux别名 可以将一些常用的 但是直接输入 比较长的命令封装起来 向文件追加内容 不一定用tee echo &gt;&gt; 也是可以的 cat都行 不局限命令 能达成功能即可]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[guava-basic笔记]]></title>
-    <url>%2Fming%2Fd9ddd520.html</url>
-    <content type="text"><![CDATA[##guava basic 基本工具避免null optional如果是jdk1.8以上直接使用optional 1.8以下需要使用guava basic工具包前置检查 Preconditions方法声明（不包括额外参数）描述检查失败时抛出的异常checkArgument(boolean)检查boolean是否为true，用来检查传递给方法的参数。IllegalArgumentExceptioncheckNotNull(T)检查value是否为null，该方法直接返回value，因此可以内嵌使用checkNotNull。NullPointerExceptioncheckState(boolean)用来检查对象的某些状态。IllegalStateExceptioncheckElementIndex(int index, int size)检查index作为索引值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;size *IndexOutOfBoundsExceptioncheckPositionIndex(int index, int size)检查index作为位置值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;=size *IndexOutOfBoundsExceptioncheckPositionIndexes(int start, int end, int size)检查[start, end]表示的位置范围对某个列表、字符串或数组是否有效*IndexOutOfBoundsExceptionobject方法 Objectsjdk1.7 后提供了相应的方法 可以不用guava提供比较链 ComparisonChain排序 Ordering排序器方法描述natural()对可排序类型做自然排序，如数字按大小，日期按先后排序usingToString()按对象的字符串形式做字典排序[lexicographical ordering]from(Comparator)把给定的Comparator转化为排序器链式调用方法描述reverse()|获取语义相反的排序器nullsFirst()|使用当前排序器，但额外把null值排到最前面。nullsLast()|使用当前排序器，但额外把null值排到最后面。compound(Comparator)|合成另一个比较器，以处理当前排序器中的相等情况。lexicographical()|基于处理类型T的排序器，返回该类型的可迭代对象Iterable的排序器。onResultOf(Function)|对集合中元素调用Function，再按返回值用当前排序器排序。排序器方法描述greatestOf(Iterable iterable, int k)|获取可迭代对象中最大的k个元素。|leastOfisOrdered(Iterable)|判断可迭代对象是否已按排序器排序：允许有排序值相等的元素。|isStrictlyOrderedsortedCopy(Iterable)|判断可迭代对象是否已严格按排序器排序：不允许排序值相等的元素。|immutableSortedCopymin(E, E)|返回两个参数中最小的那个。如果相等，则返回第一个参数。|max(E, E)min(E, E, E, E…)|返回多个参数中最小的那个。如果有超过一个参数都最小，则返回第一个最小的参数。|max(E, E, E, E…)min(Iterable)|返回迭代器中最小的元素。如果可迭代对象中没有元素，则抛出NoSuchElementException。|max(Iterable), min(Iterator), max(Iterator)总结: guava的基本工具类用的多的可能就是 Preconditions 来检查参数了 optional jdk8 已经包含了 比较的方法 也有 或者 jdk8中stream集合提供更加强大的 宝马都有了 还用个毛的guava的自行车]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>guava</tag>
-        <tag>tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[中文写java]]></title>
-    <url>%2Fming%2Fe8ebc393.html</url>
-    <content type="text"><![CDATA[###偶然间发现java底层是采用utf16做编码集的 突发奇想 既然是utf16做底层编码 拿起不是可以拿非英文开发 毕竟编译器可以识别中文那么肯定也可以编译中文###代码尝试：12345678910111213class 垃圾&#123; public void 一个垃圾方法()&#123; System.out.println(&quot;真的垃圾&quot;); &#125; public void 两个垃圾方法(String 垃圾参数)&#123; System.out.println(&quot;第二个垃圾方法的垃圾参数:&quot;+垃圾参数); &#125; public static void main(String[] args) &#123; 垃圾 垃圾的实例=new 垃圾(); 垃圾的实例.一个垃圾方法(); 垃圾的实例.两个垃圾方法(&quot;啦等等单打独斗&quot;); &#125;&#125; ####总结:java真的贼几把神奇、这样看来几乎可以用任何utf16包含的语言去编写java了]]></content>
-      <categories>
-        <category>骚想法</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[springboot-thymeleaf模版实现类似jsp的sitemesh]]></title>
-    <url>%2Fming%2F12183fd8.html</url>
-    <content type="text"><![CDATA[####thymeleaf虽然现在大部分项目 更加倾向于前后端分离 但是有时候身为后端工程师 总想手贱写点小东西但是jsp 又比较老 而且需要web容器支撑 spring boot 支持性太差所以还是用spring boot 推荐的thymeleaf可是 jsp中的siteMesh装饰器真的好用 苦于thymeleaf没有这个东西在国外博客看到别人实现了类似功能 特此写这篇笔记 方便后续查阅1:建立layout注解用这个注解标识 那些接口需要被装饰123456789101112131415161718192021222324import java.lang.annotation.*;/** * 样式装饰器 注解 在controller中注解 * * @author ming * @date 2017-08-28 11点 */@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)@Retention(RetentionPolicy.RUNTIME)@Documentedpublic @interface Layout &#123; /** * no layout will be used */ String none = &quot;none&quot;; /** * default layout will be used */ String defaultLayOut = &quot;default&quot;; String value() default defaultLayOut;&#125; 2:建立 thymeleaf 处理拦截器这个拦截器 就是用来根据layout注解处理相关组装页面的123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566/** * thymeleaf样式拦截器 实现类似 jsp的sitemesh 装饰器功能 * * @author ming * @date 2017-08-28 11点 */public class ThymeleafLayoutInterceptor extends HandlerInterceptorAdapter &#123; private static final String DEFAULT_LAYOUT = &quot;layouts/default&quot;; private static final String DEFAULT_VIEW_ATTRIBUTE_NAME = &quot;view&quot;; private String defaultLayout = DEFAULT_LAYOUT; private String viewAttributeName = DEFAULT_VIEW_ATTRIBUTE_NAME; public void setDefaultLayout(String defaultLayout) &#123; Assert.hasLength(defaultLayout, &quot;默认样式不存在!&quot;); this.defaultLayout = defaultLayout; &#125; public void setViewAttributeName(String viewAttributeName) &#123; Assert.hasLength(defaultLayout, &quot;默认样式不存在!&quot;); this.viewAttributeName = viewAttributeName; &#125; @Override public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception &#123; if (modelAndView == null || !modelAndView.hasView()) &#123; return; &#125; String originalViewName = modelAndView.getViewName(); if (isRedirectOrForward(originalViewName)) &#123; return; &#125; String layoutName = getLayoutName(handler); if (Layout.none.equals(layoutName)) &#123; return; &#125; modelAndView.setViewName(layoutName); modelAndView.addObject(this.viewAttributeName, originalViewName); &#125; private boolean isRedirectOrForward(String viewName) &#123; return viewName.startsWith(&quot;redirect:&quot;) || viewName.startsWith(&quot;forward:&quot;); &#125; private String getLayoutName(Object handler) &#123; if (handler instanceof HandlerMethod) &#123; HandlerMethod handlerMethod = (HandlerMethod) handler; Layout layout = getMethodOrTypeAnnotation(handlerMethod); if (layout != null) &#123; return layout.value(); &#125; &#125; return this.defaultLayout; &#125; private Layout getMethodOrTypeAnnotation(HandlerMethod handlerMethod) &#123; Layout layout = handlerMethod.getMethodAnnotation(Layout.class); if (layout == null) &#123; return handlerMethod.getBeanType().getAnnotation(Layout.class); &#125; return layout; &#125;&#125; 3:建立样式装饰页面在项目静态页面路径下 创建 layouts文件夹在文件夹目录下建立 装饰配置html 例如default.html12345678910111213&lt;!DOCTYPE html&gt;&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot; lang=&quot;en&quot;&gt;&lt;head&gt; &lt;meta charset=&quot;utf-8&quot;/&gt; &lt;title&gt;ming thymeleaf site mesh&lt;/title&gt;&lt;/head&gt;&lt;body&gt; &lt;div id=&quot;menu-container&quot;&gt; &lt;div class=&quot;container&quot; th:replace=&quot;$&#123;view&#125; :: content&quot;&gt;加载中。。。。。&lt;/div&gt; &lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 4:在controller中应用layout默认是使用default的 这个看layout实现即可这样 index.html就会嵌入到default.html中 那个th:replace=“{view}”那个位置1234567891011121314151617181920import com.ming.base.annotations.Layout;import org.springframework.stereotype.Controller;import org.springframework.web.bind.annotation.GetMapping;/** * 首页 控制器 * * @author ming * @date 2017-11-08 10:33 */@Controller@Layoutpublic class IndexController &#123; @GetMapping(value = &#123;&quot;&quot;, &quot;/&quot;, &quot;/index&quot;&#125;) public String index() &#123; return &quot;index&quot;; &#125;&#125; ####总结：thymeleaf 总的来说 还行 毕竟简单粗暴 但是有几个比较坑的地方 1:必须是标在的xml结构的html 也就是必须符合xml规范 2：由于技术用的人可能不太多 编辑器支持不是很好 不能做到 jsp 那样可以直接追踪到controller中]]></content>
+    <title><![CDATA[spring boot 自定义mvc MessageConverter 笔记]]></title>
+    <url>%2Fming%2Fde4fca49.html</url>
+    <content type="text"><![CDATA[指定前后端传输数据格式在前后分离项目中 最麻烦的应该就是 前后端工程师对接后端通过添加mvc消息转换器 返回更加符合前端的数据格式这个数据格式 不是说返回的格式 而是 某些类型的数据的处理 例如 date 可以转换成Long类型的时间戳返回直接继承实现即可 如果是继承WebMvcConfigurerAdapter 实现的mvc 相关配置 可以不用管 这样 它自己会添加到转换器链中如果是继承WebMvcConfigurationSupport 那么 需要重写configureMessageConverters() 手动添加到转换器链中1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/** * 返回数数据格式转换器 * * @author ming * @date 2017-11-10 13:57 */public class MessageConverter extends AbstractHttpMessageConverter&lt;Object&gt; &#123; /** * date 转换为 时间戳 * * @author ming * @date 2017-11-10 13:56 */ ValueFilter filter = (obj, s, v) -&gt; &#123; if (v instanceof Date) &#123; return ((Date) v).getTime(); &#125; return v; &#125;; public MessageConverter() &#123; super(MediaType.ALL); &#125; @Override protected boolean supports(Class&lt;?&gt; clazz) &#123; return true; &#125; @Override protected Object readInternal(Class&lt;?&gt; aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException &#123; return null; &#125; @Override public boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType) &#123; return this.supports(clazz) &amp;&amp; this.canWrite(mediaType); &#125; @Override protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException &#123; FileCopyUtils.copy(JSON.toJSONString(o, filter, SerializerFeature.DisableCircularReferenceDetect).getBytes(), httpOutputMessage.getBody()); &#125;&#125; 这个只是返回数据中数据的类型的格式化 如果是要对返回数据格式进行格式化需要利用对ResponseBodyAdvice进行继承 进行控制器增强处理返回数据格式]]></content>
       <categories>
         <category>笔记</category>
       </categories>

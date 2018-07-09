@@ -1,8 +1,8 @@
 ---
-title: 夸域笔记
+title: 跨域笔记
 categories: 笔记
 tags:
-  - 夸域
+  - 跨域
 abbrlink: '38475811'
 date: 2017-11-11 00:00:00
 ---

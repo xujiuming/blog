@@ -114,20 +114,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/windows/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/vbox/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/spring-boot/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -150,6 +136,20 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/messageConverter/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/windows/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/vbox/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -317,13 +317,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/java/</loc>
-        <lastmod>2018-07-05T02:43:34.885Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/stream%E8%AE%A1%E7%AE%97/</loc>
         <lastmod>2018-07-05T02:43:34.885Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -368,6 +361,20 @@
     <url>
         <loc>http://www.xujiuming.com/tags/time/</loc>
         <lastmod>2018-07-09T05:40:04.100Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/java/</loc>
+        <lastmod>2018-07-11T03:55:04.367Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/jvm/</loc>
+        <lastmod>2018-07-11T03:55:04.367Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

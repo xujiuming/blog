@@ -69,6 +69,14 @@ sudo ./filebeat --setup -e
 这个时候 在这台node上 所有docker的日志都会被filebeat采集起来并且发送到es上   
 
 产出日志后 直接在kibana上查看即可    
+
+#### 遇到的问题
+* kibana 建立读取索引的时候 报错 FORBIDDEN/12/index read-only / allow delete (api)]
+删除 索引的 只读权限即可     
+```
+curl -XPUT -H "Content-Type: application/json" http://ip:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+```
+
 #### 总结 
 由于 docker集群的日志采集比较操蛋 可能是多种不同的系统运行(例如java类应用、各种服务软件的日志之类的) 那么在日志格式上无法做到 统一 
 采用这种通过收集docker 的标准输出和错误输出 可以收集整个docker集群中的docker的日志  方便查看和管理 

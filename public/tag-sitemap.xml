@@ -100,6 +100,20 @@
     </url>
 
     <url>
+        <loc>http://www.xujiuming.com/tags/windows/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/vbox/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://www.xujiuming.com/tags/mvc/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -121,20 +135,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/windows/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/vbox/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/yml%E3%80%81yaml/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -143,13 +143,6 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E4%B9%B1%E7%A0%81/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/%E5%AE%89%E5%85%A8/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -171,6 +164,13 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/%E5%AE%89%E5%85%A8/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -219,6 +219,20 @@
     </url>
 
     <url>
+        <loc>http://www.xujiuming.com/tags/jenkins/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/groovy/</loc>
+        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://www.xujiuming.com/tags/cdn/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -241,20 +255,6 @@
 
     <url>
         <loc>http://www.xujiuming.com/tags/%E9%98%BF%E9%87%8C%E4%BA%91/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/jenkins/</loc>
-        <lastmod>2018-06-25T03:49:16.163Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/groovy/</loc>
         <lastmod>2018-06-25T03:49:16.163Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -373,41 +373,6 @@
     </url>
 
     <url>
-        <loc>http://www.xujiuming.com/tags/docker/</loc>
-        <lastmod>2018-07-17T04:52:02.791Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/%E6%97%A5%E5%BF%97/</loc>
-        <lastmod>2018-07-17T04:52:02.791Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/es/</loc>
-        <lastmod>2018-07-17T04:52:02.791Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/kibana/</loc>
-        <lastmod>2018-07-17T04:52:02.791Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://www.xujiuming.com/tags/filebeat/</loc>
-        <lastmod>2018-07-17T04:52:02.791Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.xujiuming.com/tags/tools/</loc>
         <lastmod>2018-07-19T06:05:06.718Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -417,6 +382,41 @@
     <url>
         <loc>http://www.xujiuming.com/tags/json/</loc>
         <lastmod>2018-07-19T06:05:06.718Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/docker/</loc>
+        <lastmod>2018-08-09T07:25:50.503Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/%E6%97%A5%E5%BF%97/</loc>
+        <lastmod>2018-08-09T07:25:50.503Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/es/</loc>
+        <lastmod>2018-08-09T07:25:50.503Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/kibana/</loc>
+        <lastmod>2018-08-09T07:25:50.503Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.xujiuming.com/tags/filebeat/</loc>
+        <lastmod>2018-08-09T07:25:50.503Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

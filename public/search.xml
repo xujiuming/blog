@@ -15,7 +15,7 @@
   <entry>
     <title><![CDATA[es+kibana+filebeat采集docker日志实战]]></title>
     <url>%2Fming%2F7383a41.html</url>
-    <content type="text"><![CDATA[前言最近看了看 docker 标准输出和标准错误的日志采集发现 filebeat 可以直接监听 docker的启动结束等动作 并且几乎不需要配置什么 就可以很轻松的采集到node上的docker运行的日志而且也可以直接接入 k8s的标准输出和错误日志 贯彻了 elastic 的简单粗暴的套路实战启动 elastic-search 和kibana这里直接使用docker 启动即可 如果是生产或者预发环境 建议使用官方的镜像作基础镜像在上面进行个性化优化1sudo docker run -d -p 9200:9200 -p 5601:5601 --name es-kibana-test nshou/elasticsearch-kibana 安装filebeat这里使用下载压缩包方式安装 因为改配置简单 如果需要使用docker方式启动 改配置不是很方便 需要进行调整 这里只是作演示 就直接选择压缩包方式使用123#https://www.elastic.co/downloads/beats/filebeatweget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.3.1-linux-x86_64.tar.gzsudo zxvf ./filebeat-6.3.1-linux-x86_64.tar.gz 修改filebeat配置先备份 默认的filebeat.yml1sudo cp ./filebeat.yml filebeat.yml.bak 修改安装目录中filebeat.yml 主要是修改 inputs的type 自动安装kibana的索引 和es地址具体配置详情参考:https://www.elastic.co/docker-kubernetes-container-monitoring12345678910111213141516171819202122#=========================== Filebeat inputs =============================filebeat.inputs: - type: docker containers.ids: - &apos;*&apos; processors: - add_docker_metadata: ~#============================== Kibana =====================================setup.kibana: host: &quot;localhost:5601&quot;#================================ Outputs =====================================#-------------------------- Elasticsearch output ------------------------------output.elasticsearch: # Array of hosts to connect to. hosts: [&quot;localhost:9200&quot;] 启动并且根据配置自动安装filebeat 索引12# 启动并且安装 filebeat sudo ./filebeat --setup -e 这个时候 在这台node上 所有docker的日志都会被filebeat采集起来并且发送到es上 产出日志后 直接在kibana上查看即可 总结由于 docker集群的日志采集比较操蛋 可能是多种不同的系统运行(例如java类应用、各种服务软件的日志之类的) 那么在日志格式上无法做到 统一采用这种通过收集docker 的标准输出和错误输出 可以收集整个docker集群中的docker的日志 方便查看和管理 当然filebeat也支持直接和k8s集群接入]]></content>
+    <content type="text"><![CDATA[前言最近看了看 docker 标准输出和标准错误的日志采集发现 filebeat 可以直接监听 docker的启动结束等动作 并且几乎不需要配置什么 就可以很轻松的采集到node上的docker运行的日志而且也可以直接接入 k8s的标准输出和错误日志 贯彻了 elastic 的简单粗暴的套路实战启动 elastic-search 和kibana这里直接使用docker 启动即可 如果是生产或者预发环境 建议使用官方的镜像作基础镜像在上面进行个性化优化1sudo docker run -d -p 9200:9200 -p 5601:5601 --name es-kibana-test nshou/elasticsearch-kibana 安装filebeat这里使用下载压缩包方式安装 因为改配置简单 如果需要使用docker方式启动 改配置不是很方便 需要进行调整 这里只是作演示 就直接选择压缩包方式使用123#https://www.elastic.co/downloads/beats/filebeatweget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.3.1-linux-x86_64.tar.gzsudo zxvf ./filebeat-6.3.1-linux-x86_64.tar.gz 修改filebeat配置先备份 默认的filebeat.yml1sudo cp ./filebeat.yml filebeat.yml.bak 修改安装目录中filebeat.yml 主要是修改 inputs的type 自动安装kibana的索引 和es地址具体配置详情参考:https://www.elastic.co/docker-kubernetes-container-monitoring12345678910111213141516171819202122#=========================== Filebeat inputs =============================filebeat.inputs: - type: docker containers.ids: - &apos;*&apos; processors: - add_docker_metadata: ~#============================== Kibana =====================================setup.kibana: host: &quot;localhost:5601&quot;#================================ Outputs =====================================#-------------------------- Elasticsearch output ------------------------------output.elasticsearch: # Array of hosts to connect to. hosts: [&quot;localhost:9200&quot;] 启动并且根据配置自动安装filebeat 索引12# 启动并且安装 filebeat sudo ./filebeat --setup -e 这个时候 在这台node上 所有docker的日志都会被filebeat采集起来并且发送到es上 产出日志后 直接在kibana上查看即可 遇到的问题 kibana 建立读取索引的时候 报错 FORBIDDEN/12/index read-only / allow delete (api)]删除 索引的 只读权限即可 1curl -XPUT -H &quot;Content-Type: application/json&quot; http://ip:9200/_all/_settings -d &apos;&#123;&quot;index.blocks.read_only_allow_delete&quot;: null&#125;&apos; 总结由于 docker集群的日志采集比较操蛋 可能是多种不同的系统运行(例如java类应用、各种服务软件的日志之类的) 那么在日志格式上无法做到 统一采用这种通过收集docker 的标准输出和错误输出 可以收集整个docker集群中的docker的日志 方便查看和管理 当然filebeat也支持直接和k8s集群接入]]></content>
       <categories>
         <category>实战</category>
       </categories>
@@ -283,25 +283,26 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[树莓派组装运行]]></title>
-    <url>%2Fming%2F4c838b91.html</url>
-    <content type="text"><![CDATA[####自己闲的蛋疼 购买了个树莓派3b 由于不太懂这个 买配件 组装运行起来耗费了好久 特此做个笔记#####树莓派配件组成:1:板子:就是生产好的树莓派的电子板2:电源:3b版本需要5v 2.5A的电源 如果外接设备多的话要按需增加电源3:sd卡:做系统启动 存储的sd存储卡4:散热装备:散热片两个(cpu、gpu)、风扇一个5:外壳:还是需要一个外壳的 不然贼丑#####树莓派组装1:先把sd卡刷个系统 随便刷 个官方的系统就行2:把散热片贴好 。风扇接好 风扇接46脚 红色4(供电) 黑色6 如果想可关闭电风扇或者控温自动控制 需要一个继电器、一个温度感应模块3:插上网线4:接上电源5:开机需要会自己搭建内网或者扫描设备ip然后通过ssh协议连接上树莓派即可#####总结:成本大概在300-400左右 其实很不错了 这个价位能有这个配置这个玩法 很满足了 就是有点麻烦什么都要自己折腾 树莓派可以做很多东西 据大佬说 树莓派最终梦想就是自己造一架基于树莓派的无人机]]></content>
+    <title><![CDATA[guava-basic笔记]]></title>
+    <url>%2Fming%2Fd9ddd520.html</url>
+    <content type="text"><![CDATA[##guava basic 基本工具避免null optional如果是jdk1.8以上直接使用optional 1.8以下需要使用guava basic工具包前置检查 Preconditions方法声明（不包括额外参数）描述检查失败时抛出的异常checkArgument(boolean)检查boolean是否为true，用来检查传递给方法的参数。IllegalArgumentExceptioncheckNotNull(T)检查value是否为null，该方法直接返回value，因此可以内嵌使用checkNotNull。NullPointerExceptioncheckState(boolean)用来检查对象的某些状态。IllegalStateExceptioncheckElementIndex(int index, int size)检查index作为索引值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;size *IndexOutOfBoundsExceptioncheckPositionIndex(int index, int size)检查index作为位置值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;=size *IndexOutOfBoundsExceptioncheckPositionIndexes(int start, int end, int size)检查[start, end]表示的位置范围对某个列表、字符串或数组是否有效*IndexOutOfBoundsExceptionobject方法 Objectsjdk1.7 后提供了相应的方法 可以不用guava提供比较链 ComparisonChain排序 Ordering排序器方法描述natural()对可排序类型做自然排序，如数字按大小，日期按先后排序usingToString()按对象的字符串形式做字典排序[lexicographical ordering]from(Comparator)把给定的Comparator转化为排序器链式调用方法描述reverse()|获取语义相反的排序器nullsFirst()|使用当前排序器，但额外把null值排到最前面。nullsLast()|使用当前排序器，但额外把null值排到最后面。compound(Comparator)|合成另一个比较器，以处理当前排序器中的相等情况。lexicographical()|基于处理类型T的排序器，返回该类型的可迭代对象Iterable的排序器。onResultOf(Function)|对集合中元素调用Function，再按返回值用当前排序器排序。排序器方法描述greatestOf(Iterable iterable, int k)|获取可迭代对象中最大的k个元素。|leastOfisOrdered(Iterable)|判断可迭代对象是否已按排序器排序：允许有排序值相等的元素。|isStrictlyOrderedsortedCopy(Iterable)|判断可迭代对象是否已严格按排序器排序：不允许排序值相等的元素。|immutableSortedCopymin(E, E)|返回两个参数中最小的那个。如果相等，则返回第一个参数。|max(E, E)min(E, E, E, E…)|返回多个参数中最小的那个。如果有超过一个参数都最小，则返回第一个最小的参数。|max(E, E, E, E…)min(Iterable)|返回迭代器中最小的元素。如果可迭代对象中没有元素，则抛出NoSuchElementException。|max(Iterable), min(Iterator), max(Iterator)总结: guava的基本工具类用的多的可能就是 Preconditions 来检查参数了 optional jdk8 已经包含了 比较的方法 也有 或者 jdk8中stream集合提供更加强大的 宝马都有了 还用个毛的guava的自行车]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
-        <tag>linux</tag>
+        <tag>guava</tag>
+        <tag>tools</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[树莓派vnc链接]]></title>
-    <url>%2Fming%2F52f5e4f0.html</url>
-    <content type="text"><![CDATA[###树莓派开启wifi模块后 想看看树莓派的桌面 然后就开启了vnc服务 玩玩####安装vnc服务1sudo apt-get install tightvncserver ####设置vnc链接的密码（最长只能8位 超过的截取前8位）1vncpasswd ####添加开机启动1sudo vim /etc/init.d/vncserver 内容:12345678910111213141516171819202122#!/bin/sh#如果不是 pi用户 请 改这里的user 登录的时候 也用这里的userexport USER=&apos;pi&apos; eval cd ~$USER case &quot;$1&quot; in start) # 启动命令行。此处自定义分辨率、控制台号码或其它参数。 su $USER -c &apos;/usr/bin/vncserver -depth 16 -geometry 1024x768 :1&apos; echo &quot;Starting VNC server for $USER &quot; ;; stop) # 终止命令行。此处控制台号码与启动一致。 su $USER -c &apos;/usr/bin/vncserver -kill :1&apos; echo &quot;vncserver stopped&quot; ;; *) echo &quot;Usage: /etc/init.d/vncserver &#123;start|stop&#125;&quot; exit 1 ;;esacexit 0 添加执行权限 更新开机启动12sudo chmod 755 /etc/init.d/vncserversudo update-rc.d vncserver defaults ###登录通过vnc工具登录账户 pi(脚本中的user)密码 设置的vnc密码 不是ssh密码 ###多个桌面开启默认是端口:5900 如果第一个窗口推荐在5900+1。。。以此类推 不要用默认的 有坑 ####总结: vnc链接树莓派的桌面 感觉卡卡的 玛格及]]></content>
+    <title><![CDATA[spring bean 加载顺序解决办法]]></title>
+    <url>%2Fming%2F50d1ed2b.html</url>
+    <content type="text"><![CDATA[在使用SpringBeanManager工具类的时候 发现 spring boot 是根据目录取扫描装配bean 的由于我把 这个工具类放在com.ming.core.utils下 导致 这个加载顺序在一些初始化服务之后看了一下相关资料有四种解决方法在配置中调整顺序先加载的 写在最上面 但是呢 我懒的写配置文件123&lt;!--bean声明--&gt; &lt;bean class=&quot;com.ming.core.utils.SpringBeanManager&quot;/&gt; &lt;bean class=&quot;com.ming.base.init.SystemInit&quot; init-method=&quot;init&quot; destroy-method=&quot;destroy&quot; /&gt; 使用@Autowired 注入到所需的服务中其实就是跟在配置中写 ref差不多的功能 spring 会解析到这个会依赖springBeanManager 所以会先加载springBeanManager这种方式 有点丑 但是可以解决问题 123456789101112131415161718@Componentpublic class SystemInit &#123; /** * 使 SpringBeanManager在SystemInit之前初始化 * * @author ming * @date 2017-11-09 17:52 */ @Autowired private SpringBeanManager springBeanManager; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用DependsOn这个是要配置一个或者多个 注册的bean的名称 而不是类的名称 123456789101112// 等待springBeanManager 装载完毕 初始化本类@DependsOn(value = &quot;springBeanManager&quot;)@Componentpublic class SystemInit &#123; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用@Order注解此方式 在spring boot 中暂时无法使用 等找到相关文档 再看看是什么原因 无法使用####总结：一般来说 对于加载顺序有强烈要求的地方 不是很多 如果有 使用DependsOn 基本能解决了]]></content>
       <categories>
-        <category>笔记</category>
+        <category>坑</category>
       </categories>
       <tags>
-        <tag>linux</tag>
+        <tag>spring</tag>
       </tags>
   </entry>
   <entry>
@@ -321,17 +322,6 @@
     <content type="text"><![CDATA[公司想切换到spring cloud上所以我找了本书看看 大致上知道了spring cloud的各部分组件 也算是用的比较熟练了但是好记性不如烂笔头 所以写一波笔记 防止遗忘####目录综述注册中心(eureka、consul、zk)微服务服务端、客户端(feign)容错、负载均衡(ribbon、hystrix)配置中心(config)网关(zuul)消息总线(bus、stream)定时任务调度(qz)分布式调用链日志(sleuth:基于zipkin的)搭建个人基于spring cloud 的脚手架遇到的问题####综述spring cloud 提供一整套分布式微服务的解决方案联系到云原生(cloud native)这个概念我个人觉得 他是把微服务的架构+容器+自动化运维整合到一起提出的概念在基于docker+k8s这样的或者类似的平台下 快速开发、切入到已有的分布式环境中的应用####注册中心在微服务架构中 较为核心的应该就是注册中心了 服务的治理、使用都需要注册中心的协助spring cloud支持比较好的注册中心 大致有三种 eureka、consul、zookeeper这三个 各有各的好 不过现在来说 consul可能功能更加齐全 更加好用一点 这个在后续的详细的笔记详说####微服务的服务端、客户端######服务端:这个就是很普通的http接口 莓什么好说的 现在http大部分还是使用1.0。或者1.1 性能说实话一般 不过差不多够用 如果有特殊需求 完全可以选择其他协议例如我北京的有个大佬朋友 他们也是spring cloud +docker +k8s技术栈 他们就要把http协议切换到tcp协议 照样刚但是后续http2.0出来后 我觉得性能差别应该不会太大了 毕竟 http2.0也是基于二进制 还有其它的功能 我比较看好 http2.0######客户端:简陋点直接用restTemplate也是可以访问调用的 但是不好管理 而且麻烦 建议使用feign去申明接口即可调用但是这个也有点坑举个例子 在spring mvc 4.3 之后 是提供GetMapping这样的封装RequestMapping的接口 但是feign不支持的 还有其他的坑 到详细的笔记细说####容错、负载均衡######容错:spring cloud 是基于hystrix来做容错的 容错其实就是 发现错误 马上关闭停止对错误的节点的访问、有相应的降级措施情况下 进行服务降级 保证服务的可用当然也提供请求缓存、请求合并 turbine也可以基于hystrix、dashboard来进行集群的状态监控######负载均衡:spring cloud 是基于ribbon来做客户端负载均衡的 首先 会去注册中心找到注册列表 通过轮寻方式 去负载均衡 当然可以重写负载均衡器(LoadBalancerClient) 也是可以使用其他更加优越的算法的 毕竟spring cloud 只是提供基础实现####配置中心国内的话 各个大公司基本都有各自的配置中心的实现 我们公司用的是baidu的disconf 用起来也就那回事吧 不如spring cloud configconfig 是使用 git 或者svn 来做配置仓库 这天生站在巨人肩膀上config 可以实现集中管理各个集群的配置 而且安全性较高 访问安全、数据的加密解密(对称加密需要替换jre、还支持rsa这种非对称加密)还可以通过配合bus组件 进行动态修改集群配置 这一点是很重要的 因为很多参数根据实际情况进行微调是非常需要的####网关就是统一对访问进行管理的地方 例如鉴权、限制等等网关 说实话 如果实力强劲 就不会选择这个来用zuulnginx+lua功能不比这个东西强？####消息总线说的这么高端其实就是一个mq的使用 bus主要是消息传递 stream主要是发布订阅事件没什么特别的spring cloud bus 或者stream 天然支持 rabbit或者kafka 都差不多吧 看具体情况选择 个人比较倾向rabbit####定时任务调度定时任务 是每个系统必须的一个模块一般也就三种方式1:基于jdk的timer timerTask方式 这种方式简单粗暴 但是需要自己实现一些复杂的功能2:基于spring 的 scheduled task 这个也是不太适合企业级使用3:qz(quartz)功能多 支持集群环境下调度 但是需要数据库支持 不用说 肯定qz的 不然要写死####分布式调用链日志sleuth 是基于zipkin的一套分布式调用链跟踪组件说起这个 公司的zipkin还是我们组负责的 老大带我们去引入zipkin 搞死人了调用链呢 是跟踪每个请求从发起 到调用各个服务 一直到db操作一整链记录这些日志 方便优化、跟踪错误这个到详细笔记细说 这个和业务日志、操作日志是不同的####遇到的问题这个说实话还是遇到很多问题的 因为我基于公司已有的架构 使用spirng cloud 从新整合 还是有点坑的 详细笔记再说####总结:spring cloud 基本上就这些组件 spring cloud + docker + k8s 这一套可以说是现在做微服务 云原生的标准套路了]]></content>
       <categories>
         <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[spring bean 加载顺序解决办法]]></title>
-    <url>%2Fming%2F50d1ed2b.html</url>
-    <content type="text"><![CDATA[在使用SpringBeanManager工具类的时候 发现 spring boot 是根据目录取扫描装配bean 的由于我把 这个工具类放在com.ming.core.utils下 导致 这个加载顺序在一些初始化服务之后看了一下相关资料有四种解决方法在配置中调整顺序先加载的 写在最上面 但是呢 我懒的写配置文件123&lt;!--bean声明--&gt; &lt;bean class=&quot;com.ming.core.utils.SpringBeanManager&quot;/&gt; &lt;bean class=&quot;com.ming.base.init.SystemInit&quot; init-method=&quot;init&quot; destroy-method=&quot;destroy&quot; /&gt; 使用@Autowired 注入到所需的服务中其实就是跟在配置中写 ref差不多的功能 spring 会解析到这个会依赖springBeanManager 所以会先加载springBeanManager这种方式 有点丑 但是可以解决问题 123456789101112131415161718@Componentpublic class SystemInit &#123; /** * 使 SpringBeanManager在SystemInit之前初始化 * * @author ming * @date 2017-11-09 17:52 */ @Autowired private SpringBeanManager springBeanManager; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用DependsOn这个是要配置一个或者多个 注册的bean的名称 而不是类的名称 123456789101112// 等待springBeanManager 装载完毕 初始化本类@DependsOn(value = &quot;springBeanManager&quot;)@Componentpublic class SystemInit &#123; @PostConstruct public void init() &#123; //初始化 script job bean GroovyBeanInit.InitScriptJob(); &#125;&#125; 使用@Order注解此方式 在spring boot 中暂时无法使用 等找到相关文档 再看看是什么原因 无法使用####总结：一般来说 对于加载顺序有强烈要求的地方 不是很多 如果有 使用DependsOn 基本能解决了]]></content>
-      <categories>
-        <category>坑</category>
       </categories>
       <tags>
         <tag>spring</tag>
@@ -438,9 +428,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot mvc配置笔记]]></title>
-    <url>%2Fming%2Fcdea8691.html</url>
-    <content type="text"><![CDATA[配置mvc相关参数的类常用的 也就是如下三种方法 如果需要使用spring boot 中默认实现 请选则第三种方式 避免覆盖spring boot 实现@EnableWebMvc+extends WebMvcConfigurationAdapter，在扩展的类中重写父类的方法即可，这种方式会屏蔽springboot的@EnableAutoConfiguration中的设置extends WebMvcConfigurationSupport，在扩展的类中重写父类的方法即可，这种方式会屏蔽springboot的@EnableAutoConfiguration中的设置extends WebMvcConfigurationAdapter，在扩展的类中重写父类的方法即可，这种方式依旧使用springboot的@EnableAutoConfiguration中的设置以上资料参考博客:http://www.voidcn.com/article/p-fpvxvkbi-bpb.html####常用方式实现1:拦截器实现1234567891011121314151617181920import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;import javax.servlet.http.HttpServletRequest;import javax.servlet.http.HttpServletResponse;/** * 统一设定返回包头 * * @author ming * @date 2017-11-06 18:15 */public class ResponseHandlerInterceptot extends HandlerInterceptorAdapter &#123; @Override public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123; //统一设定 返回编码集 response.setCharacterEncoding(&quot;UTF-8&quot;); &#125;&#125; 2:注册到拦截器链中1234567891011121314151617181920212223242526272829303132333435363738394041/** * 拦截器配置 * * @author ming * @date 2017-08-28 11点 */@Configurationpublic class WebInterceptors extends WebMvcConfigurerAdapter &#123; public WebInterceptors() &#123; super(); &#125; /** * 添加拦截器 * * @author ming * @date 2017-11-07 10:08 */ @Override public void addInterceptors(InterceptorRegistry registry) &#123; //注册统一处理响应包头拦截器 registry.addInterceptor(new ResponseHandlerInterceptot()); super.addInterceptors(registry); &#125; /** * 添加允许跨域的请求 * * @author ming * @date 2017-11-10 17:07 */ @Override public void addCorsMappings(CorsRegistry registry) &#123; //允许所有请求跨域 registry.addMapping(&quot;/**&quot;); super.addCorsMappings(registry); &#125; &#125; ####总结:追求高度自定义 继承 WebMvcConfigurationSupport 如果想偷懒 那就继承 WebMvcConfigurationAdapter 可以拥有spring boot 默认的配置]]></content>
+    <title><![CDATA[spring boot 自定义mvc MessageConverter 笔记]]></title>
+    <url>%2Fming%2Fde4fca49.html</url>
+    <content type="text"><![CDATA[指定前后端传输数据格式在前后分离项目中 最麻烦的应该就是 前后端工程师对接后端通过添加mvc消息转换器 返回更加符合前端的数据格式这个数据格式 不是说返回的格式 而是 某些类型的数据的处理 例如 date 可以转换成Long类型的时间戳返回直接继承实现即可 如果是继承WebMvcConfigurerAdapter 实现的mvc 相关配置 可以不用管 这样 它自己会添加到转换器链中如果是继承WebMvcConfigurationSupport 那么 需要重写configureMessageConverters() 手动添加到转换器链中1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/** * 返回数数据格式转换器 * * @author ming * @date 2017-11-10 13:57 */public class MessageConverter extends AbstractHttpMessageConverter&lt;Object&gt; &#123; /** * date 转换为 时间戳 * * @author ming * @date 2017-11-10 13:56 */ ValueFilter filter = (obj, s, v) -&gt; &#123; if (v instanceof Date) &#123; return ((Date) v).getTime(); &#125; return v; &#125;; public MessageConverter() &#123; super(MediaType.ALL); &#125; @Override protected boolean supports(Class&lt;?&gt; clazz) &#123; return true; &#125; @Override protected Object readInternal(Class&lt;?&gt; aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException &#123; return null; &#125; @Override public boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType) &#123; return this.supports(clazz) &amp;&amp; this.canWrite(mediaType); &#125; @Override protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException &#123; FileCopyUtils.copy(JSON.toJSONString(o, filter, SerializerFeature.DisableCircularReferenceDetect).getBytes(), httpOutputMessage.getBody()); &#125;&#125; 这个只是返回数据中数据的类型的格式化 如果是要对返回数据格式进行格式化需要利用对ResponseBodyAdvice进行继承 进行控制器增强处理返回数据格式]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -449,9 +439,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot 自定义mvc MessageConverter 笔记]]></title>
-    <url>%2Fming%2Fde4fca49.html</url>
-    <content type="text"><![CDATA[指定前后端传输数据格式在前后分离项目中 最麻烦的应该就是 前后端工程师对接后端通过添加mvc消息转换器 返回更加符合前端的数据格式这个数据格式 不是说返回的格式 而是 某些类型的数据的处理 例如 date 可以转换成Long类型的时间戳返回直接继承实现即可 如果是继承WebMvcConfigurerAdapter 实现的mvc 相关配置 可以不用管 这样 它自己会添加到转换器链中如果是继承WebMvcConfigurationSupport 那么 需要重写configureMessageConverters() 手动添加到转换器链中1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/** * 返回数数据格式转换器 * * @author ming * @date 2017-11-10 13:57 */public class MessageConverter extends AbstractHttpMessageConverter&lt;Object&gt; &#123; /** * date 转换为 时间戳 * * @author ming * @date 2017-11-10 13:56 */ ValueFilter filter = (obj, s, v) -&gt; &#123; if (v instanceof Date) &#123; return ((Date) v).getTime(); &#125; return v; &#125;; public MessageConverter() &#123; super(MediaType.ALL); &#125; @Override protected boolean supports(Class&lt;?&gt; clazz) &#123; return true; &#125; @Override protected Object readInternal(Class&lt;?&gt; aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException &#123; return null; &#125; @Override public boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType) &#123; return this.supports(clazz) &amp;&amp; this.canWrite(mediaType); &#125; @Override protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException &#123; FileCopyUtils.copy(JSON.toJSONString(o, filter, SerializerFeature.DisableCircularReferenceDetect).getBytes(), httpOutputMessage.getBody()); &#125;&#125; 这个只是返回数据中数据的类型的格式化 如果是要对返回数据格式进行格式化需要利用对ResponseBodyAdvice进行继承 进行控制器增强处理返回数据格式]]></content>
+    <title><![CDATA[spring boot mvc配置笔记]]></title>
+    <url>%2Fming%2Fcdea8691.html</url>
+    <content type="text"><![CDATA[配置mvc相关参数的类常用的 也就是如下三种方法 如果需要使用spring boot 中默认实现 请选则第三种方式 避免覆盖spring boot 实现@EnableWebMvc+extends WebMvcConfigurationAdapter，在扩展的类中重写父类的方法即可，这种方式会屏蔽springboot的@EnableAutoConfiguration中的设置extends WebMvcConfigurationSupport，在扩展的类中重写父类的方法即可，这种方式会屏蔽springboot的@EnableAutoConfiguration中的设置extends WebMvcConfigurationAdapter，在扩展的类中重写父类的方法即可，这种方式依旧使用springboot的@EnableAutoConfiguration中的设置以上资料参考博客:http://www.voidcn.com/article/p-fpvxvkbi-bpb.html####常用方式实现1:拦截器实现1234567891011121314151617181920import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;import javax.servlet.http.HttpServletRequest;import javax.servlet.http.HttpServletResponse;/** * 统一设定返回包头 * * @author ming * @date 2017-11-06 18:15 */public class ResponseHandlerInterceptot extends HandlerInterceptorAdapter &#123; @Override public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123; //统一设定 返回编码集 response.setCharacterEncoding(&quot;UTF-8&quot;); &#125;&#125; 2:注册到拦截器链中1234567891011121314151617181920212223242526272829303132333435363738394041/** * 拦截器配置 * * @author ming * @date 2017-08-28 11点 */@Configurationpublic class WebInterceptors extends WebMvcConfigurerAdapter &#123; public WebInterceptors() &#123; super(); &#125; /** * 添加拦截器 * * @author ming * @date 2017-11-07 10:08 */ @Override public void addInterceptors(InterceptorRegistry registry) &#123; //注册统一处理响应包头拦截器 registry.addInterceptor(new ResponseHandlerInterceptot()); super.addInterceptors(registry); &#125; /** * 添加允许跨域的请求 * * @author ming * @date 2017-11-10 17:07 */ @Override public void addCorsMappings(CorsRegistry registry) &#123; //允许所有请求跨域 registry.addMapping(&quot;/**&quot;); super.addCorsMappings(registry); &#125; &#125; ####总结:追求高度自定义 继承 WebMvcConfigurationSupport 如果想偷懒 那就继承 WebMvcConfigurationAdapter 可以拥有spring boot 默认的配置]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -495,6 +485,18 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[spring boot (四)笔记]]></title>
+    <url>%2Fming%2F68619b43.html</url>
+    <content type="text"><![CDATA[###在使用spring boot的时候 spring本身会根据springboot的版本引入依赖包 跟maven一样有隐藏依赖会自动引入这个时候如果不需要其中一些工具包 或者需要指定某些包的版本 可以通过maven的功能去排除依赖和覆盖依赖##排除依赖 通过maven的语法排除依赖包 exclusions例如 为项目大小瘦身的时候 排除不需要的jar 例如jackson12345678910111213&lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;exclusions&gt; &lt;exclusion&gt; &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt; &lt;/exclusion&gt; &lt;/exclusions&gt;&lt;/dependency&gt;``` ##覆盖依赖 通过maven的最短路径寻包的特性 去覆盖已有依赖例如 需要指定某个包的版本 直接在spring boot所在的pom中添加这个包的依赖即可 例如 spring boot 的版本依赖的jackson是2.3.3 但是我们需要2.4.3版本 直接在spring boot 的pom下面添加2.4.3 的jackson即可 com.fasterxml.jackson.core jackson-databind 2.4.3```]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[spring boot (三)笔记]]></title>
     <url>%2Fming%2F241784d.html</url>
     <content type="text"><![CDATA[###spring boot中 在某些配置的时候肯定是需要自定义配置的 spring boot 默认显示配置覆盖默认配置 所以只需要符合spring boot的配置环境###能够覆盖默认配置的配置位置1:命令行参数(如直接命令行启动某个jar 后面附带的命令)2:jndi配置3:jvm配置4:操作系统环境变量5:随机生成带random.*的属性(并不是很明白 以后看懂了 在更新)6:应用程序的application.properties 或者 application.yml7:通过@PropertySource注解标注的bean######按照顺序覆盖 优先级从1-7 依次降低 就是说 当命令行指定了某个配置 后面在怎么写 也无法改变 因为 命令行的参数优先级最高######如果 有的配置上述几个位置没有配置则采用spring boot 的默认配置###application文件位置1:外置 应用程序的运行目录的/config目录2:外置 应用程序运行目录3:内置 jar或者war的/config目录内4:内置 jar或者war的根目录######也是从1-4 优先级依次降低、yml配置 覆盖 properties中的配置###在程序中使用配置中的参数@ConfigurationProperties这个注解可以去配置中寻找某些前缀的参数如 配置中有12my.name=xianyumy.sex=boy 那么可以在某个bean中注入 通过setter注入···@ConfigurationProperties(prefix=”my”)public class myProperties{ private String name;private String sex;setter.getter 。。。。}···]]></content>
@@ -507,18 +509,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[guava-basic笔记]]></title>
-    <url>%2Fming%2Fd9ddd520.html</url>
-    <content type="text"><![CDATA[##guava basic 基本工具避免null optional如果是jdk1.8以上直接使用optional 1.8以下需要使用guava basic工具包前置检查 Preconditions方法声明（不包括额外参数）描述检查失败时抛出的异常checkArgument(boolean)检查boolean是否为true，用来检查传递给方法的参数。IllegalArgumentExceptioncheckNotNull(T)检查value是否为null，该方法直接返回value，因此可以内嵌使用checkNotNull。NullPointerExceptioncheckState(boolean)用来检查对象的某些状态。IllegalStateExceptioncheckElementIndex(int index, int size)检查index作为索引值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;size *IndexOutOfBoundsExceptioncheckPositionIndex(int index, int size)检查index作为位置值对某个列表、字符串或数组是否有效。index&gt;=0 &amp;&amp; index&lt;=size *IndexOutOfBoundsExceptioncheckPositionIndexes(int start, int end, int size)检查[start, end]表示的位置范围对某个列表、字符串或数组是否有效*IndexOutOfBoundsExceptionobject方法 Objectsjdk1.7 后提供了相应的方法 可以不用guava提供比较链 ComparisonChain排序 Ordering排序器方法描述natural()对可排序类型做自然排序，如数字按大小，日期按先后排序usingToString()按对象的字符串形式做字典排序[lexicographical ordering]from(Comparator)把给定的Comparator转化为排序器链式调用方法描述reverse()|获取语义相反的排序器nullsFirst()|使用当前排序器，但额外把null值排到最前面。nullsLast()|使用当前排序器，但额外把null值排到最后面。compound(Comparator)|合成另一个比较器，以处理当前排序器中的相等情况。lexicographical()|基于处理类型T的排序器，返回该类型的可迭代对象Iterable的排序器。onResultOf(Function)|对集合中元素调用Function，再按返回值用当前排序器排序。排序器方法描述greatestOf(Iterable iterable, int k)|获取可迭代对象中最大的k个元素。|leastOfisOrdered(Iterable)|判断可迭代对象是否已按排序器排序：允许有排序值相等的元素。|isStrictlyOrderedsortedCopy(Iterable)|判断可迭代对象是否已严格按排序器排序：不允许排序值相等的元素。|immutableSortedCopymin(E, E)|返回两个参数中最小的那个。如果相等，则返回第一个参数。|max(E, E)min(E, E, E, E…)|返回多个参数中最小的那个。如果有超过一个参数都最小，则返回第一个最小的参数。|max(E, E, E, E…)min(Iterable)|返回迭代器中最小的元素。如果可迭代对象中没有元素，则抛出NoSuchElementException。|max(Iterable), min(Iterator), max(Iterator)总结: guava的基本工具类用的多的可能就是 Preconditions 来检查参数了 optional jdk8 已经包含了 比较的方法 也有 或者 jdk8中stream集合提供更加强大的 宝马都有了 还用个毛的guava的自行车]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>guava</tag>
-        <tag>tools</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[java注解笔记]]></title>
     <url>%2Fming%2F478f654a.html</url>
     <content type="text"><![CDATA[##java定义的4个标准元数据注解:1 @Target2 @Retention3 @Documented4 @Inherited|名称 | 作用 | 取值 | 备注||———|:——|:——-|——||@target | 用来说明annotation修饰对象范围 描述注解使用范围| 1.CONSTRUCTOR:用于描述构造器2.FIELD:用于描述域3.LOCAL_VARIABLE:用于描述局部变量4.METHOD:用于描述方法5.PACKAGE:用于描述包6.PARAMETER:用于描述参数7.TYPE:用于描述类、接口(包括注解类型) 或enum声明|在自定义注解时候 定义注解使用范围@Retention定义annotation保留时间长短 也就是生命周期1.SOURCE:在源文件中有效（即源文件保留） 2.CLASS:在class文件中有效（即class保留） 3.RUNTIME:在运行时有效（即运行时保留）用来定义注解生命周期@Documented标记注解 描述这个类型的注解是作为被标注的程序成员变量的公共api就是一个标记 例如javadoc的注解 可用被javadoc这样的工具进行操作生成文档@Inherited标记注解 描述某个被标注的类型是被继承的 如果使用此注解标记一个类 啦么这个注解将用于该类的子类当@Inherited annotation类型标注的annotation的Retention是RetentionPolicy.RUNTIME，则反射API增强了这种继承性。如果我们使用java.lang.reflect去查询一个@Inherited annotation类型的annotation时，反射代码检查将展开工作：检查class和其父类，直到发现指定的annotation类型被发现，或者到达类继承结构的顶层。定义注解格式 public @interface 注解名{定义内容}注解参数可支持类型：1.所有基本数据类型（int,float,boolean,byte,double,char,long,short) 2.String类型 3.Class类型 4.enum类型 5.Annotation类型 6.以上所有类型的数组annotation类型的参数设定要求：第一,只能用public或默认(default)这两个访问权修饰.例如,String value();这里把方法设为defaul默认类型； 第二,参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.例如,String value();这里的参数成员就为String; 第三,如果只有一个参数成员,最好把参数名称设为”value”,后加小括号.例:下面的例子FruitName注解就只有一个参数成员。注解元素必须有默认值 要么默认指定 要么注解时候指定。非基本类型的注解元素不能为null注解如果不处理 几乎和注释一样 所以需要注解处理器主要是通过反射来构建自定义注解处理器]]></content>
@@ -527,17 +517,6 @@
       </categories>
       <tags>
         <tag>java基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[idea 常用插件]]></title>
-    <url>%2Fming%2Fa365393a.html</url>
-    <content type="text"><![CDATA[名称功能快捷键备注ace jump文件中匹配字符串跳转ctrl+;常用在代码中匹配跳转vim使用类似vim方式操作文件内容vim控使用find bugs查找代码中不符合他的规范的代码略坑 但是有点用.ignoregit 配置忽略文件的插件可以通过查看是否变灰 来确定配置是否生效bashsupport写bashshell脚本的插件一般用途 shell脚本 不是很需要这个lombok配合lombok.jar使用lombok 很不错 能让代码看起来 更加干净整洁markdown support书写markdown 文件的插件还不错 用起来 和简书上差不多code glance代码试图pgup pgon 上下翻屏]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>tools</tag>
       </tags>
   </entry>
   <entry>
@@ -645,6 +624,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[docker 运行秒退出解决办法]]></title>
+    <url>%2Fming%2F52ab603.html</url>
+    <content type="text"><![CDATA[###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器解决方法:在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如mysql这样的 需要让他在前台运行 mysqld.service]]></content>
+      <categories>
+        <category>坑</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[maven 远程部署tomcat 上的java web 项目]]></title>
     <url>%2Fming%2Fd7957e83.html</url>
     <content type="text"><![CDATA[####由于有朋友不会这个远程部署又懒的百度、google 于是我写这个maven+tomcat远程部署javaweb项目的教程。以后心情好说不定会继续更新项目管理的一些环境搭建:如jenkins+gitlab+项目管理工具(如禅道)这样自动化部署测试环境##工具和环境准备1:工具 maven tomcat2:环境maven能下jar即可、tomcat管理员账户和一些安全设置设定(8.5以上需要设定远程管理员访问的配置)3:能访问远程tomcat管理页面##maven远程部署配置####1: maven工具配置需要在maven的setting.xml中添加如下配置settins.xml 一般在maven安装目录的conf文件夹下 不排除有人更改默认地址了12345678&lt;servers&gt; &lt;!--maven tomcat远程部署密码帐号密码设置--&gt; &lt;server&gt; &lt;id&gt;名称 例如“laji” (任意取 pom.xml中需要使用)&lt;/id&gt; &lt;username&gt;tomcat管理员用户名&lt;/username&gt; &lt;password&gt;tomcat管理员密码&lt;/password&gt; &lt;/server&gt;&lt;/servers&gt; ####2:maven项目中的pom设置 在build的插件中添加下面这个插件并且配置亲测可以支持8.5tomcat 和7.x的 , tomcat 9.x的没测试1234567891011121314&lt;!--tomcat远程部署插件--&gt; &lt;plugin&gt; &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt; &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.1&lt;/version&gt; &lt;configuration&gt; &lt;!-- 此处的名字必须和setting.xml中配置的ID一致--&gt; &lt;server&gt;laji&lt;/server&gt; &lt;!-- tomcat远程部署访问页面--&gt; &lt;url&gt;http://服务器ip:8080/manager/text&lt;/url&gt; &lt;!-- 此处的名字是项目发布的工程名 可以任意取 访问部署好的项目旧是这个名称--&gt; &lt;path&gt;/lajiproject&lt;/path&gt; &lt;/configuration&gt; &lt;/plugin&gt; ##tomcat远程部署配置 ####1:需要配置tomcat管理员账户 并且能访问远程tomcat管理员地址例如：localhost:8080/manager/text在tomcat安装目录的conf下面的tomcat-users.xml中修改12345678910111213&lt;tomcat-users xmlns=&quot;http://tomcat.apache.org/xml&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://tomcat.apache.org/xml tomcat-users.xsd&quot; version=&quot;1.0&quot;&gt;&lt;role rolename=&quot;admin-gui&quot;/&gt;&lt;role rolename=&quot;admin-script&quot;/&gt;&lt;role rolename=&quot;manager-gui&quot;/&gt;&lt;role rolename=&quot;manager-script&quot;/&gt;&lt;role rolename=&quot;manager-jmx&quot;/&gt;&lt;role rolename=&quot;manager-status&quot;/&gt;&lt;user username=&quot;admin&quot; password=&quot;ideal123&quot; roles=&quot;manager-gui,manager-script,manager-jmx,manager-status,admin-script,admin-gui&quot;/&gt;&lt;/tomcat-users&gt; ####2:tomcat8.5远程需要添加远程管理员用户访问配置步骤 ####tomcat 8.5之后呢对安全访问增强了 不仅仅需要配置管理帐号还需要配置允许远程访问管理员账户1234567891011在conf/Catalina/localhost/manager.xml 没有就创建这个xml ，然后在manager.xml中添加&lt;Context privileged=&quot;true&quot; antiResourceLocking=&quot;false&quot; docBase=&quot;$&#123;catalina.home&#125;/webapps/manager&quot;&gt; &lt;Valve className=&quot;org.apache.catalina.valves.RemoteAddrValve&quot; allow=&quot;^.*$&quot; /&gt;&lt;/Context&gt;直接生效无须重启在官方文档中提到：每个web应用应该有自己的安全管理文件（manager.xml）如果没有使用默认值 也就是不能远程访问所以如果需要远程访问就需要创建manager.xml来指定允许远程访问规则 ##执行远程部署 ####例如idea 在你项目的maven配置的地方找到Plugins&gt;tomcat7&gt;tomcat7:redeploy ####尽量使用redeploy 因为你不从新部署有时候会产生乱七八糟的错误 ####这个插件具体玩法 向具体了解就需要自行找官方文档 我也没看官方文档 ###总结:部署过程： maven编译jar或者war》maven通过远程服务器的支持上传jar或者war ###这个时候需要保证本地编译的jar和war能符合服务器上的tomcat的jre版本]]></content>
@@ -655,17 +645,6 @@
         <tag>java</tag>
         <tag>maven</tag>
         <tag>tomcat</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[docker 运行秒退出解决办法]]></title>
-    <url>%2Fming%2F52ab603.html</url>
-    <content type="text"><![CDATA[###在学习docker的时候 遇到一个坑 就是当docker容器中没有前台运行的程序的时候 docker会认为这个容器没有工作内容会自动关闭这个容器解决方法:在写dockerfile的时候 记得留一个在前台执行的任务 特别是在做那种一般在后台运行的服务 如mysql这样的 需要让他在前台运行 mysqld.service]]></content>
-      <categories>
-        <category>坑</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -703,6 +682,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[iptables笔记]]></title>
+    <url>%2Fming%2F5bcc860.html</url>
+    <content type="text"><![CDATA[##iptables linux上常用防火墙参考地址：http://www.cnblogs.com/kevingrace/p/6265113.htmliptables 和netfilter关系netfilter 是linux内核中实现的包过滤的函数相关的东西iptables 是一个管理防火墙的工具 真正实现防火墙的还是netfilter语法iptables (选项) (参数)选项man iptables-t&lt;表&gt;：指定要操纵的表；-A：向规则链中添加条目；-D：从规则链中删除条目；-I：向规则链中插入条目；-R：替换规则链中的条目；-L：显示规则链中已有的条目；-F：清楚规则链中已有的条目；-Z：清空规则链中的数据包计算器和字节计数器；-X:删除规则链-N：创建新的用户自定义规则链；-P：定义规则链中的默认目标；-h：显示帮助信息；-p：指定要匹配的数据包协议类型；-s：指定要匹配的数据包源ip地址；-j&lt;目标&gt;：指定要跳转的目标；-i&lt;网络接口&gt;：指定数据包进入本机的网络接口；-o&lt;网络接口&gt;：指定数据包要离开本机所使用的网络接口。1iptables -t 表名 &lt;-A/I/D/R&gt; 规则链名 [规则号] &lt;-i/o 网卡名&gt; -p 协议名 &lt;-s 源IP/源子网&gt; --sport 源端口 &lt;-d 目标IP/目标子网&gt; --dport 目标端口 -j 动作 ####表名提供特定的功能|名称|功能|备注||:–|:–|:–||raw|数据跟踪处理|网址过滤||mangle|数据包修改，包重构|qds||nat|地址转换,网络地址转换|网关路由||filter|包过滤|防火墙规则| 链 名 名称 功能 备注 INPUT 输入数据包 对输入数据包的规则 OUTPUT 输出数据包 对输出数据包的规则 FORWARD 转发数据包 对转发数据的规则 PREROUTING 目标地址转换数据包 DANT POSTOUTING 源地址转换数据包 SNAT 表 和 链的关系图 ####动作 名称 功能 备注 ACCEPT 接受数据包 常用 打开某个端口接受数据 DROP 丢弃数据包 常用 禁止某个端口访问 MATCH 匹配 符合某个ip 或者端口 REJECT 丢弃数据包 可以向发送这个包的源主机发送错误消息 TARGET 指定动作 说明如何处理这个数据包 接受 丢弃 拒绝 JUMP 标识跳转到那个链上 RULE 一个或者多个匹配及其对应目标 REDIRECT 重定向、映射、透明代理 SNAT 源地址转换 DNAT 目标地址转换 MASQUERADE ip伪装 nat 用于adsl LOG 日志记录 ####实例 查看已有的iptables 规则 1234//查看iptables 列表 带数字 iptables -L -n -v //查看iptables 以序号标记iptables -L -n --line-numbers 清除已有的iptables 规则 123iptables -F --flush ：清楚规则链中已有的条目；iptables -X --delete-chain 删除 规则链iptables -Z --flush ：清空规则链中的数据包计算器和字节计数器； *删除 INPUT中的序号为num的规则1iptables -D INPUT num *开放指定端口 就是接受数据包123456789101112# 开启本地回环接口 运行本机访问本机iptables -A INPUT -s 127.0.0.1 -j ACCEPT # 允许已建立或相关连的通行iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT#允许本机所有向外访问iptables -A OUTPUT -j ACCEPT#允许 访问某个端口iptables -A INPUT -p tcp --dport 22 -j ACCEPT 允许访问 22端口# 禁止其他未允许的规则访问iptables -A INPUT -j reject# 禁止其他未允许的转发数据包访问iptables -A FORWARD -j reject 屏蔽ip 12345678# 屏蔽单个ipiptables -I INPUT -s 123.1.1.1 -j DROP# 屏蔽整个网段 123.0.0.0 - 123.255.255.254iptables -I INPUT -s 123.0.0.0/8 -j DROP# 屏蔽123.1.0.0 - 123.1.255.254网段iptables -I INPUT -s 123.1.0.0/16 -j DROP# 屏蔽 123.1.1.0 - 123.1.1.254网段iptables -i INPUT -s 123.1.1.0/24 -j DROP *]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[yml格式笔记]]></title>
     <url>%2Fming%2F958a34fe.html</url>
     <content type="text"><![CDATA[####yaml 在学习docker-compose工具中需要用到yaml来做配置####yaml语法清晰简洁 适合写配置 但是不适合做数据传输####在比较新的技术中 大量应用了yaml去配置 如spring cloud docker-compose等######语法规则大小写敏感缩进表示层级关系缩进不允许tab 只允许空格空格数量不重要。相同层级左边对齐即可#表示注释######支持的数据结构对象1name: xu 数组 123name: - xu - xu1 纯量 123456789101112131415161718数字number: 123boolean flag: true or falsenull值parent:~ !!强转类型 字符串1:默认不使用引号 str: xu2:包含特殊字符串需要引号 str: &apos;xu&apos;3:双引号不对特殊字符转义 s1: &apos;xu&apos; s2: &quot;xu&quot;4:字符串可以写成多行 必须缩进一个空格 换行符转为空格 str: 多行 字符 串5:多行字符串 可以用| 保留换行符 或者&gt; 折叠6: + 保留文字末尾换行 -删除文字末尾换行 ######引用允许用&amp;设定锚点 用*引用 用&lt;&lt;合并到当前数据 ######学习博客地址:http://www.ruanyifeng.com/blog/2016/07/yaml.html?f=tt]]></content>
@@ -725,18 +715,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[接口签名笔记]]></title>
-    <url>%2Fming%2F5e68a67b.html</url>
-    <content type="text"><![CDATA[####由于开放型的短信接口受到不明来源的恶意访问 大佬们紧急对整个项目的接口进行加密原理:密钥+参数生成 md5 签名 客户端保存好密钥即可 之前对接苏宁易购的那个支付平台的时候 也是选择这种方式进行访问加密1:生成密钥这个随机定义 例如我选择使用 appId + salt 生成md5 截取前12位作为 指定app应用的密钥 如果发生泄漏 可以通过改变salt 来生成新的密钥2:客户端密钥 存储客户端 拿到密钥不能明文存储 例如 12位 可以拆分三段 然后分别进行偏移 这样如果别人要识别 必须反编译源码 并且读懂相关规则3:签名规则除开签名以外所有参数 按照排序规则排序 然后拼接上密钥 通过md5 或者类似的算法生成md5签名4：服务端验证规则除开签名 也按照客户端同样的排序规则排序 拼接密钥 通过相同的算法生成服务端签名 通过比较客户端签名 和服务端签名 来验证服务是否可靠、生成签名 方法示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100#!/usr/bin/env groovy/** groovy 生成md5 签名的算法 * * @author ming * @date 2017-11-15 12:45 */import java.nio.charset.Charsetimport java.security.MessageDigestimport java.security.NoSuchAlgorithmExceptionimport org.apache.commons.codec.binary.Hex;static void main(String[] args) &#123; Map&lt;String, String[]&gt; map = new HashMap&lt;&gt;() map.put(&quot;sign&quot;, [&quot;mkasfasfds&quot;] as String[]) map.put(&quot;param&quot;, [&quot;ming&quot;] as String[]) map.put(&quot;b&quot;, [&quot;b&quot;] as String[]) map.put(&quot;a&quot;, [&quot;a&quot;] as String[]) print(getSign(&quot;ming&quot;, map))&#125;/** * 生成签名 * @param accessSecretKey 密钥 * @param parameterMap 参数map 集合 * @author ming * @date 2017-11-15 11:42 */String getSign(String accessSecretKey, Map&lt;String, String[]&gt; parameterMap) &#123; //拼接参数 StringBuffer allNotEncryptString = new StringBuffer(); String signature = parameterMap.get(&quot;sign&quot;)[0]; // 获取未加密的请求参数 String notEncryptString = getRequestParameterString(parameterMap); if (notEncryptString == null || notEncryptString.length() == 0) &#123; throw new NullPointerException(&quot; 请求参数拼接为空&quot;) &#125; // 组合所有加密的字符穿 allNotEncryptString.append(notEncryptString); allNotEncryptString.append(&quot;secret&quot; + accessSecretKey); // 本地加密 String localSignature = md5(allNotEncryptString.toString(), Charset.forName(&quot;UTF-8&quot;)).toLowerCase(); return localSignature;&#125;/** * 取得未加密的请求参数字符串&lt;br/&gt; * 注：1.该字符串的组成规则为： * 1.1 请求参数 &apos;key&apos;+&apos;value&apos;成对 * 1.2 依据字母顺序表：a--&gt;b--&gt;c--&gt;...--&gt;y--&gt;z 对‘请求参数key’排序 * 2.该字符串中不包括signature * */static String getRequestParameterString(Map&lt;String, String[]&gt; parameterMap) &#123; if (parameterMap == null || parameterMap.size() == 0) &#123; return null; &#125; List&lt;String&gt; parameterNameList = new ArrayList&lt;&gt;(parameterMap.keySet()); // 对请求的key 排序 parameterNameList.sort &#123; a, b -&gt; (a &lt;=&gt; b) &#125;; StringBuffer strBuffer = new StringBuffer(); for (String parameterName : parameterNameList) &#123; //排除签名 if (parameterName == &quot;sign&quot;) &#123; continue; &#125; String[] values = parameterMap.get(parameterName); if (values != null) &#123; if (values.length == 1) &#123; strBuffer.append(parameterName + values[0]); &#125; else &#123; //此处规则 省略。。。。 &#125; &#125; &#125; return strBuffer.toString();&#125;/*** * MD5加密 生成32位md5码 * * @param inStr 待加密字符串 * @return 返回32位md5码 */ static String md5(String inStr, Charset charset) &#123; MessageDigest messageDigest = null; try &#123; messageDigest = MessageDigest.getInstance(&quot;MD5&quot;); &#125; catch (NoSuchAlgorithmException e) &#123; e.printStackTrace(); &#125; if (messageDigest == null) &#123; throw new NullPointerException(); &#125; messageDigest.update(inStr.getBytes(charset)); byte[] digestBytes = messageDigest.digest(); return Hex.encodeHexString(digestBytes);&#125;]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>安全</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[guava-collections笔记]]></title>
     <url>%2Fming%2F54bd928f.html</url>
     <content type="text"><![CDATA[guava 集合工具不可变集合当对象被不可信的库调用时，不可变形式是安全的；不可变对象被多个线程调用时，不存在竞态条件问题不可变集合不需要考虑变化，因此可以节省时间和空间。所有不可变的集合都比它们的可变形式有更好的内存利用率（分析和测试细节）；不可变对象因为有固定不变，可以作为常量来安全使用1guava 不可变集合不接受null 如果需要可使用null使用jdk中的Collections.unmonifiableXXX（） 创建不可变集合 copyOf ImmutableSet.copyOf(set); of ImmutableSet.of(“1”,”2”); Builder 1234ImmutableSet.&lt;Color&gt;builder() .addAll(WEBSAFE_COLORS) .add(new Color(0, 191, 255)) .build(); 有序的不可变集合 在构建的时候 就排序 asList() 视图所有不可变集合提供 asList() 视图 方便的获取指定值 sortedSet.asList().get(k)从ImmutableSortedSet中读取第k个最小元素。 可变集合和不可变集合对照表 可变集合接口 属于JDK还是Guava 不可变版本 Collection|JDK|ImmutableCollectionList|JDK|ImmutableListSet|JDK|ImmutableSetSortedSet/NavigableSet|JDK|ImmutableSortedSetMap|JDK|ImmutableMapSortedMap|JDK|ImmutableSortedMapMultiset|Guava|ImmutableMultisetSortedMultiset|Guava|ImmutableSortedMultisetMultimap|Guava|ImmutableMultimapListMultimap|Guava|ImmutableListMultimapSetMultimap|Guava|ImmutableSetMultimapBiMap|Guava|ImmutableBiMapClassToInstanceMap|Guava|ImmutableClassToInstanceMapTable|Guava|ImmutableTable guava 新集合1: Multiset 方法|描述|—-|—-|count(E)|给定元素在Multiset中的计数elementSet()|Multiset中不重复元素的集合，类型为SetentrySet()|和Map的entrySet类似，返回Set&lt;Multiset.Entry&gt;，其中包含的Entry支持getElement()和getCount()方法add(E, int)|增加给定元素在Multiset中的计数remove(E, int)|减少给定元素在Multiset中的计数setCount(E, int)|设置给定元素在Multiset中的计数，不可以为负数size()|返回集合元素的总个数（包括重复的元素） 2:Multimap 单键多值map 方法签名|描述|等价于|—-|—-|—|put(K, V)|添加键到单个值的映射|multimap.get(key).add(value)putAll(K, Iterable)|依次添加键到多个值的映射|Iterables.addAll(multimap.get(key), values)remove(K, V)|移除键到值的映射；如果有这样的键值并成功移除，返回true。|multimap.get(key).remove(value)removeAll(K)|清除键对应的所有值，返回的集合包含所有之前映射到K的值，但修改这个集合就不会影响Multimap了。|multimap.get(key).clear()replaceValues(K, Iterable)|清除键对应的所有值，并重新把key关联到Iterable中的每个元素。返回的集合包含所有之前映射到K的值。|multimap.get(key).clear(); Iterables.addAll(multimap.get(key), values) 3: BiMap 双向映射map 通过inverse() 反转键值对 保证值是唯一的 values()返回是set 键映射到已经存在的值 需要使用 forcePut 4: Table =&gt; Map&lt;R,Map&gt; ==》表格 Table rowMap()：用Map&lt;R, Map&gt;表现Table。同样的， rowKeySet()返回”行”的集合Set。 row(r) ：用Map返回给定”行”的所有列，对这个map进行的写操作也将写入Table中。 类似的列访问方法：columnMap()、columnKeySet()、column(c)。（基于列的访问会比基于的行访问稍微低效点） cellSet()：用元素类型为Table.Cell的Set表现Table。Cell类似于Map.Entry，但它是用行和列两个键区分的。 5: CLassToInstanceMap 它的键是类型，而值是符合键所指类型的对象。Map&lt;Class&lt;? extends B&gt;, B&gt; ==》 ClassToInstanceMap 集合扩展工具类1: Forwarding(装饰器)自定义集合的时候可以前后加一些操作 例如日志2: PeekingIterator(将jdk中的Iterator增强提供一个peek()方法)注意：Iterators.peekingIterator返回的PeekingIterator不支持在peek()操作之后调用remove()方法。12345678910List&lt;E&gt; result = Lists.newArrayList();PeekingIterator&lt;E&gt; iter = Iterators.peekingIterator(source.iterator());while (iter.hasNext()) &#123; E current = iter.next(); while (iter.hasNext() &amp;&amp; iter.peek().equals(current)) &#123; //跳过重复的元素 iter.next(); &#125; result.add(current);&#125; 3:AbstractIterator AbstractSequentialIterator jdk8有更加强大的迭代器http://ifeve.com/google-guava-newcollectiontypes/ 总结: guava工具包最出名应该就是集合的相关操作了1：提供不可变集合 来提升性能 但是这个用起来要注意 要确定后续肯定不会在向集合添加更新删除操作了，之前在项目中 调用dubbo服务的时候 用不可变集合 直接gg、####2：第二大的功能 应该就是他的一些变种集合类了 不过用的比较多的话 也就是table、Multimap 其他有用到 很少]]></content>
@@ -749,14 +727,14 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[跨域笔记]]></title>
-    <url>%2Fming%2F38475811.html</url>
-    <content type="text"><![CDATA[##在将项目前后端分离的时候，首当其冲的就是跨域问题;此篇笔记 用来记录什么是跨域、如何解决跨域、以及一个实例;免得自己以后忘记了还需要去搜索###什么是跨域http为了提高安全，禁止非同域访问什么是同域:满足下三条才是同域 1:同端口 ip，2:同样的协议,3:如果是子域名 也要一样 否则就是非同域 不能直接互相访问，必须通过一些安全设置或者技巧去访问如jsonp、cors等方案###解决跨域####1:jsonp 方式首先jsonp和json是没有任何关系的 ;由于浏览器对js、图片不会做跨域限制jsonp就是相当于把数据下载下来解析，利用script标签去下载数据 然后解析就是用javascript动态加载一个script文件，如何去解析这个文件 例如json字符串######局限性:只能get请求 如果需要post、put等其他请求 无法满足###2:cors跨域(重点)cors是w3c定义的一种新的标准 用来适应跨域数据请求的当浏览器发现是跨域请求 会自动在报头添加一些跨域信息 如option等cors跨域分为简单请求和负责请求 但是只要在服务端设定合适 区别不是特别大当满足如下条件就是简单的cors跨域请求 不满足则是复杂cors请求1:请求方式:get、post、head2:报头限制:只能包含如下报头信息 超过则是复杂请求Accept、Accept-Language、Content-Language、Last-Event-ID、Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain|也就是意味者如果要自定义报头、发送cookie等功能 都是复杂请求不管是复杂请求还是简单请求 在服务端设置的时候 复杂请求设置是涵盖了简单请求需要的设置的######简单cors跨域1发送简单请求--&gt;服务端检验请求合法性--&gt;请求合法就和正常请求一样、不合法返回跨域错误提示 ######复杂cors跨域1发送预检请求--&gt;服务端检验请求是否合法--&gt;请求合法 发送正式请求、不合法 结束 提示请求不符合服务端检验要求 学习地址:http://www.ruanyifeng.com/blog/2016/04/cors.html]]></content>
+    <title><![CDATA[alias笔记]]></title>
+    <url>%2Fming%2Fd0a7cd2b.html</url>
+    <content type="text"><![CDATA[#####linux alias 别名设置####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用1:设定临时 alias 只能在当前shell可用 退出shell 失效12alias asliasNname=&apos;命令&apos;例如: alias psa = &apos;ps -aux&apos; 2:设定永久 alias只需要吧 alias 加入 环境变量配置文件中即可 例如加入 全局环境变量/etc/profile 或者当前用户的环境变量配置中 例如～/.bashrc123456tee -a /etc/profilealias psa=&apos;ps -aux&apos;# ctrl +c 结束录入后 应用 环境变量source /etc/profile 注意: psa = ‘ps -aux’ 这样不行 因为shell语法的格式问题 写python写多了 吗买皮 #####总结: linux别名 可以将一些常用的 但是直接输入 比较长的命令封装起来 向文件追加内容 不一定用tee echo &gt;&gt; 也是可以的 cat都行 不局限命令 能达成功能即可]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
-        <tag>跨域</tag>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -771,9 +749,20 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式(二)-23种设计模式分类和基本概述]]></title>
-    <url>%2Fming%2F18dacc63.html</url>
-    <content type="text"><![CDATA[##创建型模式：提供在创建对象的时候的逻辑，不是直接使用运算符如new这样的形式来实例化对象，模式名称 | 模式概述 | 备注—–|:————|:—–工厂模式(Factory Pattern) | 就是一个产品加工共厂的套路 负责产生一些大致相似的产品 | 例如生产娃娃的加工厂 生产娃娃 有的是充气的 有的是硅胶的 但是你只需要指定是使用什么材料 就可以通过工厂产生出来抽象工厂模式(Abstract Factory Pattern)| 工厂的工厂 用来生产工厂的工厂| 例如我有建造硅胶产品工厂的能力 我可以拿来建立娃娃工厂、我也可以拿来建立其他硅胶产品工厂单例模式(Singleton Pattern)| 一个类只能有一个对象，并且是需要线程安全的创建 | 在国内一个人名义上是只能有一个老婆的，如果你想两个合法老婆 那就违法了 也就是线程不安全了建造者模式(Builder Pattern)| 在将类组合成复杂对象的时候 被组合的类是变化的 但是组合的方式是固定的 | 例如娃娃工厂 里面需要很多基本的设备 什么融合材料的设备、将材料做成模型的设备、模型组合设备等等。他们大致组合顺序是固定的但是设备选择不一定，可以买国产货也可以使用其他国家的机器。原型模式(Prototype Pattern)| 先创建一个原型 以后在需要这个对象 直接克隆 | 例如生产娃娃 你有一个波多XXX 啥的娃娃 但是她的制作工艺比较复杂 那这个时候可以通过这个娃娃去做一套模具来进行克隆 这样就能保证快速 完整的作出波多XXX样式的娃娃##结构型模式：关注类和对象的组合，用继承来组合接口和定义组合对象获取新功能的方式模式名称 | 模式概述 | 备注——–|:———|:—–适配器模式(Adapter Pattern)|就是一个类似转接头的东西 主要是针对类的兼容性做改变 让旧类和新类进行兼容|例如苹果7手机 它本身是不能直接使用ust数据线链接电脑的必须找个type-c转换成usb接口的设备来做个适配桥接模式(Bridge Pattern)||过滤器模式(Filter\Criteria Pattern)||组合模式(Composite Pattern)||装饰器模式(Decorator Pattern)||外观模式(Facade Pattern)||享元模式(Flyweight Pattern)||代理模式(Proxy Pattern)||##行为型模式:关注对象之间的通信模式名称 | 模式概述 | 备注——–|:———|:—–责任链模式(Chain of Responsibllity Pattern)||命令模式(Command Pattern)||解释器模式(InterPreTer Pattern)||迭代器模式(Iterator Pattern)||中介者模式(Mediator Pattern)||备忘录模式(Memento Pattern)||观察者模式(Observer Pattern)||状态模式(State Pattern)||空对象模式(null object Pattern)||策略模式(strategy Pattern)||模板模式(Template Pattern)||访问者模式(Visitor Pattern)||]]></content>
+    <title><![CDATA[跨域笔记]]></title>
+    <url>%2Fming%2F38475811.html</url>
+    <content type="text"><![CDATA[##在将项目前后端分离的时候，首当其冲的就是跨域问题;此篇笔记 用来记录什么是跨域、如何解决跨域、以及一个实例;免得自己以后忘记了还需要去搜索###什么是跨域http为了提高安全，禁止非同域访问什么是同域:满足下三条才是同域 1:同端口 ip，2:同样的协议,3:如果是子域名 也要一样 否则就是非同域 不能直接互相访问，必须通过一些安全设置或者技巧去访问如jsonp、cors等方案###解决跨域####1:jsonp 方式首先jsonp和json是没有任何关系的 ;由于浏览器对js、图片不会做跨域限制jsonp就是相当于把数据下载下来解析，利用script标签去下载数据 然后解析就是用javascript动态加载一个script文件，如何去解析这个文件 例如json字符串######局限性:只能get请求 如果需要post、put等其他请求 无法满足###2:cors跨域(重点)cors是w3c定义的一种新的标准 用来适应跨域数据请求的当浏览器发现是跨域请求 会自动在报头添加一些跨域信息 如option等cors跨域分为简单请求和负责请求 但是只要在服务端设定合适 区别不是特别大当满足如下条件就是简单的cors跨域请求 不满足则是复杂cors请求1:请求方式:get、post、head2:报头限制:只能包含如下报头信息 超过则是复杂请求Accept、Accept-Language、Content-Language、Last-Event-ID、Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain|也就是意味者如果要自定义报头、发送cookie等功能 都是复杂请求不管是复杂请求还是简单请求 在服务端设置的时候 复杂请求设置是涵盖了简单请求需要的设置的######简单cors跨域1发送简单请求--&gt;服务端检验请求合法性--&gt;请求合法就和正常请求一样、不合法返回跨域错误提示 ######复杂cors跨域1发送预检请求--&gt;服务端检验请求是否合法--&gt;请求合法 发送正式请求、不合法 结束 提示请求不符合服务端检验要求 学习地址:http://www.ruanyifeng.com/blog/2016/04/cors.html]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>跨域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[设计模式笔记(七)：创建型-原型模式]]></title>
+    <url>%2Fming%2F5a9f0461.html</url>
+    <content type="text"><![CDATA[##原型模式：（Prototype Pattern）####意图用原型实例来指定创建对象的种类，并且通过拷贝这些原型创建新的对象####主要解决在运行期建立和删除原型####何时使用1：当一个系统应该独立于它产品创建构成和表示的时候。2：当要实例化的类是在运行时刻指定的时候 ，例如动态装载3：为了避免创建一个与产品类层次平行的工厂类层次4：当一个类的实例智能有几个不同状态组合中的一种时候，建立相应数目的原型并克隆他们 比每次用合适的状态的手工实例化该 类更方便一些####如何解决利用已有的一个原型对象，快速生成和原型对象一样的实例####关键代码1：实现克隆操作 利用Cloneable 重写clone(),2:原型模式同样用于隔离类对象使用者和具体类型（易变类）之间耦合关系，要求易变类拥有稳定的接口####实例1：细胞分裂2：java object clone() 方法####优点1：提高性能2：避免构造函数约束####缺点1：配备克隆方法需要对类的功能进行通盘考虑，对于全新的类不麻烦，但是对于已经有的类不容易实现，特别是一个类引用不支持串行化的间接对象或者引用含有循环结构的适合2：必须实现Cloneable接口3：逃避构造函数约束####使用场景1：资源优化2：类初始化需要很多资源，3：性能和安全要求场景4：通过new产生对象需要非常繁琐的数据准备或者访问权限5：一个对象多个修改者6：一个对象需要提供给其他对象访问，并且多个调用者都需要修改其值，7：实际项目中原型模式常根工厂模式一起，通过clone创建一个对象，如何由工厂方法提供给调用者，####注意和对一个类来实例化创建对象不同的是，原型模式是通过一个现有的对象生成一个新的对象，浅拷贝通过Cloneable ，深拷贝通过Serializable读取二进制流####总结：通过实现cloneable的clone（） 方法来实现浅克隆 通过序列化获取二进制流 来进行深度克隆 就是自行创建一个可靠安全的原型 通过克隆方式获得该对象####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/Prototype]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -782,9 +771,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[设计模式笔记(七)：创建型-原型模式]]></title>
-    <url>%2Fming%2F5a9f0461.html</url>
-    <content type="text"><![CDATA[##原型模式：（Prototype Pattern）####意图用原型实例来指定创建对象的种类，并且通过拷贝这些原型创建新的对象####主要解决在运行期建立和删除原型####何时使用1：当一个系统应该独立于它产品创建构成和表示的时候。2：当要实例化的类是在运行时刻指定的时候 ，例如动态装载3：为了避免创建一个与产品类层次平行的工厂类层次4：当一个类的实例智能有几个不同状态组合中的一种时候，建立相应数目的原型并克隆他们 比每次用合适的状态的手工实例化该 类更方便一些####如何解决利用已有的一个原型对象，快速生成和原型对象一样的实例####关键代码1：实现克隆操作 利用Cloneable 重写clone(),2:原型模式同样用于隔离类对象使用者和具体类型（易变类）之间耦合关系，要求易变类拥有稳定的接口####实例1：细胞分裂2：java object clone() 方法####优点1：提高性能2：避免构造函数约束####缺点1：配备克隆方法需要对类的功能进行通盘考虑，对于全新的类不麻烦，但是对于已经有的类不容易实现，特别是一个类引用不支持串行化的间接对象或者引用含有循环结构的适合2：必须实现Cloneable接口3：逃避构造函数约束####使用场景1：资源优化2：类初始化需要很多资源，3：性能和安全要求场景4：通过new产生对象需要非常繁琐的数据准备或者访问权限5：一个对象多个修改者6：一个对象需要提供给其他对象访问，并且多个调用者都需要修改其值，7：实际项目中原型模式常根工厂模式一起，通过clone创建一个对象，如何由工厂方法提供给调用者，####注意和对一个类来实例化创建对象不同的是，原型模式是通过一个现有的对象生成一个新的对象，浅拷贝通过Cloneable ，深拷贝通过Serializable读取二进制流####总结：通过实现cloneable的clone（） 方法来实现浅克隆 通过序列化获取二进制流 来进行深度克隆 就是自行创建一个可靠安全的原型 通过克隆方式获得该对象####代码地址：https://github.com/xuxianyu/myGitHub/tree/master/DisignPattern/src/main/java/com/xxx/create/Prototype]]></content>
+    <title><![CDATA[设计模式(二)-23种设计模式分类和基本概述]]></title>
+    <url>%2Fming%2F18dacc63.html</url>
+    <content type="text"><![CDATA[##创建型模式：提供在创建对象的时候的逻辑，不是直接使用运算符如new这样的形式来实例化对象，模式名称 | 模式概述 | 备注—–|:————|:—–工厂模式(Factory Pattern) | 就是一个产品加工共厂的套路 负责产生一些大致相似的产品 | 例如生产娃娃的加工厂 生产娃娃 有的是充气的 有的是硅胶的 但是你只需要指定是使用什么材料 就可以通过工厂产生出来抽象工厂模式(Abstract Factory Pattern)| 工厂的工厂 用来生产工厂的工厂| 例如我有建造硅胶产品工厂的能力 我可以拿来建立娃娃工厂、我也可以拿来建立其他硅胶产品工厂单例模式(Singleton Pattern)| 一个类只能有一个对象，并且是需要线程安全的创建 | 在国内一个人名义上是只能有一个老婆的，如果你想两个合法老婆 那就违法了 也就是线程不安全了建造者模式(Builder Pattern)| 在将类组合成复杂对象的时候 被组合的类是变化的 但是组合的方式是固定的 | 例如娃娃工厂 里面需要很多基本的设备 什么融合材料的设备、将材料做成模型的设备、模型组合设备等等。他们大致组合顺序是固定的但是设备选择不一定，可以买国产货也可以使用其他国家的机器。原型模式(Prototype Pattern)| 先创建一个原型 以后在需要这个对象 直接克隆 | 例如生产娃娃 你有一个波多XXX 啥的娃娃 但是她的制作工艺比较复杂 那这个时候可以通过这个娃娃去做一套模具来进行克隆 这样就能保证快速 完整的作出波多XXX样式的娃娃##结构型模式：关注类和对象的组合，用继承来组合接口和定义组合对象获取新功能的方式模式名称 | 模式概述 | 备注——–|:———|:—–适配器模式(Adapter Pattern)|就是一个类似转接头的东西 主要是针对类的兼容性做改变 让旧类和新类进行兼容|例如苹果7手机 它本身是不能直接使用ust数据线链接电脑的必须找个type-c转换成usb接口的设备来做个适配桥接模式(Bridge Pattern)||过滤器模式(Filter\Criteria Pattern)||组合模式(Composite Pattern)||装饰器模式(Decorator Pattern)||外观模式(Facade Pattern)||享元模式(Flyweight Pattern)||代理模式(Proxy Pattern)||##行为型模式:关注对象之间的通信模式名称 | 模式概述 | 备注——–|:———|:—–责任链模式(Chain of Responsibllity Pattern)||命令模式(Command Pattern)||解释器模式(InterPreTer Pattern)||迭代器模式(Iterator Pattern)||中介者模式(Mediator Pattern)||备忘录模式(Memento Pattern)||观察者模式(Observer Pattern)||状态模式(State Pattern)||空对象模式(null object Pattern)||策略模式(strategy Pattern)||模板模式(Template Pattern)||访问者模式(Visitor Pattern)||]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -859,34 +848,23 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[guava-cache笔记]]></title>
-    <url>%2Fming%2F1be97d35.html</url>
-    <content type="text"><![CDATA[## guava cache工具示例12345678910111213141516171819202122232425262728293031323334353637/** * 缓存示例 * * @author ming * @date 2017/8/7 */ @Test public void helloWorldTest() throws ExecutionException &#123; LoadingCache&lt;Long, String&gt; strCache = CacheBuilder.newBuilder().maximumSize(1000) .expireAfterWrite(10, TimeUnit.MINUTES) .build(new CacheLoader&lt;Long, String&gt;() &#123; //有这个键就从缓存中去 没有就根据load方法从新获取 //如果load没有显示抛出异常 可以用getUnchecked查找缓存 如果显示抛出 就不能使用getUnchecked @Override public String load(Long o) throws Exception &#123; return &quot;缓存:&quot; + o; &#125; //批量加载 @Override public Map&lt;Long, String&gt; loadAll(Iterable&lt;? extends Long&gt; keys) throws Exception &#123; Map&lt;Long,String&gt; tempMap = Maps.newConcurrentMap(); keys.forEach(key-&gt;&#123; tempMap.put(key,&quot;缓存:&quot;+key); &#125;); return tempMap; &#125; //重新加载 @Override public ListenableFuture&lt;String&gt; reload(Long key, String oldValue) throws Exception &#123; return super.reload(key, oldValue); &#125; &#125;); System.out.println(strCache.get(1L)); System.out.println(strCache.get(1L)); System.out.println(strCache.get(2L)); &#125; ####适合的场景 通过消耗内存提高速度 预料到某些数据会被频繁查询 缓存数量不会超过内存####需要注意的点 如果显示抛出异常 不可使用getUnchecked(); 可以通过重写load、loadAll、reload方法来进行单个加载获取、组合加载获取、重新加载 getAll 默认是通过load来加载没有缓存的信息 除非重写loadAll####Callable加载可以通过不同的回调函数 来缓存从不同数据源来的数据 不局限于load方法来缓存数据123456789101112131415161718192021222324252627282930/** 回调方式 执行获取缓存 方便实现&quot;如果有缓存则返回；否则运算、缓存、然后返回&quot; * 可以在同一个cache对象中 通过不同方法获取 源数据 * @author ming * @date 2017/8/7 */ @Test public void callableTest() throws ExecutionException &#123; //创建缓存对象 不重写cacheLoader 利用callable来从源数据获取缓存 不管有没有重写 callable优先 Cache&lt;Long,String&gt; cache = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader&lt;Long, String&gt;() &#123; //使用带回调方式获取缓存 优先执行回调方法获取的缓存 @Override public String load(Long key) throws Exception &#123; return &quot;缓存:&quot;+key; &#125; &#125;); //创建 通过回调获取缓存 System.out.println(cache.get(1L, new Callable&lt;String&gt;() &#123; public String call() throws Exception&#123; return &quot;回调缓存:&quot;+1L; &#125; &#125;)); System.out.println(cache.get(2L, new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;回调缓存2：&quot;+2; &#125; &#125;)); &#125; ####缓存回收 基于容量回收(size-based eviction)如果只是不超过固定值 直接使用maximumSize()构建 如果要通过不同的权重来计算实现Weigher 定时回收(timed eviction) expireAfterAccess(long, TimeUnit)：缓存项在给定时间内没有被读/写访问，则回收。请注意这种缓存的回收顺序和基于大小回收一样。 expireAfterWrite(long, TimeUnit)：缓存项在给定时间内没有被写访问（创建或覆盖），则回收。如果认为缓存数据总是在固定时候后变得陈旧不可用，这种回收方式是可取的。 基于引用(Reference-based eviction) CacheBuilder.weakKeys()：使用弱引用存储键。当键没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用键的缓存用==而不是equals比较键。 CacheBuilder.weakValues()：使用弱引用存储值。当值没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用值的缓存用==而不是equals比较值。 CacheBuilder.softValues()：使用软引用存储值。软引用只有在响应内存需要时，才按照全局最近最少使用的顺序回收。考虑到使用软引用的性能影响，我们通常建议使用更有性能预测性的缓存大小限定（见上文，基于容量回收）。使用软引用值的缓存同样用==而不是equals比较值。 显示清除 个别清除：Cache.invalidate(key) 批量清除：Cache.invalidateAll(keys) 清除所有缓存项：Cache.invalidateAll()####监听器removalListener默认是同步进行的 可以通过RemovalListeners.asynchronous(RemovalListener,Executor)装饰成 异步123456789101112131415161718192021222324252627282930313233/**清除缓存监听器 * @author ming * @date 2017/8/8 */ @Test public void listenerTest() throws ExecutionException &#123; RemovalListener&lt;Long,String&gt; removalListener = new RemovalListener&lt;Long, String&gt;() &#123; //移除动作监听器 同步进行 @Override public void onRemoval(RemovalNotification&lt;Long, String&gt; notification) &#123; System.out.println(&quot;\n删除缓存:&quot;+notification); System.out.println(notification.getKey()); System.out.println(notification.getValue()); //清除原因 返回是什么情况下清除的 例如超过大小、手动清除等 System.out.println(notification.getCause()); //是否是自动清除 System.out.println(notification.wasEvicted()); &#125; &#125;; //装饰成异步的 //RemovalListeners.asynchronous(removalListener, new Executor&#123;...&#125;); Cache&lt;Long,String&gt; cache= CacheBuilder.newBuilder().maximumSize(1000) .removalListener(removalListener).build(); //添加缓存 cache.get(1L, new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;回调缓存:&quot;+1L; &#125; &#125;); //显示删除缓存 被removalListener监听到 cache.invalidate(1L); &#125; ####刷新 指定刷新 cache.refresh(key) 定时刷新CacheBuilder.refreshAfterWrite(到时间、访问过期的数据才会触发)、CacheBuilder.expireAfterWrite(到时间直接刷新数据)12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152/** * 刷新缓存 * * @author ming * @date 2017/8/8 */ @Test public void refreshTest() throws ExecutionException, InterruptedException &#123; //定时执行服务 ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(10); LoadingCache&lt;Integer, String&gt; cache = CacheBuilder.newBuilder() .maximumSize(1000) //定时刷新 到时间后 访问过期数据后进行刷新 优先级比expireAfterWrite高 //.refreshAfterWrite(100,TimeUnit.MILLISECONDS) //定时刷新 到时间直接刷新 //.expireAfterWrite(100,TimeUnit.MILLISECONDS) .build(new CacheLoader&lt;Integer, String&gt;() &#123; @Override public String load(Integer key) throws Exception &#123; return &quot;load缓存+&quot; + key; &#125; @Override public ListenableFuture&lt;String&gt; reload(Integer key, String oldValue) throws Exception &#123; //当key &lt;2的时候 直接刷新 当key&gt;=2 异步刷新 if (key &lt; 2) &#123; return Futures.immediateFuture(oldValue); &#125; else &#123; //异步 ListenableFutureTask&lt;String&gt; task = ListenableFutureTask.create(new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;异步刷新缓存&quot; + System.currentTimeMillis(); &#125; &#125;); executor.execute(task); return task; &#125; &#125; &#125;); System.out.println(cache.get(1)); System.out.println(cache.get(3)); //key&lt;2 cache.refresh(1); System.out.println(cache.get(1)); //key &gt;= 2 异步刷新 cache.refresh(3); //由于是异步刷新 获取最新数据 主线程休眠1s Thread.sleep(1000); System.out.println(cache.get(3)); &#125; ####统计缓存信息guava缓存提供统计缓存信息方法 CacheBuilder.recordStats()开启缓存 cache.stats()获取缓存12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455/** * 缓存统计信息 * * @author ming * @date 2017/8/8 */ @Test public void statTest() throws ExecutionException &#123; LoadingCache&lt;Integer, String&gt; cache = CacheBuilder.newBuilder() .maximumSize(1000) //开启缓存统计功能 .recordStats() .build(new CacheLoader&lt;Integer, String&gt;() &#123; @Override public String load(Integer key) throws Exception &#123; return &quot;缓存:&quot; + key; &#125; &#125;); //查询缓存 for (int i = 0; i &lt; 99; i++) &#123; cache.get(i); &#125; //查询已经缓存的数据 此时命中率 1% cache.get(1); CacheStats stats = cache.stats(); //请求次数 System.out.println(&quot;请求中次数:&quot; + stats.requestCount()); //命中次数 System.out.println(&quot;命中次数:&quot; + stats.hitCount()); //命中率 System.out.println(&quot;命中率:&quot; + stats.hitRate()); //miss数量 System.out.println(&quot;miss数量:&quot; + stats.missCount()); //miss 比例 System.out.println(&quot;miss率:&quot; + stats.missRate()); //加载数量 System.out.println(&quot;加载总数量:&quot; + stats.loadCount()); //加载成功数量 System.out.println(&quot;加载成功数量:&quot; + stats.loadSuccessCount()); //加载异常数量 System.out.println(&quot;加载异常数量:&quot; + stats.loadExceptionCount()); //加载异常比例 System.out.println(&quot;加载异常比例&quot; + stats.loadExceptionRate()); //加载总耗时 ns System.out.println(&quot;加载总耗时:&quot; + stats.totalLoadTime()); //加载新值的平均 时间 ns (ns/1000 = ms) System.out.println(&quot;加载源数据平均时间:&quot; + stats.averageLoadPenalty()); //缓存被回收的总数量 显示清除不算 System.out.println(&quot;被自动回收的数量:&quot; + stats.evictionCount()); // 减 本身-other 小于0 返回0 //System.out.println(stats.minus(new CacheStats(...))); // 加 本身+other //System.out.println(stats.plus(new CacheStats(...))); System.out.println(stats); &#125; 总结:guava的cache 适合那些微型项目、或者是一些小地方用用 ;大项目还是得靠 redis或者其他的方式来做;不过这个guava的cache 真心好用 异步加载、缓存刷新、过期策略 、缓存监控、都相当好用]]></content>
+    <title><![CDATA[接口签名笔记]]></title>
+    <url>%2Fming%2F5e68a67b.html</url>
+    <content type="text"><![CDATA[####由于开放型的短信接口受到不明来源的恶意访问 大佬们紧急对整个项目的接口进行加密原理:密钥+参数生成 md5 签名 客户端保存好密钥即可 之前对接苏宁易购的那个支付平台的时候 也是选择这种方式进行访问加密1:生成密钥这个随机定义 例如我选择使用 appId + salt 生成md5 截取前12位作为 指定app应用的密钥 如果发生泄漏 可以通过改变salt 来生成新的密钥2:客户端密钥 存储客户端 拿到密钥不能明文存储 例如 12位 可以拆分三段 然后分别进行偏移 这样如果别人要识别 必须反编译源码 并且读懂相关规则3:签名规则除开签名以外所有参数 按照排序规则排序 然后拼接上密钥 通过md5 或者类似的算法生成md5签名4：服务端验证规则除开签名 也按照客户端同样的排序规则排序 拼接密钥 通过相同的算法生成服务端签名 通过比较客户端签名 和服务端签名 来验证服务是否可靠、生成签名 方法示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100#!/usr/bin/env groovy/** groovy 生成md5 签名的算法 * * @author ming * @date 2017-11-15 12:45 */import java.nio.charset.Charsetimport java.security.MessageDigestimport java.security.NoSuchAlgorithmExceptionimport org.apache.commons.codec.binary.Hex;static void main(String[] args) &#123; Map&lt;String, String[]&gt; map = new HashMap&lt;&gt;() map.put(&quot;sign&quot;, [&quot;mkasfasfds&quot;] as String[]) map.put(&quot;param&quot;, [&quot;ming&quot;] as String[]) map.put(&quot;b&quot;, [&quot;b&quot;] as String[]) map.put(&quot;a&quot;, [&quot;a&quot;] as String[]) print(getSign(&quot;ming&quot;, map))&#125;/** * 生成签名 * @param accessSecretKey 密钥 * @param parameterMap 参数map 集合 * @author ming * @date 2017-11-15 11:42 */String getSign(String accessSecretKey, Map&lt;String, String[]&gt; parameterMap) &#123; //拼接参数 StringBuffer allNotEncryptString = new StringBuffer(); String signature = parameterMap.get(&quot;sign&quot;)[0]; // 获取未加密的请求参数 String notEncryptString = getRequestParameterString(parameterMap); if (notEncryptString == null || notEncryptString.length() == 0) &#123; throw new NullPointerException(&quot; 请求参数拼接为空&quot;) &#125; // 组合所有加密的字符穿 allNotEncryptString.append(notEncryptString); allNotEncryptString.append(&quot;secret&quot; + accessSecretKey); // 本地加密 String localSignature = md5(allNotEncryptString.toString(), Charset.forName(&quot;UTF-8&quot;)).toLowerCase(); return localSignature;&#125;/** * 取得未加密的请求参数字符串&lt;br/&gt; * 注：1.该字符串的组成规则为： * 1.1 请求参数 &apos;key&apos;+&apos;value&apos;成对 * 1.2 依据字母顺序表：a--&gt;b--&gt;c--&gt;...--&gt;y--&gt;z 对‘请求参数key’排序 * 2.该字符串中不包括signature * */static String getRequestParameterString(Map&lt;String, String[]&gt; parameterMap) &#123; if (parameterMap == null || parameterMap.size() == 0) &#123; return null; &#125; List&lt;String&gt; parameterNameList = new ArrayList&lt;&gt;(parameterMap.keySet()); // 对请求的key 排序 parameterNameList.sort &#123; a, b -&gt; (a &lt;=&gt; b) &#125;; StringBuffer strBuffer = new StringBuffer(); for (String parameterName : parameterNameList) &#123; //排除签名 if (parameterName == &quot;sign&quot;) &#123; continue; &#125; String[] values = parameterMap.get(parameterName); if (values != null) &#123; if (values.length == 1) &#123; strBuffer.append(parameterName + values[0]); &#125; else &#123; //此处规则 省略。。。。 &#125; &#125; &#125; return strBuffer.toString();&#125;/*** * MD5加密 生成32位md5码 * * @param inStr 待加密字符串 * @return 返回32位md5码 */ static String md5(String inStr, Charset charset) &#123; MessageDigest messageDigest = null; try &#123; messageDigest = MessageDigest.getInstance(&quot;MD5&quot;); &#125; catch (NoSuchAlgorithmException e) &#123; e.printStackTrace(); &#125; if (messageDigest == null) &#123; throw new NullPointerException(); &#125; messageDigest.update(inStr.getBytes(charset)); byte[] digestBytes = messageDigest.digest(); return Hex.encodeHexString(digestBytes);&#125;]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
-        <tag>guava</tag>
-        <tag>tools</tag>
+        <tag>java</tag>
+        <tag>安全</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[iptables笔记]]></title>
-    <url>%2Fming%2F5bcc860.html</url>
-    <content type="text"><![CDATA[##iptables linux上常用防火墙参考地址：http://www.cnblogs.com/kevingrace/p/6265113.htmliptables 和netfilter关系netfilter 是linux内核中实现的包过滤的函数相关的东西iptables 是一个管理防火墙的工具 真正实现防火墙的还是netfilter语法iptables (选项) (参数)选项man iptables-t&lt;表&gt;：指定要操纵的表；-A：向规则链中添加条目；-D：从规则链中删除条目；-I：向规则链中插入条目；-R：替换规则链中的条目；-L：显示规则链中已有的条目；-F：清楚规则链中已有的条目；-Z：清空规则链中的数据包计算器和字节计数器；-X:删除规则链-N：创建新的用户自定义规则链；-P：定义规则链中的默认目标；-h：显示帮助信息；-p：指定要匹配的数据包协议类型；-s：指定要匹配的数据包源ip地址；-j&lt;目标&gt;：指定要跳转的目标；-i&lt;网络接口&gt;：指定数据包进入本机的网络接口；-o&lt;网络接口&gt;：指定数据包要离开本机所使用的网络接口。1iptables -t 表名 &lt;-A/I/D/R&gt; 规则链名 [规则号] &lt;-i/o 网卡名&gt; -p 协议名 &lt;-s 源IP/源子网&gt; --sport 源端口 &lt;-d 目标IP/目标子网&gt; --dport 目标端口 -j 动作 ####表名提供特定的功能|名称|功能|备注||:–|:–|:–||raw|数据跟踪处理|网址过滤||mangle|数据包修改，包重构|qds||nat|地址转换,网络地址转换|网关路由||filter|包过滤|防火墙规则| 链 名 名称 功能 备注 INPUT 输入数据包 对输入数据包的规则 OUTPUT 输出数据包 对输出数据包的规则 FORWARD 转发数据包 对转发数据的规则 PREROUTING 目标地址转换数据包 DANT POSTOUTING 源地址转换数据包 SNAT 表 和 链的关系图 ####动作 名称 功能 备注 ACCEPT 接受数据包 常用 打开某个端口接受数据 DROP 丢弃数据包 常用 禁止某个端口访问 MATCH 匹配 符合某个ip 或者端口 REJECT 丢弃数据包 可以向发送这个包的源主机发送错误消息 TARGET 指定动作 说明如何处理这个数据包 接受 丢弃 拒绝 JUMP 标识跳转到那个链上 RULE 一个或者多个匹配及其对应目标 REDIRECT 重定向、映射、透明代理 SNAT 源地址转换 DNAT 目标地址转换 MASQUERADE ip伪装 nat 用于adsl LOG 日志记录 ####实例 查看已有的iptables 规则 1234//查看iptables 列表 带数字 iptables -L -n -v //查看iptables 以序号标记iptables -L -n --line-numbers 清除已有的iptables 规则 123iptables -F --flush ：清楚规则链中已有的条目；iptables -X --delete-chain 删除 规则链iptables -Z --flush ：清空规则链中的数据包计算器和字节计数器； *删除 INPUT中的序号为num的规则1iptables -D INPUT num *开放指定端口 就是接受数据包123456789101112# 开启本地回环接口 运行本机访问本机iptables -A INPUT -s 127.0.0.1 -j ACCEPT # 允许已建立或相关连的通行iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT#允许本机所有向外访问iptables -A OUTPUT -j ACCEPT#允许 访问某个端口iptables -A INPUT -p tcp --dport 22 -j ACCEPT 允许访问 22端口# 禁止其他未允许的规则访问iptables -A INPUT -j reject# 禁止其他未允许的转发数据包访问iptables -A FORWARD -j reject 屏蔽ip 12345678# 屏蔽单个ipiptables -I INPUT -s 123.1.1.1 -j DROP# 屏蔽整个网段 123.0.0.0 - 123.255.255.254iptables -I INPUT -s 123.0.0.0/8 -j DROP# 屏蔽123.1.0.0 - 123.1.255.254网段iptables -I INPUT -s 123.1.0.0/16 -j DROP# 屏蔽 123.1.1.0 - 123.1.1.254网段iptables -i INPUT -s 123.1.1.0/24 -j DROP *]]></content>
+    <title><![CDATA[linux 解压windows文件乱码处理]]></title>
+    <url>%2Fming%2F5c7769e6.html</url>
+    <content type="text"><![CDATA[通过unzip行命令解压，指定字符集unzip -O CP936 xxx.zip (用GBK, GB18030也可以)有趣的是unzip的manual中并无这个选项的说明, unzip –help对这个参数有一行简单的说明。在环境变量中，指定unzip参数，总是以指定的字符集显示和解压文件/etc/environment中加入2行?12UNZIP=”-O CP936”ZIPINFO=”-O CP936”这样Gnome桌面的归档文件管理器(file-roller)可以正常使用unzip解压中文，但是file-roller本身并不能设置编码传递给unzip。]]></content>
       <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[alias笔记]]></title>
-    <url>%2Fming%2Fd0a7cd2b.html</url>
-    <content type="text"><![CDATA[#####linux alias 别名设置####有时候有些命令常用 例如 ‘ls -a’ ‘ps -aux’ 这样的 如果每次输入全部 麻烦的很 通过设置别名 可以快速使用1:设定临时 alias 只能在当前shell可用 退出shell 失效12alias asliasNname=&apos;命令&apos;例如: alias psa = &apos;ps -aux&apos; 2:设定永久 alias只需要吧 alias 加入 环境变量配置文件中即可 例如加入 全局环境变量/etc/profile 或者当前用户的环境变量配置中 例如～/.bashrc123456tee -a /etc/profilealias psa=&apos;ps -aux&apos;# ctrl +c 结束录入后 应用 环境变量source /etc/profile 注意: psa = ‘ps -aux’ 这样不行 因为shell语法的格式问题 写python写多了 吗买皮 #####总结: linux别名 可以将一些常用的 但是直接输入 比较长的命令封装起来 向文件追加内容 不一定用tee echo &gt;&gt; 也是可以的 cat都行 不局限命令 能达成功能即可]]></content>
-      <categories>
-        <category>笔记</category>
+        <category>坑</category>
       </categories>
       <tags>
         <tag>linux</tag>
@@ -915,11 +893,22 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[linux 解压windows文件乱码处理]]></title>
-    <url>%2Fming%2F5c7769e6.html</url>
-    <content type="text"><![CDATA[通过unzip行命令解压，指定字符集unzip -O CP936 xxx.zip (用GBK, GB18030也可以)有趣的是unzip的manual中并无这个选项的说明, unzip –help对这个参数有一行简单的说明。在环境变量中，指定unzip参数，总是以指定的字符集显示和解压文件/etc/environment中加入2行?12UNZIP=”-O CP936”ZIPINFO=”-O CP936”这样Gnome桌面的归档文件管理器(file-roller)可以正常使用unzip解压中文，但是file-roller本身并不能设置编码传递给unzip。]]></content>
+    <title><![CDATA[使用docker搭建ssServer]]></title>
+    <url>%2Fming%2F409db0cf.html</url>
+    <content type="text"><![CDATA[由于gfw的存在 经常需要翻墙 自己手动搭建 ssServer又麻烦 使用docker 使用现成的image简单方便快捷######docker只能在3.10以上的内核的linux系统或者差不多版本的其他系统中运行 所以在购买vps的时候要看清楚是什么架构 内核是否支持docker######docker 下载ssServer镜像 (无法翻墙的请参考 另一篇笔记 docker使用aliyun加速器)···docker pull mritd/shadowsocks···这个镜像是我认识的一个大佬写的、在dockerhub上也是排名第一的shadowsocksServer容器image######启动 ssServer镜像(相关文档地址:https://hub.docker.com/r/mritd/shadowsocks/)···docker run -dt –name ss -p 6443:6443 mritd/shadowsocks -s “-s 0.0.0.0 -p 6443 -m aes-256-cfb -k test123 –fast-open”···本地的ssClient设置ip是你vpsip端口 6443加密方式是aes-256-cfb密码是test123######总结：用已经有的docker容器来做ssServer能够快速的搭建起一个配置好的ssServer 避免自己手工安装配置的繁琐感觉这篇要被查水表]]></content>
       <categories>
-        <category>坑</category>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[linux使用ss笔记]]></title>
+    <url>%2Fming%2F5624ab1d.html</url>
+    <content type="text"><![CDATA[由于有个朋友对于在linux上使用ss翻墙不会 特别写个简单的笔记、#######基于ubunut17.04、python3、####1:安装pip31sudo apt install pip3 ####2:通过pip3安装shadowsocks1sudo pip3 install shadowsocks ####3:设置shadowsocksServer属性配置123456789&#123; &quot;server&quot;:&quot;ss服务器ip&quot;, &quot;server_port&quot;:端口, &quot;local_address&quot;:&quot;127.0.0.1&quot;,(本地socks5地址) &quot;local_port&quot;:1080,(本地socks5端口) &quot;password&quot;:&quot;ss服务器密码&quot;, &quot;timeout&quot;:300,(超时时间 ms), “method”:&quot;aes-256-cfb&quot;(加密方式)尽量选择这个 &#125; ####4:启动本地ss1sudo sslocal -c 配置文件地址 ####5:设置代理这里设置代理有很多方式 先说两种常用的1:直接设置整个系统的代理 、通过gfwlist生成ip表 去判别国内国外网站选择性加速2:对某部分程序设置代理、如chrome浏览器 下载个switch代理工具 可以自己设定路由规则也可以通过gfwlist生成相应的ip表 ######总结:ss翻墙 总的来说就是 发起访问—&gt;从本地服务器代理访问、判断是否需要代理—&gt;需要代理的连接远程ssServer 进行代理—-&gt;访问gfw之外的内容]]></content>
+      <categories>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>linux</tag>
@@ -935,28 +924,6 @@
       <tags>
         <tag>spring</tag>
         <tag>quartz</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[linux使用ss笔记]]></title>
-    <url>%2Fming%2F5624ab1d.html</url>
-    <content type="text"><![CDATA[由于有个朋友对于在linux上使用ss翻墙不会 特别写个简单的笔记、#######基于ubunut17.04、python3、####1:安装pip31sudo apt install pip3 ####2:通过pip3安装shadowsocks1sudo pip3 install shadowsocks ####3:设置shadowsocksServer属性配置123456789&#123; &quot;server&quot;:&quot;ss服务器ip&quot;, &quot;server_port&quot;:端口, &quot;local_address&quot;:&quot;127.0.0.1&quot;,(本地socks5地址) &quot;local_port&quot;:1080,(本地socks5端口) &quot;password&quot;:&quot;ss服务器密码&quot;, &quot;timeout&quot;:300,(超时时间 ms), “method”:&quot;aes-256-cfb&quot;(加密方式)尽量选择这个 &#125; ####4:启动本地ss1sudo sslocal -c 配置文件地址 ####5:设置代理这里设置代理有很多方式 先说两种常用的1:直接设置整个系统的代理 、通过gfwlist生成ip表 去判别国内国外网站选择性加速2:对某部分程序设置代理、如chrome浏览器 下载个switch代理工具 可以自己设定路由规则也可以通过gfwlist生成相应的ip表 ######总结:ss翻墙 总的来说就是 发起访问—&gt;从本地服务器代理访问、判断是否需要代理—&gt;需要代理的连接远程ssServer 进行代理—-&gt;访问gfw之外的内容]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[使用docker搭建ssServer]]></title>
-    <url>%2Fming%2F409db0cf.html</url>
-    <content type="text"><![CDATA[由于gfw的存在 经常需要翻墙 自己手动搭建 ssServer又麻烦 使用docker 使用现成的image简单方便快捷######docker只能在3.10以上的内核的linux系统或者差不多版本的其他系统中运行 所以在购买vps的时候要看清楚是什么架构 内核是否支持docker######docker 下载ssServer镜像 (无法翻墙的请参考 另一篇笔记 docker使用aliyun加速器)···docker pull mritd/shadowsocks···这个镜像是我认识的一个大佬写的、在dockerhub上也是排名第一的shadowsocksServer容器image######启动 ssServer镜像(相关文档地址:https://hub.docker.com/r/mritd/shadowsocks/)···docker run -dt –name ss -p 6443:6443 mritd/shadowsocks -s “-s 0.0.0.0 -p 6443 -m aes-256-cfb -k test123 –fast-open”···本地的ssClient设置ip是你vpsip端口 6443加密方式是aes-256-cfb密码是test123######总结：用已经有的docker容器来做ssServer能够快速的搭建起一个配置好的ssServer 避免自己手工安装配置的繁琐感觉这篇要被查水表]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -982,15 +949,48 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[spring boot (四)笔记]]></title>
-    <url>%2Fming%2F68619b43.html</url>
-    <content type="text"><![CDATA[###在使用spring boot的时候 spring本身会根据springboot的版本引入依赖包 跟maven一样有隐藏依赖会自动引入这个时候如果不需要其中一些工具包 或者需要指定某些包的版本 可以通过maven的功能去排除依赖和覆盖依赖##排除依赖 通过maven的语法排除依赖包 exclusions例如 为项目大小瘦身的时候 排除不需要的jar 例如jackson12345678910111213&lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;exclusions&gt; &lt;exclusion&gt; &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt; &lt;/exclusion&gt; &lt;/exclusions&gt;&lt;/dependency&gt;``` ##覆盖依赖 通过maven的最短路径寻包的特性 去覆盖已有依赖例如 需要指定某个包的版本 直接在spring boot所在的pom中添加这个包的依赖即可 例如 spring boot 的版本依赖的jackson是2.3.3 但是我们需要2.4.3版本 直接在spring boot 的pom下面添加2.4.3 的jackson即可 com.fasterxml.jackson.core jackson-databind 2.4.3```]]></content>
+    <title><![CDATA[guava-cache笔记]]></title>
+    <url>%2Fming%2F1be97d35.html</url>
+    <content type="text"><![CDATA[## guava cache工具示例12345678910111213141516171819202122232425262728293031323334353637/** * 缓存示例 * * @author ming * @date 2017/8/7 */ @Test public void helloWorldTest() throws ExecutionException &#123; LoadingCache&lt;Long, String&gt; strCache = CacheBuilder.newBuilder().maximumSize(1000) .expireAfterWrite(10, TimeUnit.MINUTES) .build(new CacheLoader&lt;Long, String&gt;() &#123; //有这个键就从缓存中去 没有就根据load方法从新获取 //如果load没有显示抛出异常 可以用getUnchecked查找缓存 如果显示抛出 就不能使用getUnchecked @Override public String load(Long o) throws Exception &#123; return &quot;缓存:&quot; + o; &#125; //批量加载 @Override public Map&lt;Long, String&gt; loadAll(Iterable&lt;? extends Long&gt; keys) throws Exception &#123; Map&lt;Long,String&gt; tempMap = Maps.newConcurrentMap(); keys.forEach(key-&gt;&#123; tempMap.put(key,&quot;缓存:&quot;+key); &#125;); return tempMap; &#125; //重新加载 @Override public ListenableFuture&lt;String&gt; reload(Long key, String oldValue) throws Exception &#123; return super.reload(key, oldValue); &#125; &#125;); System.out.println(strCache.get(1L)); System.out.println(strCache.get(1L)); System.out.println(strCache.get(2L)); &#125; ####适合的场景 通过消耗内存提高速度 预料到某些数据会被频繁查询 缓存数量不会超过内存####需要注意的点 如果显示抛出异常 不可使用getUnchecked(); 可以通过重写load、loadAll、reload方法来进行单个加载获取、组合加载获取、重新加载 getAll 默认是通过load来加载没有缓存的信息 除非重写loadAll####Callable加载可以通过不同的回调函数 来缓存从不同数据源来的数据 不局限于load方法来缓存数据123456789101112131415161718192021222324252627282930/** 回调方式 执行获取缓存 方便实现&quot;如果有缓存则返回；否则运算、缓存、然后返回&quot; * 可以在同一个cache对象中 通过不同方法获取 源数据 * @author ming * @date 2017/8/7 */ @Test public void callableTest() throws ExecutionException &#123; //创建缓存对象 不重写cacheLoader 利用callable来从源数据获取缓存 不管有没有重写 callable优先 Cache&lt;Long,String&gt; cache = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader&lt;Long, String&gt;() &#123; //使用带回调方式获取缓存 优先执行回调方法获取的缓存 @Override public String load(Long key) throws Exception &#123; return &quot;缓存:&quot;+key; &#125; &#125;); //创建 通过回调获取缓存 System.out.println(cache.get(1L, new Callable&lt;String&gt;() &#123; public String call() throws Exception&#123; return &quot;回调缓存:&quot;+1L; &#125; &#125;)); System.out.println(cache.get(2L, new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;回调缓存2：&quot;+2; &#125; &#125;)); &#125; ####缓存回收 基于容量回收(size-based eviction)如果只是不超过固定值 直接使用maximumSize()构建 如果要通过不同的权重来计算实现Weigher 定时回收(timed eviction) expireAfterAccess(long, TimeUnit)：缓存项在给定时间内没有被读/写访问，则回收。请注意这种缓存的回收顺序和基于大小回收一样。 expireAfterWrite(long, TimeUnit)：缓存项在给定时间内没有被写访问（创建或覆盖），则回收。如果认为缓存数据总是在固定时候后变得陈旧不可用，这种回收方式是可取的。 基于引用(Reference-based eviction) CacheBuilder.weakKeys()：使用弱引用存储键。当键没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用键的缓存用==而不是equals比较键。 CacheBuilder.weakValues()：使用弱引用存储值。当值没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用值的缓存用==而不是equals比较值。 CacheBuilder.softValues()：使用软引用存储值。软引用只有在响应内存需要时，才按照全局最近最少使用的顺序回收。考虑到使用软引用的性能影响，我们通常建议使用更有性能预测性的缓存大小限定（见上文，基于容量回收）。使用软引用值的缓存同样用==而不是equals比较值。 显示清除 个别清除：Cache.invalidate(key) 批量清除：Cache.invalidateAll(keys) 清除所有缓存项：Cache.invalidateAll()####监听器removalListener默认是同步进行的 可以通过RemovalListeners.asynchronous(RemovalListener,Executor)装饰成 异步123456789101112131415161718192021222324252627282930313233/**清除缓存监听器 * @author ming * @date 2017/8/8 */ @Test public void listenerTest() throws ExecutionException &#123; RemovalListener&lt;Long,String&gt; removalListener = new RemovalListener&lt;Long, String&gt;() &#123; //移除动作监听器 同步进行 @Override public void onRemoval(RemovalNotification&lt;Long, String&gt; notification) &#123; System.out.println(&quot;\n删除缓存:&quot;+notification); System.out.println(notification.getKey()); System.out.println(notification.getValue()); //清除原因 返回是什么情况下清除的 例如超过大小、手动清除等 System.out.println(notification.getCause()); //是否是自动清除 System.out.println(notification.wasEvicted()); &#125; &#125;; //装饰成异步的 //RemovalListeners.asynchronous(removalListener, new Executor&#123;...&#125;); Cache&lt;Long,String&gt; cache= CacheBuilder.newBuilder().maximumSize(1000) .removalListener(removalListener).build(); //添加缓存 cache.get(1L, new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;回调缓存:&quot;+1L; &#125; &#125;); //显示删除缓存 被removalListener监听到 cache.invalidate(1L); &#125; ####刷新 指定刷新 cache.refresh(key) 定时刷新CacheBuilder.refreshAfterWrite(到时间、访问过期的数据才会触发)、CacheBuilder.expireAfterWrite(到时间直接刷新数据)12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152/** * 刷新缓存 * * @author ming * @date 2017/8/8 */ @Test public void refreshTest() throws ExecutionException, InterruptedException &#123; //定时执行服务 ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(10); LoadingCache&lt;Integer, String&gt; cache = CacheBuilder.newBuilder() .maximumSize(1000) //定时刷新 到时间后 访问过期数据后进行刷新 优先级比expireAfterWrite高 //.refreshAfterWrite(100,TimeUnit.MILLISECONDS) //定时刷新 到时间直接刷新 //.expireAfterWrite(100,TimeUnit.MILLISECONDS) .build(new CacheLoader&lt;Integer, String&gt;() &#123; @Override public String load(Integer key) throws Exception &#123; return &quot;load缓存+&quot; + key; &#125; @Override public ListenableFuture&lt;String&gt; reload(Integer key, String oldValue) throws Exception &#123; //当key &lt;2的时候 直接刷新 当key&gt;=2 异步刷新 if (key &lt; 2) &#123; return Futures.immediateFuture(oldValue); &#125; else &#123; //异步 ListenableFutureTask&lt;String&gt; task = ListenableFutureTask.create(new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; return &quot;异步刷新缓存&quot; + System.currentTimeMillis(); &#125; &#125;); executor.execute(task); return task; &#125; &#125; &#125;); System.out.println(cache.get(1)); System.out.println(cache.get(3)); //key&lt;2 cache.refresh(1); System.out.println(cache.get(1)); //key &gt;= 2 异步刷新 cache.refresh(3); //由于是异步刷新 获取最新数据 主线程休眠1s Thread.sleep(1000); System.out.println(cache.get(3)); &#125; ####统计缓存信息guava缓存提供统计缓存信息方法 CacheBuilder.recordStats()开启缓存 cache.stats()获取缓存12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455/** * 缓存统计信息 * * @author ming * @date 2017/8/8 */ @Test public void statTest() throws ExecutionException &#123; LoadingCache&lt;Integer, String&gt; cache = CacheBuilder.newBuilder() .maximumSize(1000) //开启缓存统计功能 .recordStats() .build(new CacheLoader&lt;Integer, String&gt;() &#123; @Override public String load(Integer key) throws Exception &#123; return &quot;缓存:&quot; + key; &#125; &#125;); //查询缓存 for (int i = 0; i &lt; 99; i++) &#123; cache.get(i); &#125; //查询已经缓存的数据 此时命中率 1% cache.get(1); CacheStats stats = cache.stats(); //请求次数 System.out.println(&quot;请求中次数:&quot; + stats.requestCount()); //命中次数 System.out.println(&quot;命中次数:&quot; + stats.hitCount()); //命中率 System.out.println(&quot;命中率:&quot; + stats.hitRate()); //miss数量 System.out.println(&quot;miss数量:&quot; + stats.missCount()); //miss 比例 System.out.println(&quot;miss率:&quot; + stats.missRate()); //加载数量 System.out.println(&quot;加载总数量:&quot; + stats.loadCount()); //加载成功数量 System.out.println(&quot;加载成功数量:&quot; + stats.loadSuccessCount()); //加载异常数量 System.out.println(&quot;加载异常数量:&quot; + stats.loadExceptionCount()); //加载异常比例 System.out.println(&quot;加载异常比例&quot; + stats.loadExceptionRate()); //加载总耗时 ns System.out.println(&quot;加载总耗时:&quot; + stats.totalLoadTime()); //加载新值的平均 时间 ns (ns/1000 = ms) System.out.println(&quot;加载源数据平均时间:&quot; + stats.averageLoadPenalty()); //缓存被回收的总数量 显示清除不算 System.out.println(&quot;被自动回收的数量:&quot; + stats.evictionCount()); // 减 本身-other 小于0 返回0 //System.out.println(stats.minus(new CacheStats(...))); // 加 本身+other //System.out.println(stats.plus(new CacheStats(...))); System.out.println(stats); &#125; 总结:guava的cache 适合那些微型项目、或者是一些小地方用用 ;大项目还是得靠 redis或者其他的方式来做;不过这个guava的cache 真心好用 异步加载、缓存刷新、过期策略 、缓存监控、都相当好用]]></content>
       <categories>
         <category>笔记</category>
       </categories>
       <tags>
-        <tag>java</tag>
-        <tag>spring</tag>
+        <tag>guava</tag>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派组装运行]]></title>
+    <url>%2Fming%2F4c838b91.html</url>
+    <content type="text"><![CDATA[####自己闲的蛋疼 购买了个树莓派3b 由于不太懂这个 买配件 组装运行起来耗费了好久 特此做个笔记#####树莓派配件组成:1:板子:就是生产好的树莓派的电子板2:电源:3b版本需要5v 2.5A的电源 如果外接设备多的话要按需增加电源3:sd卡:做系统启动 存储的sd存储卡4:散热装备:散热片两个(cpu、gpu)、风扇一个5:外壳:还是需要一个外壳的 不然贼丑#####树莓派组装1:先把sd卡刷个系统 随便刷 个官方的系统就行2:把散热片贴好 。风扇接好 风扇接46脚 红色4(供电) 黑色6 如果想可关闭电风扇或者控温自动控制 需要一个继电器、一个温度感应模块3:插上网线4:接上电源5:开机需要会自己搭建内网或者扫描设备ip然后通过ssh协议连接上树莓派即可#####总结:成本大概在300-400左右 其实很不错了 这个价位能有这个配置这个玩法 很满足了 就是有点麻烦什么都要自己折腾 树莓派可以做很多东西 据大佬说 树莓派最终梦想就是自己造一架基于树莓派的无人机]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派vnc链接]]></title>
+    <url>%2Fming%2F52f5e4f0.html</url>
+    <content type="text"><![CDATA[###树莓派开启wifi模块后 想看看树莓派的桌面 然后就开启了vnc服务 玩玩####安装vnc服务1sudo apt-get install tightvncserver ####设置vnc链接的密码（最长只能8位 超过的截取前8位）1vncpasswd ####添加开机启动1sudo vim /etc/init.d/vncserver 内容:12345678910111213141516171819202122#!/bin/sh#如果不是 pi用户 请 改这里的user 登录的时候 也用这里的userexport USER=&apos;pi&apos; eval cd ~$USER case &quot;$1&quot; in start) # 启动命令行。此处自定义分辨率、控制台号码或其它参数。 su $USER -c &apos;/usr/bin/vncserver -depth 16 -geometry 1024x768 :1&apos; echo &quot;Starting VNC server for $USER &quot; ;; stop) # 终止命令行。此处控制台号码与启动一致。 su $USER -c &apos;/usr/bin/vncserver -kill :1&apos; echo &quot;vncserver stopped&quot; ;; *) echo &quot;Usage: /etc/init.d/vncserver &#123;start|stop&#125;&quot; exit 1 ;;esacexit 0 添加执行权限 更新开机启动12sudo chmod 755 /etc/init.d/vncserversudo update-rc.d vncserver defaults ###登录通过vnc工具登录账户 pi(脚本中的user)密码 设置的vnc密码 不是ssh密码 ###多个桌面开启默认是端口:5900 如果第一个窗口推荐在5900+1。。。以此类推 不要用默认的 有坑 ####总结: vnc链接树莓派的桌面 感觉卡卡的 玛格及]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[idea 常用插件]]></title>
+    <url>%2Fming%2Fa365393a.html</url>
+    <content type="text"><![CDATA[名称功能快捷键备注ace jump文件中匹配字符串跳转ctrl+;常用在代码中匹配跳转vim使用类似vim方式操作文件内容vim控使用find bugs查找代码中不符合他的规范的代码略坑 但是有点用.ignoregit 配置忽略文件的插件可以通过查看是否变灰 来确定配置是否生效bashsupport写bashshell脚本的插件一般用途 shell脚本 不是很需要这个lombok配合lombok.jar使用lombok 很不错 能让代码看起来 更加干净整洁markdown support书写markdown 文件的插件还不错 用起来 和简书上差不多code glance代码试图pgup pgon 上下翻屏]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>tools</tag>
       </tags>
   </entry>
   <entry>

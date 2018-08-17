@@ -1,4 +1,4 @@
-package com.ming.ming;
+package com.ming;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MingApplicationTests {
+public class StartTests {
 
 	@Test
 	public void contextLoads() {

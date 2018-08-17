@@ -1,12 +1,12 @@
-package com.ming.ming;
+package com.ming;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MingApplication {
+public class Start {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MingApplication.class, args);
+		SpringApplication.run(Start.class, args);
 	}
 }

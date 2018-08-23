@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 #安装npm
 sudo apt install npm  -y
+#安装 cnpm
+sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 # 使用npm 安装  n
-sudo npm install -g n
+sudo cnpm install -g n
 # 使用n  更新 npm  node
 sudo n latest
 #安装 hexo
-sudo npm install hexo -g
+sudo cnpm install hexo -g
 # 安装压缩优化
-sudo npm install gulp -g
+sudo cnpm install gulp -g
 
 #安装依赖
-sudo npm install
+sudo cnpm install

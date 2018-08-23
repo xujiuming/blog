@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[eureka-client多网卡配置笔记]]></title>
     <url>%2Fming%2F17f39e95.html</url>
-    <content type="text"><![CDATA[前言在使用swarm编排docker的时候 由于swarm 需要暴露端口需要ingress网络 但是 eureka client 注册的时候 不需要使用 ingress这种网络的网卡那么这个时候 就需要配置 eureka client 偏向的网络和排除的网卡之类的配置相关源码解析InetUtils 获取网络工具类这个工具类主要就是从InetUtilsProperties中的配置中 去查询、指定偏向网络、排除网络等相关功能主要函数:函数名称函数作用备注findFirstNonLoopbackHostInfo获取第一个非本地回环的主机信息通过获取第一个非本地回环的网络地址来解析成为需要的hostInfofindFirstNonLoopbackAddress获取第一个非本地回环的网络地址根据配置的忽略网卡、倾向网络等参数 来选择第一个有效的网卡ignoreAddress是否排除这个地址配合配置和判断是否本地回环地址来判断ignoreInterface是否排除这个网卡配合配置来判断是否排除InetUtilsProperties 获取网络工具类依赖的配置这个类主要就是接收配置文件中的spring.cloud.inetutils前缀的配置 提供给InetUtils使用主要配置:配置属性作用备注defaultHostname默认主机姓名默认是localhostdefaultIpAddress默认网络地址默认是127.0.0.1timeoutSeconds超时时间默认1ignoredInterfaces排除的网卡接收正则表达式useOnlySiteLocalInterfaces是否启用本地回环网卡preferredNetworks倾向网络ip地址接收正则表达式、或者前缀匹配UtilAutoConfiguration InetUtils相关自动配置这个类是为了提供一个InetUtils相关的默认配置默认开启这个配置 但是都是使用的InetUtilsProperties中的默认配置配置123456789101112131415spring: cloud: inetutils: #默认host 名称 default-hostname: xxx # 默认ip地址 default-ip-address: 192.168.1.11 #超时时间 timeout-seconds: 2 #排除的网卡 ignored-interfaces: eth0 #是否读取本地回环网络 use-only-site-local-interfaces: false #倾向网络ip地址 可匹配正则 也可以匹配前缀 preferred-networks: 192.168 总结eureka client 提供了这些配置 直接看源码 在InetUtils 、InetUtilsProperties 、 UtilAutoConfiguration看看 就知道那些配置可以配置了]]></content>
+    <content type="text"><![CDATA[前言在使用swarm编排docker的时候 由于swarm 需要暴露端口需要ingress网络 但是 eureka client 注册的时候 不需要使用 ingress这种网络的网卡那么这个时候 就需要配置 eureka client 偏向的网络和排除的网卡之类的配置相关源码解析InetUtils 获取网络工具类这个工具类主要就是从InetUtilsProperties中的配置中 去查询、指定偏向网络、排除网络等相关功能主要函数:函数名称函数作用备注findFirstNonLoopbackHostInfo获取第一个非本地回环的主机信息通过获取第一个非本地回环的网络地址来解析成为需要的hostInfofindFirstNonLoopbackAddress获取第一个非本地回环的网络地址根据配置的忽略网卡、倾向网络等参数 来选择第一个有效的网卡ignoreAddress是否排除这个地址配合配置和判断是否本地回环地址来判断ignoreInterface是否排除这个网卡配合配置来判断是否排除InetUtilsProperties 获取网络工具类依赖的配置这个类主要就是接收配置文件中的spring.cloud.inetutils前缀的配置 提供给InetUtils使用主要配置:配置属性作用备注defaultHostname默认主机姓名默认是localhostdefaultIpAddress默认网络地址默认是127.0.0.1timeoutSeconds超时时间默认1ignoredInterfaces排除的网卡接收正则表达式useOnlySiteLocalInterfaces是否启用本地回环网卡preferredNetworks倾向网络ip地址接收正则表达式、或者前缀匹配UtilAutoConfiguration InetUtils相关自动配置这个类是为了提供一个InetUtils相关的默认配置默认开启这个配置 但是都是使用的InetUtilsProperties中的默认配置配置123456789101112131415spring: cloud: inetutils: #默认host 名称 default-hostname: xxx # 默认ip地址 default-ip-address: 192.168.1.11 #超时时间 timeout-seconds: 2 #排除的网卡 ignored-interfaces: eth0 #是否读取本地回环网络 use-only-site-local-interfaces: false #倾向网络ip地址 可匹配正则 也可以匹配前缀 preferred-networks: 192.168 总结配置的时候 一定要考虑加载时机 如果是spring cloud 项目 最好配置在bootstrap.yml中 否则可能读取的时候时机错误 导致配置不生效eureka client 提供了这些配置 直接看源码 在InetUtils 、InetUtilsProperties 、 UtilAutoConfiguration看看 就知道那些配置可以配置了]]></content>
       <categories>
         <category>笔记</category>
       </categories>
@@ -544,6 +544,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[idea 常用插件]]></title>
+    <url>%2Fming%2Fa365393a.html</url>
+    <content type="text"><![CDATA[名称功能快捷键备注ace jump文件中匹配字符串跳转ctrl+;常用在代码中匹配跳转vim使用类似vim方式操作文件内容vim控使用find bugs查找代码中不符合他的规范的代码略坑 但是有点用.ignoregit 配置忽略文件的插件可以通过查看是否变灰 来确定配置是否生效bashsupport写bashshell脚本的插件一般用途 shell脚本 不是很需要这个lombok配合lombok.jar使用lombok 很不错 能让代码看起来 更加干净整洁markdown support书写markdown 文件的插件还不错 用起来 和简书上差不多code glance代码试图pgup pgon 上下翻屏]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[java操控excel相关(poi,jxl)笔记]]></title>
     <url>%2Fming%2Fd3259856.html</url>
     <content type="text"><![CDATA[poi和jxl介绍poi和jxl操作excel不同点poi读写excel实例jxl读写excel实例poi读写word实例poi和jxl选择1:poi和jxl介绍1.1:poipoi是对所有office资源进行读写的一套工具包、属于apache开源组织。 1.2:jxljxl只能对excel进行操作的一套工具包。 2:两者操作excel不同点poi和jxl都是封装了对excel操作方法; poi是把整个文件的属性都封装在HSSFWorkbook 中; 通过HSSFWorkbook来操作单个工作薄。然后通过工作薄来操作行; 在通过行来操控单元格。这样一级一级的分拆下来; HSSFWorkbook----&gt;HSSFSheet-----&gt;HSSFRow----&gt;HSSFCell; 由于是基于HSSFWorkbook对象一步步创建起来的。所以不用把创建好的单元格添加进这个对象中、 如果需要对部分表格进行设置样式什么的。就可以创立HSSFCellStyle对象来进行设定样式; jxl是把整个文件封装在Workbook相关对象中; 通过Workbook去创建sheet工作薄;但是和poi不一样的地方是 jxl是通过向sheet中使用label(单元格)来进行读取写入; Workbook-----&gt;sheet------&gt;label ; jxl是先创建一个工作区域、然后区创立单元格、单元格包含这个单元格的位置、内容等信息;然后把这个单元格加入工作区; ###3：poi读写excel文件的实例(代码中fileURL是你存放路径)123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051//写入public void poiWriteExcel() &#123; //创建excel工作薄 HSSFWorkbook hssfWorkbook = new HSSFWorkbook(); //在里面创建一个sheet 名字为工作薄1 HSSFSheet hssfSheet = hssfWorkbook.createSheet(&quot;工作薄1&quot;); //在索引为o的位置创建行 也就是第一行 HSSFRow oneRow = hssfSheet.createRow(0); //创建红色字体 HSSFFont font = hssfWorkbook.createFont(); font.setColor(HSSFFont.COLOR_RED); //创建格式、 HSSFCellStyle cellStyle = hssfWorkbook.createCellStyle(); cellStyle.setFont(font); //在第o行创建第一个单元格 HSSFCell cell = oneRow.createCell(0); //使用单元格格式 cell.setCellStyle(cellStyle); //在第一个单元格输入内容 cell.setCellValue(&quot;xu&quot;); //创建一个第十行 HSSFRow tenRow = hssfSheet.createRow(9); //创建输出流 try &#123; FileOutputStream fileOutputStream = new FileOutputStream(fileURL + &quot;xianyu.xls&quot;); //存储工作博 hssfWorkbook.write(fileOutputStream); fileOutputStream.flush(); fileOutputStream.close(); &#125; catch (IOException e) &#123; System.out.println(&quot;无法写入&quot;); e.printStackTrace(); &#125; &#125;//读取public void poiReadExcel() &#123; HSSFWorkbook hssfWorkBook = null; try &#123; hssfWorkBook = new HSSFWorkbook(new FileInputStream(fileURL + &quot;xianyu.xls&quot;)); //获取第一个工作薄 HSSFSheet hssfSheet = hssfWorkBook.getSheetAt(0); //获取第一行 HSSFRow row = hssfSheet.getRow(0); System.out.println(row.getCell(0)); &#125; catch (IOException e) &#123; System.out.println(&quot;无法读取&quot;); e.printStackTrace(); &#125; &#125; ###4:jxl读写excel123456789101112131415161718192021222324252627282930313233343536//写入public void jxlWriteExcel() &#123; try &#123; //创建xls WritableWorkbook wwb = Workbook.createWorkbook( new FileOutputStream(fileURL + &quot;xianyujxl.xls&quot;)); //添加工作薄 WritableSheet sheet = wwb.createSheet(&quot;工作薄1&quot;, 0); //添加单元格 Label(x,y,z) x=列 y=行 z=内容 Label label = new Label(0, 0, &quot;xu&quot;); //添加进工作薄 sheet.addCell(label); // 写数据 wwb.write(); wwb.close(); &#125; catch (IOException e) &#123; System.out.println(&quot;写入失败&quot;); e.printStackTrace(); &#125; catch (WriteException e) &#123; e.printStackTrace(); &#125; &#125;//读取public void jxlReadExcel() &#123; try &#123; //获取excel Workbook wb = Workbook.getWorkbook( new FileInputStream(fileURL + &quot;xianyujxl.xls&quot;)); //获取sheet工作薄 Sheet sheet = wb.getSheet(0); System.out.println(sheet.getCell(0, 0).getContents()); &#125; catch (IOException | BiffException e) &#123; e.printStackTrace(); &#125; &#125; ###5:poi读写word12345678910111213141516171819202122232425262728293031//写入public void poiWriteWord() &#123; try &#123; //创建word文件 XWPFDocument xwpfDocument = new XWPFDocument(); //新建段落 XWPFParagraph xwpfP = xwpfDocument.createParagraph(); //创建文本 XWPFRun xwpfR = xwpfP.createRun(); xwpfR.setText(&quot;xu&quot;); xwpfDocument.write(new FileOutputStream(fileURL + &quot;xianyu.doc&quot;)); &#125; catch (IOException e) &#123; System.out.println(&quot;无法写入&quot;); e.printStackTrace(); &#125; &#125;//读取public void poiReadWord() &#123; //获取doc对象 XWPFDocument xwpfDocument; try &#123; xwpfDocument = new XWPFDocument(new FileInputStream(fileURL + &quot;xianyu.doc&quot;)); //获取段落并且遍历 xwpfDocument.getParagraphs().forEach(xwpfParagraph -&gt; System.out.println(xwpfParagraph.getText())); &#125; catch (IOException e) &#123; System.out.println(&quot;无法读取&quot;); e.printStackTrace(); &#125; &#125; 6：poi和jxl选择不用想了、肯定poi 因为jxl很久不更新了。poi现在是apache的项目、前景好、文档全]]></content>
@@ -552,17 +563,6 @@
       </categories>
       <tags>
         <tag>java</tag>
-        <tag>tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[idea 常用插件]]></title>
-    <url>%2Fming%2Fa365393a.html</url>
-    <content type="text"><![CDATA[名称功能快捷键备注ace jump文件中匹配字符串跳转ctrl+;常用在代码中匹配跳转vim使用类似vim方式操作文件内容vim控使用find bugs查找代码中不符合他的规范的代码略坑 但是有点用.ignoregit 配置忽略文件的插件可以通过查看是否变灰 来确定配置是否生效bashsupport写bashshell脚本的插件一般用途 shell脚本 不是很需要这个lombok配合lombok.jar使用lombok 很不错 能让代码看起来 更加干净整洁markdown support书写markdown 文件的插件还不错 用起来 和简书上差不多code glance代码试图pgup pgon 上下翻屏]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
         <tag>tools</tag>
       </tags>
   </entry>

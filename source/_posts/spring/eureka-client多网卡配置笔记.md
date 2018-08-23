@@ -62,6 +62,7 @@ spring:
       preferred-networks: 192.168
 ```
 #### 总结 
-eureka client 提供了这些配置 直接看源码  在InetUtils 、InetUtilsProperties 、 UtilAutoConfiguration 
+配置的时候 一定要考虑加载时机  如果是spring cloud 项目 最好配置在bootstrap.yml中  否则可能读取的时候时机错误 导致配置不生效      
+eureka client 提供了这些配置 直接看源码  在InetUtils 、InetUtilsProperties 、 UtilAutoConfiguration    
 看看 就知道那些配置可以配置了
 

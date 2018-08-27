@@ -1,5 +1,6 @@
 package com.ming.base.interceptor;
 
+import com.ming.base.interceptor.thymeleaf.ThymeleafLayoutInterceptor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -52,8 +53,8 @@ public class WebInterceptors extends WebMvcConfigurationSupport {
      */
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        // registry.addInterceptor(new ThymeleafLayoutInterceptor());
         registry.addInterceptor(new AccessLogInterceptor());
+        registry.addInterceptor(new ThymeleafLayoutInterceptor());
         registry.addInterceptor(new ResponseHandler());
         super.addInterceptors(registry);
     }

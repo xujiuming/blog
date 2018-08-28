@@ -5,5 +5,11 @@ package com.ming.base.web;
  */
 public interface BaseControllerInterface {
 
-
+    /**
+     * 重定向
+     *
+     * @author ming
+     * @date 2018-08-28 09:45:31
+     */
+    String redirect(String uri);
 }

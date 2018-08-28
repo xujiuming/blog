@@ -8,13 +8,15 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**thymeleaf lay out 拦截器
+/**
+ * thymeleaf lay out 拦截器
+ *
  * @author ming
  * @date 2018-08-27 11:19:22
  */
 public class ThymeleafLayoutInterceptor extends HandlerInterceptorAdapter {
 
-    private static final String DEFAULT_LAYOUT = "layouts/default";
+    private static final String DEFAULT_LAYOUT = "";
     private static final String DEFAULT_VIEW_ATTRIBUTE_NAME = "view";
 
     private String defaultLayout = DEFAULT_LAYOUT;

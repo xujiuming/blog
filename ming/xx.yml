@@ -1,0 +1,166 @@
+version: '3.3'
+services:
+
+  common:
+    image: store.onlyharbor.com:5000/boss/common:10153-20180831081310-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    extra_hosts:
+      - "api.ecs.qaline.com:101.95.22.62"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  student:
+    image: store.onlyharbor.com:5000/boss/student:10154-20180831082021-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  academic:
+    image: store.onlyharbor.com:5000/boss/academic:9962-20180829013133-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  sell:
+    image: store.onlyharbor.com:5000/boss/sell:10121-20180831035254-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    ports:
+    - 8003:8080
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  curriculum:
+    image: store.onlyharbor.com:5000/boss/curriculum:9581-20180823071052-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  accounting:
+    image: store.onlyharbor.com:5000/boss/accounting:10052-20180830005808-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    extra_hosts:
+      - "api.ecs.qaline.com:101.95.22.62"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  user:
+    image: store.onlyharbor.com:5000/boss/user:10146-20180831072749-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  frontend:
+    image: store.onlyharbor.com:5000/boss/frontend:10152-20180831080321-2.0.0-prod
+    ports:
+    - 80:80
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  crm:
+    image: store.onlyharbor.com:5000/boss/crm:10078-20180830061816-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+
+  timer-center:
+    image: store.onlyharbor.com:5000/boss/timer-center:9569-20180822032934-2.0.0-prod
+    environment:
+    - MY_ENV=prod
+    ports:
+    - 11111:8080
+    networks:
+    - boss
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+networks:
+  boss:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+      - subnet: 10.88.0.0/16

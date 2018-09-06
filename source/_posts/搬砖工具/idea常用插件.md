@@ -16,3 +16,4 @@ date: 2017-11-11 00:00:00
 |lombok|配合lombok.jar使用||lombok 很不错 能让代码看起来 更加干净整洁|
 |markdown support|书写markdown 文件的插件||还不错 用起来 和简书上差不多|
 |code glance|代码试图 | pgup pgon 上下翻屏||
+|String Manipulation |转化字符串 |alt +m |

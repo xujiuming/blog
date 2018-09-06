@@ -12,21 +12,25 @@ import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAd
 
 import java.util.Map;
 
+/**
+ * @author ming
+ * @date 2018-09-04 15:03:40
+ */
 @Configuration
 public class WebSocketConfig {
 
     @Bean
-    public WebSocketHandlerAdapter handlerAdapter(){
+    public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter();
     }
 
     @Autowired
     @Bean
-    public HandlerMapping handlerMapping(final  EchoWebSocket echoWebSocket){
+    public HandlerMapping handlerMapping(final EchoWebSocket echoWebSocket) {
         final SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        Map<String , WebSocketHandler> map = Maps.newHashMap();
-        map.put("/echo",echoWebSocket);
+        Map<String, WebSocketHandler> map = Maps.newHashMap();
+        map.put("/echo", echoWebSocket);
         mapping.setUrlMap(map);
         return mapping;
     }

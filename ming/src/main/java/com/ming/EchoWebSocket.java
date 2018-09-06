@@ -8,12 +8,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-/**web socket 示例
+/**
+ * web socket 示例
+ *
  * @author ming
  * @date 2018-08-30 10:48:43
  */
 @Component
-public class EchoWebSocket  implements WebSocketHandler {
+public class EchoWebSocket implements WebSocketHandler {
     @Override
     public List<String> getSubProtocols() {
         return Lists.newArrayList("ming");
@@ -21,6 +23,6 @@ public class EchoWebSocket  implements WebSocketHandler {
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
-        return session.send(session.receive().map(msg-> session.textMessage("nihao  websocket")));
+        return session.send(session.receive().map(msg -> session.textMessage("nihao  websocket")));
     }
 }

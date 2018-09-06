@@ -1,6 +1,7 @@
 package com.ming;
 
 import com.ming.base.web.BaseAbstractController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,12 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
+/**
+ * @author ming
+ * @date 2018-09-04 15:03:28
+ */
 @RestController
+@Slf4j
 public class IndexController extends BaseAbstractController {
 
     /**
@@ -40,5 +46,14 @@ public class IndexController extends BaseAbstractController {
                 );
     }
 
+    @GetMapping("/err")
+    public String err() {
+        log.error("xxxxxx");
+        log.info("xxinfo");
+        if (true) {
+            throw new NullPointerException();
+        }
+        return "";
+    }
 
 }

@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ import java.util.Map;
  * @author ming
  * @date 2017-11-06 16:29
  */
-public class PageParam implements Serializable {
+public class PageParam {
     /**
      * 默认值
      */

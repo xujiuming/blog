@@ -35,14 +35,14 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @author ming
      * @date 11:00
      */
-    private static ApplicationContext applicationContext;
+    private static ApplicationContext APPLICATION_CONTEXT;
     /**
      * 获取BeanFactory  进行动态注册bean 删除bean
      *
      * @author ming
      * @date 2017-11-10 15:51
      */
-    private static DefaultListableBeanFactory defaultListableBeanFactory;
+    private static DefaultListableBeanFactory DEFAULT_LISTABLE_BEAN_FACTORY;
 
     /**
      * 手动注册的bean 名称列表  必须保证 每个使用它的地方 是一样的
@@ -50,7 +50,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @author ming
      * @date 2017-11-10 15:54
      */
-    private static volatile Map<String, Class<?>> manualRegisterBeanMap = Maps.newConcurrentMap();
+    private static volatile Map<String, Class<?>> MANUAL_REGISTER_BEAN_MAP = Maps.newConcurrentMap();
 
 
     /**
@@ -61,7 +61,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @date 2017-12-12 13:46
      */
     public static Set<String> getManualRegisterBeanNameSet() {
-        return manualRegisterBeanMap.keySet();
+        return MANUAL_REGISTER_BEAN_MAP.keySet();
     }
 
     /**
@@ -79,9 +79,9 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
         //创建beanBuilder
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(beanClazz);
         //注册bean
-        defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
+        DEFAULT_LISTABLE_BEAN_FACTORY.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
         //添加手工注册的beanName 到集合
-        manualRegisterBeanMap.put(beanName, beanClazz);
+        MANUAL_REGISTER_BEAN_MAP.put(beanName, beanClazz);
     }
 
     /**
@@ -94,12 +94,12 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
     public static void removeBean(String beanName) {
         assert StringUtils.isNotEmpty(beanName);
         //当试图删除 非手动注册的bean的时候
-        if (!manualRegisterBeanMap.keySet().contains(beanName)) {
+        if (!MANUAL_REGISTER_BEAN_MAP.keySet().contains(beanName)) {
             throw new UnsupportedOperationException("不能删除非手动注册的bean");
         }
         checkDefaultListableBeanFactory();
-        defaultListableBeanFactory.removeBeanDefinition(beanName);
-        manualRegisterBeanMap.remove(beanName);
+        DEFAULT_LISTABLE_BEAN_FACTORY.removeBeanDefinition(beanName);
+        MANUAL_REGISTER_BEAN_MAP.remove(beanName);
     }
 
     /**
@@ -113,7 +113,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         checkApplicationContext();
-        return (T) applicationContext.getBean(name);
+        return (T) APPLICATION_CONTEXT.getBean(name);
     }
 
     /**
@@ -126,12 +126,12 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static <T> T getBean(Class<T> clazz) {
         checkApplicationContext();
-        return applicationContext.getBean(clazz);
+        return APPLICATION_CONTEXT.getBean(clazz);
     }
 
     public static <T> T getBean(String beanName, Class<T> clazz) {
         checkApplicationContext();
-        return applicationContext.getBean(beanName, clazz);
+        return APPLICATION_CONTEXT.getBean(beanName, clazz);
     }
 
     /**
@@ -143,7 +143,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static String[] getBeanDefinitionNames() {
         checkApplicationContext();
-        return applicationContext.getBeanDefinitionNames();
+        return APPLICATION_CONTEXT.getBeanDefinitionNames();
     }
 
     /**
@@ -155,7 +155,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static Integer getBeanDefinitionCount() {
         checkApplicationContext();
-        return applicationContext.getBeanDefinitionCount();
+        return APPLICATION_CONTEXT.getBeanDefinitionCount();
     }
 
     /**
@@ -168,7 +168,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static String[] getBeanNameListByAnnotation(Class<? extends Annotation> annotation) {
         checkApplicationContext();
-        return applicationContext.getBeanNamesForAnnotation(annotation);
+        return APPLICATION_CONTEXT.getBeanNamesForAnnotation(annotation);
     }
 
     /**
@@ -181,7 +181,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static String[] getBeanNamesForType(Class clazz) {
         checkApplicationContext();
-        return applicationContext.getBeanNamesForType(clazz);
+        return APPLICATION_CONTEXT.getBeanNamesForType(clazz);
     }
 
     /**
@@ -194,7 +194,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
         checkApplicationContext();
-        return applicationContext.getBeansOfType(clazz);
+        return APPLICATION_CONTEXT.getBeansOfType(clazz);
     }
 
     /**
@@ -204,21 +204,29 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @date 2017-08-28 17点
      */
     private static void checkApplicationContext() {
-        if (applicationContext == null) {
-            throw new NullPointerException("spring applicationContext is null !!!");
+        if (APPLICATION_CONTEXT == null) {
+            throw new NullPointerException("spring APPLICATION_CONTEXT is null !!!");
         }
     }
 
     /**
-     * 检测 defaultListableBeanFactory
+     * 检测 DEFAULT_LISTABLE_BEAN_FACTORY
      *
      * @author ming
      * @date 2017-11-10 15:47
      */
     private static void checkDefaultListableBeanFactory() {
-        if (defaultListableBeanFactory == null) {
-            throw new NullPointerException(" spring defaultListableBeanFactory is null !!!");
+        if (DEFAULT_LISTABLE_BEAN_FACTORY == null) {
+            throw new NullPointerException(" spring DEFAULT_LISTABLE_BEAN_FACTORY is null !!!");
         }
+    }
+
+    public static void setStaticDefaultListableBeanFactory(DefaultListableBeanFactory defaultListableBeanFactory) {
+        DEFAULT_LISTABLE_BEAN_FACTORY = defaultListableBeanFactory;
+    }
+
+    public static void setStaticApplicationContext(ApplicationContext applicationContext) {
+        APPLICATION_CONTEXT = applicationContext;
     }
 
     /**
@@ -229,8 +237,8 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     @Override
     public void destroy() throws Exception {
-        applicationContext = null;
-        defaultListableBeanFactory = null;
+        setStaticApplicationContext(null);
+        setStaticDefaultListableBeanFactory(null);
     }
 
     /**
@@ -241,8 +249,9 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringBeanManager.applicationContext = applicationContext;
+        setStaticApplicationContext(applicationContext);
         //获取 bean factory
-        defaultListableBeanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
+        setStaticDefaultListableBeanFactory((DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory());
     }
+
 }

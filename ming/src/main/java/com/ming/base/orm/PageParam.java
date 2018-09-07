@@ -37,10 +37,6 @@ public class PageParam {
      * 过滤参数
      */
     private Map<String, Object> filter;
-    /**
-     * 查询参数
-     */
-    private Collection<SearchFilter> searchFilters;
 
     /**
      * 获取pageable

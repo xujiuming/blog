@@ -17,7 +17,7 @@ spring:
       connection-test-query: "select 1;"
   jpa:
     # 是否打印sql
-    show-sql: true
+    show-sql: false
     hibernate:
       naming:
         #entity使用驼峰命名  数据表使用下划线命名

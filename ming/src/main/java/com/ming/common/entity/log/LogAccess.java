@@ -1,6 +1,6 @@
 package com.ming.common.entity.log;
 
-import com.ming.base.orm.InId;
+import com.ming.base.orm.InLongId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class LogAccess extends InId {
+public class LogAccess extends InLongId {
 
     private String cookies;
     private String uri;

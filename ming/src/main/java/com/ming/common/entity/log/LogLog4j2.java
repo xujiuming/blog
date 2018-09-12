@@ -1,6 +1,6 @@
 package com.ming.common.entity.log;
 
-import com.ming.base.orm.InId;
+import com.ming.base.orm.InLongId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class LogLog4j2 extends InId {
+public class LogLog4j2 extends InLongId {
 
     /**
      * 日志记录类

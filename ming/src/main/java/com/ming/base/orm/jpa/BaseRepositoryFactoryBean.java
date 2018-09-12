@@ -1,6 +1,6 @@
 package com.ming.base.orm.jpa;
 
-import com.ming.base.orm.InId;
+import com.ming.base.orm.InLongId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
@@ -28,7 +28,7 @@ public class BaseRepositoryFactoryBean<R extends JpaRepository<T, ID>, T, ID ext
         return new BaseRepositoryFactory(entityManager);
     }
 
-    private static class BaseRepositoryFactory<T extends InId, ID extends Serializable>
+    private static class BaseRepositoryFactory<T extends InLongId, ID extends Serializable>
             extends JpaRepositoryFactory {
 
         private final EntityManager em;

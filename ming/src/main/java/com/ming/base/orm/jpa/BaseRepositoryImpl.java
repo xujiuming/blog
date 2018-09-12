@@ -1,6 +1,6 @@
 package com.ming.base.orm.jpa;
 
-import com.ming.base.orm.InId;
+import com.ming.base.orm.InLongId;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author ming
  * @date 2018-09-04 16:06:42
  */
-public class BaseRepositoryImpl<T extends InId, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
+public class BaseRepositoryImpl<T extends InLongId, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
     private final EntityManager entityManager;
 
     public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
@@ -35,10 +35,10 @@ public class BaseRepositoryImpl<T extends InId, ID extends Serializable> extends
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends InId> List<T> findListById(Long id, T t) {
+    public <T extends InLongId> List<T> findListById(Long id, T t) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<? extends InId> query = criteriaBuilder.createQuery(t.getClass());
-        Root<? extends InId> root = query.from(t.getClass());
+        CriteriaQuery<? extends InLongId> query = criteriaBuilder.createQuery(t.getClass());
+        Root<? extends InLongId> root = query.from(t.getClass());
         Predicate predicate = criteriaBuilder.equal(root.get(String.valueOf(t.getId())), id);
         query.where(predicate);
         return (List<T>) entityManager.createQuery(query).getResultList();
@@ -46,10 +46,10 @@ public class BaseRepositoryImpl<T extends InId, ID extends Serializable> extends
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends InId> List<T> findListByIds(Collection<Long> ids, T t) {
+    public <T extends InLongId> List<T> findListByIds(Collection<Long> ids, T t) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<? extends InId> query = criteriaBuilder.createQuery(t.getClass());
-        Root<? extends InId> root = query.from(t.getClass());
+        CriteriaQuery<? extends InLongId> query = criteriaBuilder.createQuery(t.getClass());
+        Root<? extends InLongId> root = query.from(t.getClass());
         Predicate predicate = criteriaBuilder.in(root.get(String.valueOf(t.getId())));
         query.where(predicate);
         return (List<T>) entityManager.createQuery(query).getResultList();

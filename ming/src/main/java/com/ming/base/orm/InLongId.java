@@ -18,7 +18,7 @@ import java.time.Instant;
  */
 @MappedSuperclass
 @Data
-public class InId implements Serializable {
+public class InLongId implements Serializable {
     private static final long serialVersionUID = 1L;
 
 

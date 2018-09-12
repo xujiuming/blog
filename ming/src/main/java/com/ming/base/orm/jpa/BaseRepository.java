@@ -1,6 +1,6 @@
 package com.ming.base.orm.jpa;
 
-import com.ming.base.orm.InId;
+import com.ming.base.orm.InLongId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -38,7 +38,7 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      * @author ming
      * @date 2018-09-06 17:37:39
      */
-    <T extends InId> List<T> findListByIds(Collection<Long> ids, T t);
+    <T extends InLongId> List<T> findListByIds(Collection<Long> ids, T t);
 
 
     /**
@@ -51,5 +51,5 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      * @date 2018-09-06 17:37:58
      */
     @SuppressWarnings("unchecked")
-    <T extends InId> List<T> findListById(Long id, T t);
+    <T extends InLongId> List<T> findListById(Long id, T t);
 }

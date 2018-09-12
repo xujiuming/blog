@@ -5,6 +5,7 @@ import com.ming.common.entity.log.LogAccess;
 import com.ming.common.service.log.LogAccessService;
 import com.ming.core.utils.JacksonSingleton;
 import com.ming.core.utils.SpringBeanManager;
+import com.ming.core.utils.WebHttpUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ public class AccessLogInterceptor implements HandlerInterceptor {
         }
         logAccess.setHeaders(JacksonSingleton.writeAsString(headers));
         logAccess.setMethod(request.getMethod());
-        logAccess.setUserAgent(request.getRemoteUser());
+        logAccess.setUserAgent(WebHttpUtils.getUa(request));
         SpringBeanManager.getBean(LogAccessService.class).save(logAccess);
         return true;
     }

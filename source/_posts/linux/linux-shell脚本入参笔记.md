@@ -86,7 +86,19 @@ chmod +x ./test.sh
 ```
 #### getopt 
 增强版本的getopts 可以接收长参数、可以指定可选参数  
-11
+调用脚本方式
+```
+xxx.sh -a -b bval --aparam 
+```
+定义接收参数的格式
+* 没有:不接受参数
+* 一个:接收参数
+* 两个:选项参数可选
+-o 设置短选项  -l 设置长选项 
+```
+ARGS='getopt -o ab: -l"aparam::,help" -- "$@"'
+eval set --"${ARGS}"
+```
 
 
 #### xgrep

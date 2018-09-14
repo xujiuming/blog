@@ -23,3 +23,7 @@ date: 2017-11-11 00:00:00
 |*|alias|命名别名|alias  psa=‘ps -aux' |
 |*|sed|按行操作文本|sed '$d' ./file|
 |ubuntu| gnome-screenshot -a |局域截图|
+|*|time|统计命令的在每个硬件中的执行时间| \time -v ls |
+|*|sleep|休眠|sleep 30s 单位(s:秒,m:分,h:小时,d:天) 休眠ms sleep 0.03s 有10ms左右误差|
+|*|expr|计算器|expr 10 + 10| 
+|*|file|查看文件信息|file xxx,(-z:查看压缩文件的信息只能查看gzip的压缩包其他的压缩包无法查看,-i查看mime,-F 设置分隔符,-L查看软连接,-f根据文件的命长查看每一个文件)|

@@ -549,3 +549,23 @@ INFO: loading config from /home/ming/tools/ss/ss.json
 2018-09-12 13:57:59 INFO     loading libcrypto from libcrypto.so.1.1
 2018-09-12 13:57:59 INFO     starting local at 127.0.0.1:1080
 2018-09-12 13:57:59 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-13 09:30:33 WARNING  warning: your timeout 30000 seems too long
+2018-09-13 09:30:33 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-13 09:30:33 INFO     starting local at 127.0.0.1:1080
+2018-09-13 09:30:33 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-13 09:30:33 WARNING  warning: your timeout 30000 seems too long
+2018-09-13 09:30:34 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-13 09:30:34 INFO     starting local at 127.0.0.1:1080
+2018-09-13 09:30:34 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-14 09:29:20 WARNING  warning: your timeout 30000 seems too long
+2018-09-14 09:29:20 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-14 09:29:20 INFO     starting local at 127.0.0.1:1080
+2018-09-14 09:29:20 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-14 09:29:20 WARNING  warning: your timeout 30000 seems too long
+2018-09-14 09:29:20 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-14 09:29:20 INFO     starting local at 127.0.0.1:1080
+2018-09-14 09:29:20 ERROR    [Errno 98] Address already in use

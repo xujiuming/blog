@@ -1,10 +1,11 @@
 ---
 title: linux-ln连接笔记
 comments: true
-date: 2018-09-13 13:35:03
 categories: 笔记
 tags:
- - linux 
+  - linux
+abbrlink: '35715976'
+date: 2018-09-13 13:35:03
 ---
 #### 前言 
 在linux中 任何软件、文件、文件夹 都可以看做是一块数据块   
@@ -36,5 +37,5 @@ ln 源文件  硬链接名称
 -n  --no-dereference 当做没有引用  配合 -f 强制更新软连接地址  
 文件a b 
 c软连接指向a  这个时候要把c软连接指向到b  必须使用  ls -snf b c 
-####总结
+####  总结
 通过ln 对其他文件、目录建立方便使用的连接  大部分时候使用软连接就够了  

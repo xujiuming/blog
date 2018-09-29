@@ -12,8 +12,10 @@ date: 2017-11-11 00:00:00
 * 手动注册bean
 * 删除手工注册的bean
 ```
+package com.ming.utils;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,19 +26,19 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 对操作spring applicationcontext提供基本封装  方便使用
  * 使用order 最先加载
+ * 预期在容器最开始加载 暂时这个无法生效  如果需要这个bean 优先加载 请调整依赖 来调整bean加载顺序
  *
  * @author ming
  * @date 11:00
  */
 @Component
-//预期在容器最开始加载 暂时这个无法生效  如果需要这个bean 优先加载 请调整依赖 来调整bean加载顺序
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SpringBeanManager implements ApplicationContextAware, DisposableBean {
 
@@ -64,16 +66,16 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     private static volatile Map<String, Class<?>> manualRegisterBeanMap = Maps.newConcurrentMap();
 
+
     /**
-     * 初始化 beanFactory
+     * 获取 手动注入的 bean名称
      *
+     * @return Set<String>
      * @author ming
-     * @date 2017-11-10 15:52
+     * @date 2017-12-12 13:46
      */
-    @PostConstruct
-    public void init() {
-        //获取 bean factory
-        defaultListableBeanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
+    public static Set<String> getManualRegisterBeanNameSet() {
+        return manualRegisterBeanMap.keySet();
     }
 
     /**
@@ -85,6 +87,8 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @date 2017-11-09 16:50
      */
     public static void registerBean(String beanName, Class<?> beanClazz) {
+        assert StringUtils.isNotEmpty(beanName);
+        assert beanClazz != null;
         checkDefaultListableBeanFactory();
         //创建beanBuilder
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(beanClazz);
@@ -102,6 +106,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @date 2017-11-10 15:45
      */
     public static void removeBean(String beanName) {
+        assert StringUtils.isNotEmpty(beanName);
         //当试图删除 非手动注册的bean的时候
         if (!manualRegisterBeanMap.keySet().contains(beanName)) {
             throw new UnsupportedOperationException("不能删除非手动注册的bean");
@@ -120,7 +125,7 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @date 11:19
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getBeanByName(String name) {
+    public static <T> T getBean(String name) {
         checkApplicationContext();
         return (T) applicationContext.getBean(name);
     }
@@ -133,13 +138,12 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      * @author ming
      * @date 11:20
      */
-    public static <T> T getBeanByType(Class<T> clazz) {
+    public static <T> T getBean(Class<T> clazz) {
         checkApplicationContext();
         return applicationContext.getBean(clazz);
     }
 
-
-    public static <T> T getbeanByNameAndType(String beanName, Class<T> clazz) {
+    public static <T> T getBean(String beanName, Class<T> clazz) {
         checkApplicationContext();
         return applicationContext.getBean(beanName, clazz);
     }
@@ -207,7 +211,6 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
         return applicationContext.getBeansOfType(clazz);
     }
 
-
     /**
      * 检测applicationcontext是否可用
      *
@@ -232,6 +235,14 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
         }
     }
 
+    private static void updateApplicationContext(ApplicationContext applicationContext) {
+        SpringBeanManager.applicationContext = applicationContext;
+    }
+
+    private static void updateDefaultListableBeanFactory(DefaultListableBeanFactory defaultListableBeanFactory) {
+        SpringBeanManager.defaultListableBeanFactory = defaultListableBeanFactory;
+    }
+
     /**
      * 销毁方法
      *
@@ -240,7 +251,8 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     @Override
     public void destroy() throws Exception {
-        applicationContext = null;
+        updateApplicationContext(null);
+        updateDefaultListableBeanFactory(null);
     }
 
     /**
@@ -251,8 +263,11 @@ public class SpringBeanManager implements ApplicationContextAware, DisposableBea
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringBeanManager.applicationContext = applicationContext;
+        updateApplicationContext(applicationContext);
+        //获取 bean factory
+        updateDefaultListableBeanFactory((DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory());
     }
 }
+
 ```
 ####总结:看这个工具类的实现 就清晰的知道了 beanFactory的一些功能 和之前学习的applicationContext、beanFactory 联系起来了 

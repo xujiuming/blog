@@ -1,10 +1,11 @@
 ---
 title: linux-find笔记
 comments: true
-date: 2018-09-13 14:31:28
 categories: 笔记
 tags:
- - linux 
+  - linux
+abbrlink: 8f467268
+date: 2018-09-13 14:31:28
 ---
 #### 前言
 find 搜索查询linux系统中的文件 

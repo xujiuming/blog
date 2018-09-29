@@ -1,11 +1,12 @@
 ---
 title: linux-shell脚本入参笔记
 comments: true
-date: 2018-09-14 14:00:44
 categories: 笔记
-tags: 
- - linux
- - shell 
+tags:
+  - linux
+  - shell
+abbrlink: fd3f4f09
+date: 2018-09-14 14:00:44
 ---
 ####前言 
 linux shell脚本中 获取参数 大致上 有 
@@ -15,8 +16,6 @@ linux shell脚本中 获取参数 大致上 有
 获取 脚本后面的选项 
 * getopt 
 获取脚本后面的可变选项
-* xgrep 
-xargs + grep 
 * read
 从键盘或者文件中读取参数  
 这几种方案  
@@ -95,17 +94,70 @@ xxx.sh -a -b bval --aparam
 * 一个:接收参数
 * 两个:选项参数可选
 -o 设置短选项  -l 设置长选项 
+ARGS后面不是单引号(') 是制表符(tab)上面的那个英文符号(`)
 ```
-ARGS='getopt -o ab: -l"aparam::,help" -- "$@"'
+ARGS=`getopt -o ab: -l"aparam::,help" -- "$@"`
 eval set --"${ARGS}"
 ```
+例子:
+```
+#!/bin/bash
 
+ARGS=`getopt -o ab: -l "aparam:,help" -- "$@"`
+eval set -- "${ARGS}"
 
-#### xgrep
-
+while true;
+do
+    case "$1" in
+        -a) 
+            echo "-a "
+            shift
+            ;;
+        -b) 
+            echo "-b $2" 
+            shift 2
+            ;;
+        --aparam)
+            echo "-aparam $2"
+            shift 2
+            ;;
+        --help)
+            echo "help"
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "错误!"
+            exit 1
+            ;;
+    esac
+done
+    
+' > test.sh
+chmod +x ./test.sh 
+./test.sh -a -b bbbb --aparam aaaapp  
+```
 #### read 
+利用接收键盘输入来输入参数  
+```
+echo '
+#!/bin/bash
+read -p "请输入参数:"  name 
+echo "输入的参数${name}"
+exit 0
+' > test.sh
+chmod +x ./test.sh 
+./test.sh
+```
+####  总结 
+shell接收参数方式 总的来说 简单脚本 直接使用 $1 ...就够用了
+如果要设计复杂的参数 可以使用 getopt  getopts 来编写 
+要进行交互式的 可以使用 read 读取键盘输入来执行 
+或者甚至可以利用 其他的命令 从文件 从标准输出中读取数据 利用 xargs 这样的套路去配置参数  
 
-####总结 
 
 
 

@@ -11,3 +11,5 @@ gulp
 # 同步到ftp
 hexo deploy
 
+#刷新cdn
+./deploy.groovy

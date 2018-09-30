@@ -579,3 +579,33 @@ INFO: loading config from /home/ming/tools/ss/ss.json
 2018-09-29 09:37:17 INFO     loading libcrypto from libcrypto.so.1.1
 2018-09-29 09:37:17 INFO     starting local at 127.0.0.1:1080
 2018-09-29 09:37:17 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-29 13:56:21 WARNING  warning: your timeout 30000 seems too long
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-29 13:56:21 WARNING  warning: your timeout 30000 seems too long
+2018-09-29 13:56:21 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-29 13:56:21 INFO     starting local at 127.0.0.1:1080
+2018-09-29 13:56:21 ERROR    [Errno 98] Address already in use
+2018-09-29 13:56:21 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-29 13:56:21 INFO     starting local at 127.0.0.1:1080
+2018-09-29 13:56:21 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-29 13:58:05 WARNING  warning: your timeout 30000 seems too long
+2018-09-29 13:58:05 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-29 13:58:05 INFO     starting local at 127.0.0.1:1080
+2018-09-29 13:58:05 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-29 13:58:06 WARNING  warning: your timeout 30000 seems too long
+2018-09-29 13:58:06 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-29 13:58:06 INFO     starting local at 127.0.0.1:1080
+2018-09-29 13:58:06 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-30 09:03:30 WARNING  warning: your timeout 30000 seems too long
+2018-09-30 09:03:30 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-30 09:03:30 INFO     starting local at 127.0.0.1:1080
+2018-09-30 09:03:30 ERROR    [Errno 98] Address already in use
+INFO: loading config from /home/ming/tools/ss/ss.json
+2018-09-30 09:03:31 WARNING  warning: your timeout 30000 seems too long
+2018-09-30 09:03:31 INFO     loading libcrypto from libcrypto.so.1.1
+2018-09-30 09:03:31 INFO     starting local at 127.0.0.1:1080
+2018-09-30 09:03:31 ERROR    [Errno 98] Address already in use

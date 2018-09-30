@@ -14,3 +14,7 @@ sudo cnpm install gulp -g
 
 #安装依赖
 sudo cnpm install
+
+
+
+

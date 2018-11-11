@@ -12,7 +12,6 @@
     </Properties>
 
     <Appenders>
-        <GlobalLogAppender name="mingLogAppender"/>
         <!-- 控制台输出  -->
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${log_pattern_highlight}"/>
@@ -22,7 +21,6 @@
         <Root level="INFO">
             <!--输出到控制台-->
             <appender-ref ref="console"/>
-            <AppenderRef ref="mingLogAppender"/>
         </Root>
     </Loggers>
 </Configuration>

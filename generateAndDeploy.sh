@@ -12,4 +12,4 @@ gulp
 hexo deploy
 
 #刷新cdn
-./deploy.groovy
+#./deploy.groovy

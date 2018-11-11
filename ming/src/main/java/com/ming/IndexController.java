@@ -1,6 +1,5 @@
 package com.ming;
 
-import com.ming.base.web.BaseAbstractController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import java.time.Duration;
  */
 @RestController
 @Slf4j
-public class IndexController extends BaseAbstractController {
+public class IndexController  {
 
     /**
      * 返回一个常规的 String

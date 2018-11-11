@@ -20,7 +20,6 @@ public class LogAccess extends InLongId {
     private String cookies;
     private String uri;
     private String host;
-    private String params;
     private String headers;
     private String method;
     private String userAgent;

@@ -13,20 +13,20 @@ import java.util.concurrent.Executors;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Start.class)
 @Slf4j
-public class IdCollectorTest {
+public class IdFactoryTest {
 
     @Test
     public void newId() throws InterruptedException {
 /*
         long now = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
-            System.out.println(IdCollector.newId(IdCollectorTest.class));
+            System.out.println(IdFactory.newId(IdFactoryTest.class));
         }
         System.out.println("总耗时:" + (System.currentTimeMillis() - now) + "ms");
 */
         Runnable task = () -> {
             for (int i = 0; i < 10000; i++) {
-                log.info(IdCollector.newStringId(IdCollectorTest.class));
+                log.info(IdFactory.newStringId(IdFactoryTest.class));
             }
         };
         ExecutorService pool = Executors.newFixedThreadPool(10);

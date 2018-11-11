@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author ming
  * @date 2018-09-11 14:25:59
  */
-public class IdCollector {
+public class IdFactory {
 
     /**
      * id 序列步长

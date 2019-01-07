@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #安装npm
-sudo apt install npm  -y
+sudo pacman -Syu npm
 #安装 cnpm
 sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 # 使用npm 安装  n

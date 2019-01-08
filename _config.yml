@@ -42,7 +42,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace:
   
 # Home page setting
@@ -51,7 +51,7 @@ highlight:
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
+  per_page: 6
   order_by: -date
   
 # Category & Tag
@@ -99,21 +99,22 @@ feed:
 
 # Deployment
 ## Docs: http://wiki.jikexueyuan.com/project/hexo-document/deployment.html
-deploy:
- type: ftpsync
- host: 127.0.0.1
- user: LTAIa0kf3Ni3EGWe/mingblog
- pass: Ty930COkFHuW0wAa9sgs3Jys9xWvwm
- port: 2048
- remote: /
- #ignore: [ignore]
- connections: 1
- verbose: true
 #deploy:
-# type: git
-# repo: https://github.com/xuxianyu/xuxianyu.github.io.git
-# branch: master
-# message: hexo update
+
+deploy:
+ - type: git
+   repo: https://github.com/xuxianyu/xuxianyu.github.io.git
+   branch: master
+   message: hexo update
+ - type: ftpsync
+   host: 127.0.0.1
+   user: LTAIa0kf3Ni3EGWe/mingblog
+   pass: Ty930COkFHuW0wAa9sgs3Jys9xWvwm
+   port: 2048
+   remote: /
+   #ignore: [ignore]
+   connections: 1
+   verbose: true
 # 压缩优化配置  http://muyunyun.cn/posts/f55182c5/#more
 html_minifier:
   enable: true

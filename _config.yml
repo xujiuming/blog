@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.xujiuming.com
+url: http://blog.xujiuming.com
 root: /
 # 使用abbrlink 来重写固定url  https://segmentfault.com/a/1190000005799711
 permalink: ming/:abbrlink.html

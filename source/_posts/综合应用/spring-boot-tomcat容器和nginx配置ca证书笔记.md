@@ -177,6 +177,10 @@ public class HttpsConnectorConfig {
 ```
 访问 http://xxxx.com:8080  或者访问 https://xxxx.com:8443 即可   
 
+#### 证书格式
+不同的服务器对证书的格式要求不太一样 例如 tomcat 一般就是要.jks格式  nginx 一般是crt cer格式的 
+
+参考:https://blog.freessl.cn/ssl-cert-format-introduce/
 
 #### 总结
 自从 chrome 对http协议的网站进行明显警告后  站点 还是需要搞个证书 提升提升安全性和b格的

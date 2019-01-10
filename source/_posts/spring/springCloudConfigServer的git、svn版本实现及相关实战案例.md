@@ -127,7 +127,7 @@ pom配置
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.onlyedu</groupId>
+    <groupId>com.ming</groupId>
     <artifactId>configServer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <parent>

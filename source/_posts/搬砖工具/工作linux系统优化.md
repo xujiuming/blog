@@ -5,43 +5,29 @@ categories: 实战
 tags: 
   -linux 
 abbrlink: fbab8e0
-date: 2018-06-01 17:09:26
+date: 2019-01-29 10:45:26
 ---
 #### 前言
 由于强迫症 在工作和学习的时候 必须要用linux 但是linux桌面真的令人为难     
 用了n多版本的linux 什么arch、manjaro、centos系列的、debian系列的等等   
-最后还是觉得ubuntu用来做工作的系统最简单合适 而且少折腾    
+最后还是觉得manjaro用来做工作的系统最简单合适 而且少折腾    
 #### 初始化常用软件及工具
 
 ##### 初始化额外的工具
 ```
 #安装tmux
-sudo apt install tmux
-#安装 net tools 
-sudo apt install net-tools 
-#安装 traceroute
-sudo apt install traceroute 
-#安装vim
-sudo apt install vim 
-#安装google 浏览器
-sudo apt install chromium-browser
+sudo pacman -Syu tmux net-tools traceroute vim 
 ```
 
 ##### 笔记所需的资源
 
 [笔记所需资源tar包](https://www.xujiuming.com/ming-asset/work-linux-tar.tar.gz)
 
-##### 网易云音乐
-写代码  不听点音乐 哪里来的干劲 
-```
-#snap 安装网易云音乐
-sudo snap install netease-music --devmode --beta
-```
 ##### 初始化shadowsocks
 科学上网必备软件  不解释 
 ```
 #安装pip
-sudo apt install python3-pip
+sudo pacman -Syu python3-pip
 #安装sslocal
 sudo pip3 install shadowsocks
 #ss 配置
@@ -59,7 +45,7 @@ echo '{
 docker 安装一些 数据库啊之类的软件 还是很方便的  而且docker技术 现在应该是每个工程师必备的技能了 不会简直说不过去
 ```
 #安装docker
-sudo apt install docker docker.io
+sudo pacman -Syu docker 
 #初始化docker 加速配置
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -69,6 +55,7 @@ sudo tee /etc/docker/daemon.json <<-'EOF'
 EOF
 sudo systemctl daemon-reload
 sudo systemctl restart docker
+sudo systemctl enable docker
 ```
 ##### 初始化java相关环境
 ```
@@ -168,7 +155,16 @@ sudo  apt install -y python-gtk2
 使用idea系列的全家桶   
 安装 toolbox来管理idea系列的全家桶
    
+   
+#### 常用可选工具   
+|名称|功能|使用方式|
+|:---|:--|:------
+|tldr|查看某个命令的常规用法| tldr commandName|
+|nmon|查看当前机器的性能指标|    nmon|
+|tmux|终端分屏工具| tmux （ctrl+b）|
+|thefuck|fuck工具 输入指令发生错误直接使用fuck提示| fuck|
+|jq|json文件格式化 高亮|jq .  *.json|
 ####  总结  
 由于我是java开发 我的工作系统肯定最主要就是java以及相关的如maven、gradle、groovy、springbootcli之类的  
 其实把如果真的想折腾linux 建议还是arch  毕竟瞎折腾    
-但是工作还是稳一点 毕竟ubuntu做了这么多年的桌面linux   
+

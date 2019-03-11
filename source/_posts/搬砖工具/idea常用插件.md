@@ -17,3 +17,5 @@ date: 2017-11-11 00:00:00
 |markdown support|书写markdown 文件的插件||还不错 用起来 和简书上差不多|
 |code glance|代码试图 | pgup pgon 上下翻屏||
 |String Manipulation |转化字符串 |alt +m |
+|alibabab code 检测插件|检测java代码 规范|-|
+

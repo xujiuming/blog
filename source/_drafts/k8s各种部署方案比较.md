@@ -1,12 +1,13 @@
 ---
 title: k8s各种部署方案比较
 comments: true
-date: 2019-03-01 16:11:12
 categories: k8s
-tags:  
- - 方案比较
- - k8s 
- - docker 
+tags:
+  - 方案比较
+  - k8s
+  - docker
+abbrlink: 741c5420
+date: 2019-03-01 16:11:12
 ---
 #### 前言    
 k8s基本上是个公司 是个搞后端技术的 基本上都听过的技术    

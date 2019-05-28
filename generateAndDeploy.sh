@@ -9,7 +9,7 @@ sudo hexo generate
 # 压缩
 sudo gulp
 # 同步到ftp
-sudo hexo deploy
+#sudo hexo deploy
 
 #刷新cdn
 #./deploy.groovy

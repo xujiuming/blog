@@ -162,6 +162,7 @@ menu:
   tags: /tags/index.html || tags
   about: /about/index.html || user
   archives: /archives/index.html || archive
+  Photos: /photos/index.html || photos
   #project: /project/ || project
   #commonweal: /404.html || heartbeat
   #schedule: /schedule/ || calendar

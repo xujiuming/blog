@@ -1,0 +1,32 @@
+#author ming
+# 部署 maven 私服 的docker compose 配置
+version: '3.3'
+services:
+  sonatype-nexus3:
+    image: sonatype/nexus3
+    ports:
+      - 28888:8081
+    networks:
+      - nexus
+    environment:
+      # nexus 启动jvm配置
+      -  INSTALL4J_ADD_VM_PARAMS="-Xms2g -Xmx4g"
+  volumes:
+    - type: bind
+      source: /本地目录
+      target: /nexus-data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+networks:
+  nexus:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.88.0.0/16
+

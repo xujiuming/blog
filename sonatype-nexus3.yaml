@@ -8,9 +8,6 @@ services:
       - 28888:8081
     networks:
       - nexus
-#    environment:
-#      # nexus 启动jvm配置
-#      -  INSTALL4J_ADD_VM_PARAMS="-Xms2g -Xmx4g"
     deploy:
       replicas: 1
       update_config:

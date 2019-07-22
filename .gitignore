@@ -3,4 +3,4 @@
 将删除 nohup.out
 package-lock.json
 
-
+./public/*

@@ -57,7 +57,7 @@ swarm上默认已有一个名为ingress的overlay 网络, 可以直接使用
 2:遗忘swarm 添加节点时候的token
 ```
 sudo docker swarm join-token master
-sudo docker swarm jon-token worker 
+sudo docker swarm join-token worker 
 ```
 #### 总结
 swarm 一两台服务器的docker编排 还是很轻松的  而且也不需要 k8s那么麻烦  

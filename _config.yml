@@ -106,15 +106,15 @@ deploy:
 #   repo:
 #   branch: master
 #   message: hexo update
- - type: ftpsync
-   host: 127.0.0.1
-   user: LTAIfPobPtdGeWGA/mingblog
-   pass: QqRxEQWkkkpTAHE1DuTHqZjcpIGblK
-   port: 2048
-   remote: /
-   #ignore: [ignore]
-   connections: 1
-   verbose: true
+# - type: ftpsync
+#   host: 127.0.0.1
+#   user: LTAIfPobPtdGeWGA/mingblog
+#   pass: QqRxEQWkkkpTAHE1DuTHqZjcpIGblK
+#   port: 2048
+#   remote: /
+#   ignore: [ignore]
+#   connections: 1
+#   verbose: true
 # 压缩优化配置  http://muyunyun.cn/posts/f55182c5/#more
 html_minifier:
   enable: true

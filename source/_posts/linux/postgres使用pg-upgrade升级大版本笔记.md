@@ -71,10 +71,10 @@ pg_ctl stop -D 数据目录
 /usr/pgsql-11/bin/pg_upgrade --check -b /usr/pgsql-10/bin -B /usr/pgsql-11/bin   -d /var/lib/pgsql/10/data -D /var/lib/pgsql/11/data  
 
 # copy模式升级   
-/usr/pgsql-11/bin/pg_upgrade -c -b /usr/pgsql-10/bin -B /usr/pgsql-11/bin   -d /var/lib/pgsql/10/data -D /var/lib/pgsql/11/data  
+/usr/pgsql-11/bin/pg_upgrade -b /usr/pgsql-10/bin -B /usr/pgsql-11/bin   -d /var/lib/pgsql/10/data -D /var/lib/pgsql/11/data  
 
 # link模式升级   
-#/usr/pgsql-11/bin/pg_upgrade -c --link -b /usr/pgsql-10/bin -B /usr/pgsql-11/bin   -d /var/lib/pgsql/10/data -D /var/lib/pgsql/11/data  
+#/usr/pgsql-11/bin/pg_upgrade  --link -b /usr/pgsql-10/bin -B /usr/pgsql-11/bin   -d /var/lib/pgsql/10/data -D /var/lib/pgsql/11/data  
 ```
 
 pg_upgrade命令使用详情直接参考:
@@ -92,6 +92,20 @@ pg_upgrade --help
 #使用 postgres11的pg_ctl 
 pg_ctl start  -D /var/lib/pgsql/11/data 
 ```
+
+#### 问题处理
+* 老postgres安装了一些插件  
+需要在新的postgres上安装同样的插件  
+```text
+无法加载库 "$libdir/ltree": 错误:  无法访问文件 "$libdir/ltree": 没有那个文件或目录
+无法加载库 "$libdir/dblink": 错误:  无法访问文件 "$libdir/dblink": 没有那个文件或目录
+无法加载库 "$libdir/file_fdw": 错误:  无法访问文件 "$libdir/file_fdw": 没有那个文件或目录
+无法加载库 "$libdir/postgres_fdw": 错误:  无法访问文件 "$libdir/postgres_fdw": 没有那个文件或目录
+无法加载库 "$libdir/pg_stat_statements": 错误:  无法访问文件 "$libdir/pg_stat_statements": 没有那个文件或目录
+```
+参考   
+{% post_link linux/postgres安装插件笔记 %}     
+安装插件即可 
 
 #### 总结 
 postgres 官方提供升级的方案 还是挺不错的    

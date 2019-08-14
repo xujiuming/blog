@@ -6,7 +6,7 @@ sudo rm -rf ./public/*
 # 编译
 sudo hexo generate
 # 压缩
-sudo gulp
+#sudo gulp
 
 sudo chown -R ming:ming ./*
 sudo chmod -R 777 ./*

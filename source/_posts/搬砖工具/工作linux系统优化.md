@@ -19,10 +19,6 @@ date: 2019-01-29 10:45:26
 sudo pacman -Syu tmux net-tools traceroute vim 
 ```
 
-##### 笔记所需的资源
-
-[笔记所需资源tar包](https://www.xujiuming.com/ming-asset/work-linux-tar.tar.gz)
-
 ##### 初始化shadowsocks
 科学上网必备软件  不解释 
 ```

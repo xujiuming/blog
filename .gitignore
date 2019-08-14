@@ -4,3 +4,6 @@
 package-lock.json
 
 ./public/*
+./node_modules
+./.idea
+./.deploy_git

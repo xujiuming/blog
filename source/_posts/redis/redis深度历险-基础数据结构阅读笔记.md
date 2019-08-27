@@ -78,7 +78,43 @@ rpush name value1 value2 value3
 rpop name 
 ```
 * 慢操作
+```bash
+rpush name value1 value2 value2 
+# lindex 获取元素 会遍历链表 随着index增大而变长
+lindex  name  2   
+# ltrim (lretain) 保留指定区间的数据 区间外全部删除 负数标识倒数元素  例如-1 倒数第一个元素 
+ltrim name 1 -1  
+# lrange 
+```
+* 额外的操作
+```bash
+rpush name value1 value2 value3 
+#获取列表长度 
+llen name 
+# 迭代列表
+lrange name  
+```
+> redis 列表底层是一个 快速链表(quicklist) 在元素较少情况下是一个连续内存的ziplist  当数据量比较多的时候 扩充成一个由ziplist组成的quicklist 减少内存空间使用量、减少内存碎片化 
+##### hash(字典)
+redis的hash类型 类似java中的 Map<K,V> 但是v只能是字符串    
+* redis的hast类型rehash策略   
+使用渐进式rehash  在rehash的时候 同时存在新旧两个hash结构  查询的时候同时查询  在后续的定时器中或者hash操作中逐渐将旧hash结构的数据迁移到新hash结构中  当数据迁移完成 删除旧的hash结构    
+* 操作   
+```bash
+#设置hash结构 更新操作
+hset  name  k "v"
+#读取hash结构
+hget name k 
+#读取整个hash结构 k和v间隔出现  kvkvkv
+hgetall name 
+#获取hash字段数量
+hlen name 
+#批量新增 
+hmset name k1 v1 k2 v2 k3 v3 
+#对hash的某个键进行自增操作 
+hincrby name k 
+```
+> hash结构获取的时候 可以获取指定key的数据 不一定获取全部数据     hash结构消耗空间会比string多 
 
-> 
 #### 总结 
 

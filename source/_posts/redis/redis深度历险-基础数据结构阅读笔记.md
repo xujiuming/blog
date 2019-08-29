@@ -115,6 +115,58 @@ hmset name k1 v1 k2 v2 k3 v3
 hincrby name k 
 ```
 > hash结构获取的时候 可以获取指定key的数据 不一定获取全部数据     hash结构消耗空间会比string多 
+##### set(集合)
+redis的set相当于java的hashSet 内部键值对无序、唯一  内部实现是一个特殊的hash结构 只不过所有value都是NULL  当最后一个元素删除后 数据结构会删除、回收内存 
+
+```bash
+# 添加元素 
+sadd name value1 
+# 迭代元素
+smembers name 
+# 判断某个value 是否存在 contains
+sismember name value1
+# 获取元素长度 count 
+scard name
+# 获取一个元素
+spop name 
+```
+##### zset(有序列表)
+zset 就是一个带权重的set 集合    内部实现为跳跃列表 
+权重值为一个double类型   根据从小到大排序  
+```bash
+#添加元素 添加一个value1 权重为9.0 到name集合中
+zadd name 9.0 value1 
+# 迭代显示集合  参数为 第一个元素(0位上的) 到最后一个元素(-1位上的) 区间范围
+zrange name 0 -1 
+# 按照权重逆序列出 参数 参数为 第一个元素(0位上的) 到最后一个元素(-1位上的) 区间范围
+zrevrange name 0 -1 
+#获取元素长度 count
+zcard name 
+#获取制定的value的权重值 
+zscore name value 
+#获取某个元素的排名 
+zrank name value 
+#根据权重分值区间遍历zset集合  分值区间[负无穷,9.0]   inf=无穷大 
+zrnagebyscore name -inf 9.0 withscores 
+#删除value
+zrem name value 
+```
+
+#### 容器数据结构共同特性 
+list、set 、hash、zset都属于容器型数据结构 有一些共享的特性
+* create if not exists 如果容器不存在 会自动创建一个 再进行操作 
+* drop if no elements 如果容器内部没有元素了 会立即删除容器 释放内存  
+
+#### 过期时间规则  
+* 过期时间是以对象为单位 例如设置hash结构的过期时间 那么一旦过期整个hash结构全部删除 不是hash结构中的某个key过期 
+* 过期时间如果在后续操作中没有设置 那么这个对象就没有过期时间了  例如一个字符串设置了超时时间 后续修改了这个字符串但是没有设置超时时间  那么这个字符串就没有过期时间 
+```bash
+# 查看某个元素的过期时间 
+ttl name
+```
 
 #### 总结 
-
+最近在看redis的东西 之前老是瞎用 也不明白啥意思 只知道怎么用 有啥用    
+还是要通过一些大佬写的书籍 来协助归纳整理一下 redis的知识   
+这份笔记记录了 redis 基础的数据类型 常用的hash  string set zset等 
+至于一些 特殊的结构 如HyperLog之类的结构 没有说明  

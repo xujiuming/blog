@@ -45,6 +45,8 @@ setex name 5 value
 
 #set扩展命令 不存在则设置value 存在则不进行操作 setnx  设置name的值为value 如果不存在set创建name=value 如果存在不处理name的值
 setnx name value 
+# set扩展 同时 使用 ex nx功能 redis 2.8之后   
+set name value ex 5 nx 
 ```
 * 计数 
 如果key的value是整数 可以对它进行自增操作 自增范围是Long.minValue～Long.maxValue 超出范围redis报错      

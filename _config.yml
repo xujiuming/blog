@@ -146,4 +146,24 @@ abbrlink:
   rep: hex    # 进制：dec(default) and hex
 
 
-
+# hexo 增加 live2d 模型插件
+#参考文档 https://github.com/EYHN/hexo-helper-live2d/blob/master/README.zh-CN.md
+live2d:
+  enable: true
+  scriptFrom: local
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  debug: false
+  model:
+    #参考 https://huaji8.top/post/live2d-plugin-2.0/
+    use: live2d-widget-model-hijiki
+  display:
+    position: left
+    width: 300
+    height: 600
+    hOffset: 40
+    vOffset: -120
+  mobile:
+    show: true

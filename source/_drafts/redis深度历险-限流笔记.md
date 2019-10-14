@@ -46,6 +46,18 @@ set name value ex 5
 设置某个 name的 scope 为1ms 
 ###### redis指令 
 
+
+##### 漏桶算法 
+
+
+##### 令牌桶算法 
+
+
+
+
+#### 总结 
+
+
   
   
 

@@ -16,6 +16,7 @@
 
 <html class="{{ html_class | lower }}" lang="{{ config.language }}">
 <head>
+  <meta name="google-site-verification" content="UvgAn_WNxnBD-fv4v03f_CbnTZHS_uSh_ha2cSa__2M" />
   {{ partial('_partials/head/head.swig', {}, {cache: theme.cache.enable}) }}
   {% include '_partials/head/head-unique.swig' %}
   <title>{% block title %}{% endblock %}</title>

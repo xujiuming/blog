@@ -31,3 +31,4 @@ date: 2017-11-11 00:00:00
 |*|watch |定时重复执行某个命令 | watch -n 1 命令|
 |*|sdkman |安装java 开发环境的工具|  sdkman.io|
 |*|tldr |查看一些常用命令用法的工具| tldr 命令|
+|*|fzf|文本增强工具，我主要就是ctrl+R 搜索|-|

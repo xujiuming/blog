@@ -36,7 +36,7 @@ jobs:
           access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
       - name: 同步dist文件到oss上
-        run: ossutil cp public/ oss://ming-blog/ -rf
+        run: ossutil cp public/ oss://mingblog/ -rf
       - name: 成功通知
         if: success()
         run: |

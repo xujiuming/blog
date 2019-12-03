@@ -23,7 +23,9 @@ jobs:
       # 构建
       - name: 构建hexo博客
         run: |
+          npm install hexo-cli -g
           npm install
+          hexo clean
           hexo generate
       # 使用oss util 复制dist目录到oss
       - uses: manyuanrong/setup-ossutil@v1.0

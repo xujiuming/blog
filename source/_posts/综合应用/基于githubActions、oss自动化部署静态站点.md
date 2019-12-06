@@ -37,7 +37,7 @@ date: 2019-12-06 15:57:57
 
 ![github配置actionsSecrets截图](https://www.xujiuming.com/ming-static/github%E9%85%8D%E7%BD%AEactionsSecrets%E6%88%AA%E5%9B%BE.png)
 
-> 使用 ${{ secrets.新增的secretName }} 访问配置的变量
+> 使用 '${{ secrets.新增的secretName }}' 访问配置的变量
 
 ##### 编写github actions配置 
 在项目根目录建立 .github/workflows/sync-oss.yml

@@ -3,10 +3,11 @@
 将删除 nohup.out
 package-lock.json
 
+
+
 ./public/*
 ./node_modules
 ./.idea
-./.deploy_git
 将删除 node_modules/.bin/
 将删除 node_modules/.package_versions.json
 将删除 node_modules/.recently_updates.txt

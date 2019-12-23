@@ -18,7 +18,8 @@ postgres数据库用了很久了  也维护过很多次了
 由于此处网络上有现成的文档  直接引用
  
 > 原文链接：https://blog.csdn.net/weixin_39540651/article/details/100582554
-* 配置详解  
+
+##### 配置详解  
 ```editorconfig
 # -----------------------------
 # PostgreSQL configuration file
@@ -1012,7 +1013,7 @@ default_text_search_config = 'pg_catalog.english'
 ```
 
 
-* 按需调整的参数 简易计算规则
+##### 按需调整的参数 简易计算规则
 ```editorconfig
 max_connections=            # 规格内存(GB)*1000*(1/4)/10   +   superuser_reserved_connections  
 shared_buffers=             # IF use hugepage: 规格内存*(1/4)   ELSE: min(32GB, 规格内存*(1/4))    
@@ -1039,11 +1040,12 @@ synchronous_commit = off      # 当高并发写事务遇到了WAL瓶颈时，优
 
 ```editorconfig
 # TYPE        DATABASE        USER            ADDRESS                 METHOD
-#  访问方式类型  数据库名         用户名          访问地址范围              验证方式 
+# 访问方式类型  数据库名         用户名          访问地址范围              验证方式 
 ```
 
 ##### 配置属性范围说明 
 * TYPE
+
 |名称|备注|
 |:--|:---|
 |local|使用unix套接字连接|
@@ -1052,7 +1054,9 @@ synchronous_commit = off      # 当高并发写事务遇到了WAL瓶颈时，优
 |hostnossl|只通过tcp/ip连接 不使用ssl加密的连接|
 |hostgssenc|使用tcp/ip+gssapi加密 服务器本身需要支持 gssapi|
 |hostgssenc|只通过tcp/ip 不使用gssapi加密的连接|
+
 * DATABASE
+
 |名称|备注|
 |:--|:---|
 |all| 所有实例   但是不包括replication|
@@ -1097,20 +1101,34 @@ synchronous_commit = off      # 当高并发写事务遇到了WAL瓶颈时，优
 |bsd|使用操作系统提供的 BSD 身份验证服务进行身份验证|
 
 ##### 常用配置模版
-* 允许tcp/ip方式访问的 所有数据库 所有用户 任意地址 通过密码方式访问 
+允许tcp/ip方式访问的 所有数据库 所有用户 任意地址 通过密码方式访问 
 ```editorconfig
 host   all  all   0.0.0.0/0   md5 
 host   all  all   0.0.0.0/0   scram-sha-256 
 ```
 
-#### pg_ctl.conf
-
 #### pg_ident.conf
 
-#### start.conf 
+```editorconfig
+# MAP_NAME               SYSTEM_USER_NAME PG_USER_NAME
+# 映射名称(pg_hba.conf使用) 系统用户名         数据库用户名
+```
+##### 示例  
 
+配置映射关系
+```editorconfig
+# key为mingmap  系统用户为ming  映射为数据库用户postgres上 
+mingmap     ming     postgres
+```
+配置pg_hba.conf   map为 pg_ident.conf中的 mingmap 
+```editorconfig
+host   all  all  0.0.0.0/0  ident map=mingmap
+```
 
 #### 总结
-
+postgres 本身的配置是比较齐全的 大多数情况下 需要根据具体的运行情况进行调整优化   
+数据库本身的系统配置 postgresql.conf  
+权限和访问控制 主要是pg_hba.conf    
+不过pg_ident.conf配合pg_hba.conf 可以将不同的用户映射进来 防止用户帐号泄露之类的
 
 

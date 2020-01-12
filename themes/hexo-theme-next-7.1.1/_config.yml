@@ -1,3 +1,5 @@
+passage_end_tag:
+  enabled: true
 # ---------------------------------------------------------------
 # Theme Core Configuration Settings
 # See: https://theme-next.org/docs/theme-settings/

@@ -1,8 +1,10 @@
 # 参考: https://www.jianshu.com/p/99952652b2dd
 name: sync-oss
-# 初期监听push事件  后续按情况调整
-on: [push]
-
+# 监听master分支push事件
+on:
+  push:
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -18,14 +18,20 @@ sudo apt install zsh -y
 ```
 
 ##### 查看/切换shell
-查看当前所有shell
+查看当前所有安装过的shell
 ```shell script
 cat /etc/shells
 ```
+查看当前shell
+```shell script
+echo $SHELL
+```
+
 切换shell  
 ```shell script
 chsh -s /bin/zsh 
 ```
+
 
 ##### 安装oh my zsh 
 curl方式:

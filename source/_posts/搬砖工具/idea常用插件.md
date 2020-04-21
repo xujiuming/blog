@@ -20,4 +20,4 @@ date: 2017-11-11 00:00:00
 |alibabab code 检测插件|检测java代码 规范|-|
 |grazie|语法错误检查插件|通过配置安装多种语言来对语法进行监测|
 |leet code editor|leet code 插件|在ide中刷leet code 安装后配置帐号密码即可|
-
+|Statistic|统计项目各种文件信息 如行数 大小等等|安装后在有个statistic窗口点开即可|

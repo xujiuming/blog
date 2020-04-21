@@ -1681,3 +1681,4 @@ de_modules/p-try
 duplexify@3.7.1@duplexify/
 除 node_modules/_function-bind@1.1.1@function-bind/
 除 node_modules/_nested-error-stacks@2.0.1@nested-error-stacks/
+node_modules

@@ -126,4 +126,5 @@ public class BaseGlobalExceptionHandler {
 
 }
 ```
-####总结:通过增强controller 来捕捉全局mvc异常  这样第一可以返回指定格式错误信息  第二 可以捕捉业务异常 
+#### 总结 
+通过增强controller 来捕捉全局mvc异常  这样第一可以返回指定格式错误信息  第二 可以捕捉业务异常 

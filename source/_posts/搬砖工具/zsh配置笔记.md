@@ -49,7 +49,7 @@ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/to
 ```text
 ZSH_THEME="agnoster"
 
-plugins=(git sudo z web-search extract zsh-autosuggestions )
+plugins=(git sudo z web-search extract zsh-autosuggestions sdk)
 ```
 ##### 主题
 > 参考地址:https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
@@ -104,6 +104,11 @@ plugins=(git extract)
 * 使用示例
 ```shell script
 x xxx.tar.gz
+```
+###### sdk
+sdkman 管理java相关sdk tools的工具
+```shell script
+sdk list java 
 ```
 #### 总结
 zsh 用的人蛮多的 没啥好说的  就是用  

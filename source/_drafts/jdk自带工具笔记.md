@@ -1,11 +1,12 @@
 ---
 title: jdk自带工具笔记
 comments: true
-date: 2020-04-30 11:32:29
 categories: 笔记
 tags:
   - java-tools
-  - jdk 
+  - jdk
+abbrlink: 18dbc75e
+date: 2020-04-30 11:32:29
 ---
 #### 前言
 jdk自带的一些工具 经常用但是老是现查 很烦  

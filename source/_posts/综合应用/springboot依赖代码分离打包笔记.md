@@ -55,8 +55,8 @@ spring boot 默认打包方式为fatjar 依赖包+源码一起打包 这种方�
                         </goals>
                         <configuration>
                             <outputDirectory>target/lib</outputDirectory>
-                            <!--                            <excludeTransitive>false</excludeTransitive>-->
-                            <!--                            <stripVersion>false</stripVersion>-->
+                            <!--不重写lib  如果存在lib不处理-->
+                            <overWriteIfNewer>false</overWriteIfNewer>
                             <includeScope>compile</includeScope>
                         </configuration>
                     </execution>
@@ -64,7 +64,8 @@ spring boot 默认打包方式为fatjar 依赖包+源码一起打包 这种方�
             </plugin>
 ```
 
-> 如果有引用快照版本的jar  必须配置 useUniqueVersions = false 否则生成的MANIFEST.MF中依赖配置会有快照版本的后缀 跟lib中的jar的名字不匹配 
+> 如果有引用快照版本的jar  必须配置 useUniqueVersions = false 否则生成的MANIFEST.MF中依赖配置会有快照版本的后缀 跟lib中的jar的名字不匹配     
+> 需要配置overWriteIfNewer = false  因为docker打包的时候是按照整个文件夹中的文件计算hash值来判断是否命中缓存的 如果复写了lib 那么hash值也变了 无法命中缓存   
 
 这样打包出来的 所有依赖在target/lib包下 代码 还是打包成xxx.jar
 

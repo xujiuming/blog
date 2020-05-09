@@ -31,7 +31,7 @@ jdk自带的一些工具 经常用但是老是现查 很烦
 |jdeps      |显示java类、文件的依赖||
 |jfr        |jvm运行记录器 |配合 jcmd使用|
 |jhsdb      |连接jvm 进行调试、分析工具||
-|jimage     |将java程序打包成image|
+|jimage     |管理生成的jimage工具 |
 |jinfo      |查看当前java程序的扩展参数|
 |jjs        |java js终端、引擎||
 |jlink      |创建特定于平台的运行时映像||
@@ -57,13 +57,15 @@ jdk自带的一些工具 经常用但是老是现查 很烦
 示例java文件内容: 
 
 ```java
+package com;
+
 /**
  * 测试类
  *
  * @author ming
  * @date 2020-04-30 14:43
  */
-public class Test {
+public class Test  implements Serializable {
     /**
      * 主函数
      *
@@ -154,6 +156,7 @@ jcmd pid Thread.print
 java管理 jvm进程的gui工具  直接打开连接即可  
 ##### jdb
 > 在线debug工具  https://www.cnblogs.com/rocedu/p/6371262.html
+
 ```shell script
 # 进入 jdb终端
 jdb 
@@ -201,26 +204,167 @@ debug工具
 jhsdb hsdb 
 ```
 ##### jimage
-
+管理jlink jmod生成的 jimage工具
+```shell script
+jimage --help 
+```
 ##### jinfo
-##### jjs
-##### jlink
-##### jmap
-##### jmod
-##### jpackage
-##### jps
-##### jrunscript
-##### jshell
-##### jstack
-##### jstat
-##### jstatd
-##### keytool
-##### rmic
-##### rmid
-##### rmiregistry
-##### serialver
+查看指定jvm进程的信息  
+> 参考文档: https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jinfo.html
 
+```shell script
+jinfo pid 
+```
+##### jjs
+打开java 实现的js解释器 
+> 参考文档: https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jjs.html
+
+```shell script
+jjs 
+```
+##### jlink
+java 连接器  可以将项目和关联mod连接起来 
+> 参考文档:
+>https://zhuanlan.zhihu.com/p/120351837
+>https://docs.oracle.com/javase/9/tools/jlink.htm#JSWOR-GUID-CECAC52B-CFEE-46CB-8166-F17A8E9280E9
+
+```shell script
+jlink --module-path ./ming.jmod --add-modules java.base  --output myjre
+
+```
+##### jmap
+查看jvm内存工具
+> 参考文档: 
+>https://www.cnblogs.com/sxdcgaq8080/p/11089664.html
+>https://www.cnblogs.com/sxdcgaq8080/p/11089664.html
+
+```shell script
+#查看内存中对象列表
+jmap -clstats  pid 
+# 内存转储成文件 
+jmap -demp:all,format=b,file=./heap.dump pid
+```
+##### jmod
+管理mod文件的工具 
+> https://docs.oracle.com/javase/9/tools/jmod.htm#JSWOR-GUID-0A0BDFF6-BE34-461B-86EF-AAC9A555E2AE
+
+配置module-info.java
+```java
+module ming{
+    requires java.base;
+}
+```
+```shell script
+javac ./module-info.java
+#创建jmod文件 
+jmod create --class-path .    ming.jmod
+#查看jmod文件内容列表
+jmod list ./ming.jmod
+#提取jmod文件内容
+jmod extract ./ming.jmod 
+#查看jmod文件详细信息
+ jmod describe ./ming.jmod 
+```
+
+##### jpackage
+jdk14之后的功能 将java程序打包成各种平台的包  是基于jlink之后的更上一层封装 
+> 参考文档: 
+>https://openjdk.java.net/jeps/343
+>https://hacpai.com/article/1583033951839
+
+```shell script
+javac ./module-info.java
+#创建jmod文件 
+jmod create --class-path .    ming.jmod
+# 连接 module  
+jlink --module-path ./ming.jmod --add-modules java.base  --output myjre
+###### 注意 在那个平台打包 就只能打包到该平台支持的包  如win打包 exe  mac的dmg  linux的deb rpm等  
+# 打包成linux平台工具 
+jpackage --runtime-image myjre --type deb --name mingtest --module com/Test  
+# 打包成win平台工具 
+jpackage --runtime-image myjre --type dmg --name mingtest --module com/Test  
+# 打包成mac平台工具 
+jpackage --runtime-image myjre --type exe --name mingtest --module com/Test  
+```
+
+##### jps
+查看当前系统中 jvm进程 
+```shell script
+jps
+```
+##### jrunscript
+java 脚本语言解释器 
+> https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jrunscript.html
+
+```shell script
+# 默认为 js的nashorn解释器
+jrunscript 
+```
+
+##### jshell
+java shell  做一些简单的代码片段验证 很有用 
+```shell script
+jshell 
+```
+##### jstack
+查看jvm线程信息 
+>参考文档 https://www.iteye.com/blog/guafei-1815222
+
+```shell script
+jstack  pid
+```
+##### jstat
+jvm状态监控工具 
+>参考文档 https://baike.baidu.com/item/jstat/16207961?fr=aladdin
+
+```shell script
+# 查看支持的状态 
+jstat -options --help 
+# 查看gc情况 
+jstat -gc pid
+```
+##### jstatd
+jstatd是一个基于RMI（Remove Method Invocation）的服务程序，它用于监控基于HotSpot的JVM中资源的创建及销毁，并且提供了一个远程接口允许远程的监控工具连接到本地的JVM执行命令。
+>参考文档 https://www.cnblogs.com/EasonJim/p/7483739.html
+
+##### keytool
+java 密钥工具 类似 openssl 只是不能签发证书和管理证书链  
+>参考文档 https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html
+>https://baike.baidu.com/item/keytool/5885709?fr=aladdin
+
+```shell script
+#生成 jks证书
+ keytool -genkeypair -alias golove -keysize 2048 -keyalg RSA -validity 3650 -keystore teststore.jks -storetype JKS
+#jks 迁移到pkcs12格式 
+ keytool -importkeystore -srckeystore teststore.jks -destkeystore teststore.jks -deststoretype pkcs12 
+```
+##### rmic
+为使用 Java 远程方法协议 （JRMP） 或 Internet Orb 协议 （IIOP） 的远程对象生成存根、骨架和绑定类。还生成对象管理组 （OMG） 接口定义语言 （IDL）
+> 参考文档 https://docs.oracle.com/javase/8/docs/technotes/tools/windows/rmic.html
+
+##### rmid
+启动激活系统守护进程，使对象能够在 Java 虚拟机 （JVM） 中注册和激活。
+> https://docs.oracle.com/javase/8/docs/technotes/tools/windows/rmid.html
+
+##### rmiregistry
+在当前主机上的指定端口上启动远程对象注册表。
+> https://docs.oracle.com/javase/8/docs/technotes/tools/windows/rmiregistry.html
+
+##### serialver
+返回指定类的串行版本 UID。
+> https://docs.oracle.com/javase/8/docs/technotes/tools/windows/serialver.html
+
+```shell script
+# 查询 com.Test class的serialVersionUID  
+serialver -classpath .  com.Test
+```
 
 
 #### 总结
 没啥说的  都是要用的  
+大致分为如下几类     
+1. 查询、管理jvm信息工具 如jmap  jps jstack jdb等 
+2. 打包、编译java代码工具  java  javac  jlink  jmod  jpackage 
+3. 一些小工具 如 keytool  rmic rmid rmiregistry
+
+后面有时间 会针对一些场景作专门的记录  如优化、调整jvm的时候   或者定制化打包分发的时候  处理密钥的时候  

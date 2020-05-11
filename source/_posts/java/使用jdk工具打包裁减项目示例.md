@@ -13,14 +13,14 @@ jdk 一直在发展   中间比较有意思的功能 有 模块化、打包成�
 
 步骤:    
 1. 使用jmod 打包🏎成jmod 
-2. 使用jlink 将应用jmod 和依赖的jre 打包成一个裁减过的包 
+2. 使用jlink 将应用模块 和依赖的jre 连接打包成一个裁减过的jre+项目  
 3. 使用jpackage 将jlink打包之后的文件 分别打包成不同平台的安装包  如ubuntu的deb包  win的exe 
 
 #### 示例
 开发环境和依赖:
 * openjdk14 
 * 使用自带的建议HttpServer 作一个简单的接口 
-* ubuntu and win10 （用来演示jpackage为不同平台打包的特性）
+* ubuntu 19.10  演示将项目打包成deb包  
 
 ##### 代码 
 * httpServer 和main函数 
@@ -82,21 +82,34 @@ javac module-info.java
 jmod create --class-path .    ming.jmod
 ```
 #####  构建runtime-image
+
+> 使用jdeps 查看项目依赖   
+
 ```shell script
-# 由于要执行class必须要java.base模块  然后ming.jmod本身依赖jdk.httpserver模块  所以需要link两个模块 
-jlink --module-path ./ --add-modules TestJPackage,java.base,jdk.httpserver --output myjre 
+# 由于要执行class必须要java.base模块  然后ming.jmod本身依赖jdk.httpserver模块  所以需要link两个模块   并且配置启动类
+jlink --module-path . --add-modules java.base,jdk.httpserver,TestJPackage  --output myjre   --launcher mingtest=TestJPackage/com.Ming
 #查看裁减之后的jre大小 46m大小  原本jre 所有模块80mb起步  
 du -sh ./myjre 
 ``` 
 ##### 启动项目
 ```shell script
 # 使用裁runtime-image 运行 
-./myjre/bin/java com.Ming
+./myjre/bin/mingtest
 ```
 ##### 打包成ubuntu下的deb包  
 ```shell script
-#生成应用程序映像 
-jpackage --type app-image -n mingtest -m ming/com.Ming --runtime-image myjre
-# 打包对应版本deb 
-jpackage -n mingtest --runtime-image mingtest
+# 查看当前平台支持的包 
+#生成应用程序映像   --type 按平台打包 例如 app-image ubuntu的deb包 centos的rpm包  mac的 dmg pkg包  win的exe包 具体的可以在不同平台上查看
+jpackage --type deb -n mingtest -m TestJPackage/com.Ming --runtime-image myjre 
+```
+##### 安装、查看、运行deb包 
+```shell script
+# 安装deb包 
+sudo dpkg -i ./mingtest_1.0-1_amd64.deb 
+#解压deb包 
+sudo dpkg-deb -X  ./mingtest_1.0-1_amd64.deb  ./mingtest
+#查看当前是否安装 deb包
+sudo dpkg -l mingtest
+#通过deb安装之后运行项目  由于没有指定deb包的详细安装配置 所以 会默认安装在/opt目录 而且不会把项目启动的命令放在 path下 
+/opt/mingtest/bin/mingtest 
 ```

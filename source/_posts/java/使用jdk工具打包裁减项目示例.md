@@ -1,18 +1,19 @@
 ---
 title: 使用jdk工具打包裁减项目示例
 comments: true
-date: 2020-05-09 13:47:17
 categories: 示例
 tags:
- - jdk 
+  - jdk
+abbrlink: 99772ea2
+date: 2020-05-09 13:47:17
 ---
 #### 前言 
 jdk 一直在发展   中间比较有意思的功能 有 模块化、打包成对应平台的安装包  
 通过 jmod  jlink  jpackage  等工具 可以对java的项目和运行的环境进行裁减优化 和分发不同平台安装包  
-此处使用一个简单的例子 来演示以下  
+此处使用一个简单的例子 来演示一下  
 
 步骤:    
-1. 使用jmod 打包🏎成jmod 
+1. 使用jmod将项目打包🏎成jmod 
 2. 使用jlink 将应用模块 和依赖的jre 连接打包成一个裁减过的jre+项目  
 3. 使用jpackage 将jlink打包之后的文件 分别打包成不同平台的安装包  如ubuntu的deb包  win的exe 
 
@@ -23,6 +24,8 @@ jdk 一直在发展   中间比较有意思的功能 有 模块化、打包成�
 * ubuntu 19.10  演示将项目打包成deb包  
 
 ##### 代码 
+
+
 * httpServer 和main函数 
 ```java
 package com;
@@ -83,7 +86,7 @@ jmod create --class-path .    ming.jmod
 ```
 #####  构建runtime-image
 
-> 使用jdeps 查看项目依赖   
+> 使用 jdeps --list-deps .   查看项目依赖模块    
 
 ```shell script
 # 由于要执行class必须要java.base模块  然后ming.jmod本身依赖jdk.httpserver模块  所以需要link两个模块   并且配置启动类
@@ -113,3 +116,10 @@ sudo dpkg -l mingtest
 #通过deb安装之后运行项目  由于没有指定deb包的详细安装配置 所以 会默认安装在/opt目录 而且不会把项目启动的命令放在 path下 
 /opt/mingtest/bin/mingtest 
 ```
+
+
+#### 总结
+jdk8之后的版本 度很有意思    
+使用jlink jmod  jpackage 能够将一个java项目 裁减运行环境和打包成不同平台安装包     
+之前要想做到打包成不同平台安装包 需要使用各种各样的插件乱七八糟的   
+现在终于有了官方的工具   

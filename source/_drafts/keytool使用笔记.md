@@ -1,11 +1,12 @@
 ---
 title: keytool使用笔记
 comments: true
-date: 2020-05-11 11:00:52
 categories: 笔记
 tags:
- - keytool
- - 密钥管理
+  - keytool
+  - 密钥管理
+abbrlink: bfa996d6
+date: 2020-05-11 11:00:52
 ---
 #### 前言 
 jdk中自带的密钥和证书管理工具    

@@ -36,11 +36,11 @@ chsh -s /bin/zsh
 ##### 安装oh my zsh 
 curl方式:
 ```shell script
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL  https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 wget方式:
 ```shell script
-sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+sh -c "$(wget  https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 ```
 #### 配置
 编辑 ~/.zshrc文件

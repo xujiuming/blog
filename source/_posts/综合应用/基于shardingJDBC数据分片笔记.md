@@ -22,10 +22,10 @@ date: 2020-05-20 03:37:01
 因为大多数情况下 只需要多个数据源定好访问规则就行  不涉及分表    
 但是有上限 例如单表数据超过极限 例如mysql 百万级别数据  postgres 千万级别数据 这个时候 sql执行就会相对来说比较慢  
 ##### shardingJDBC 垂直分片示例
-分片方案:
-staff表 -> ds0 
-api_consuming_log -> ds1 
-其他表 分配到ds0 上 
+分片方案:   
+staff表 -> ds0   
+api_consuming_log -> ds1    
+其他表 分配到ds0 上    
 
 > 为了加深印象 采用java配置模式  
 
@@ -150,16 +150,16 @@ public class ShardingJDBCVerticalFragmentationConfig {
 ```
 
 #### 水平分片(分库+分表) 
-优点: 解决单表数据量问题 提升部分功能性能
-缺点: 增加多个数据库 需要冗余副本 耗费资源、实际存储表较为分散   、事务难以控制 
+* 优点: 解决单表数据量问题 提升部分功能性能
+* 缺点: 增加多个数据库 需要冗余副本 耗费资源、实际存储表较为分散   、事务难以控制 
 
 制定好分片规则 理论上可以大规模扩展  
 
 ##### shardingJDBC 水平分片示例
 
-分片方案:
-staff 均匀分布在ds0 ds1 中的  staff0 staff1 库
-api_consuming_log 分布在ds0 的api_consuming_log0   ds1的api_consuming_log1,api_consuming_log2,api_consuming_log3
+分片方案:      
+staff 均匀分布在ds0 ds1 中的  staff0 staff1 库          
+api_consuming_log 分布在ds0 的api_consuming_log0   ds1的api_consuming_log1,api_consuming_log2,api_consuming_log3     
 其他表 分配到ds0 上 
 
 
@@ -262,16 +262,16 @@ public class ShardingJDBCLevelFragmentationConfig {
         Map<String, DataSource> result = new HashMap<>();
         HikariDataSource ds0 = new HikariDataSource();
         ds0.setDriverClassName("org.postgresql.Driver");
-        ds0.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds0");
+        ds0.setJdbcUrl("jdbc:postgresql://数据库地址/ds0");
         ds0.setUsername("postgres");
-        ds0.setPassword("mima");
+        ds0.setPassword("密码");
         result.put("ds0", ds0);
 
         HikariDataSource ds1 = new HikariDataSource();
         ds1.setDriverClassName("org.postgresql.Driver");
-        ds1.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds1");
+        ds1.setJdbcUrl("jdbc:postgresql://数据库地址/ds1");
         ds1.setUsername("postgres");
-        ds1.setPassword("mima");
+        ds1.setPassword("密码");
         result.put("ds1", ds1);
         return result;
     }
@@ -382,46 +382,46 @@ public class ShardingJDBCLevelFragmentationConfig {
         // 第0套 主从数据源 ：
         HikariDataSource masterDs0 = new HikariDataSource();
         masterDs0.setDriverClassName("org.postgresql.Driver");
-        masterDs0.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds0");
+        masterDs0.setJdbcUrl("jdbc:postgresql://数据库地址/ds0");
         masterDs0.setUsername("postgres");
-        masterDs0.setPassword("mima");
+        masterDs0.setPassword("密码");
         result.put("master0", masterDs0);
 
         HikariDataSource masterDs0Slave0 = new HikariDataSource();
         masterDs0Slave0.setDriverClassName("org.postgresql.Driver");
-        masterDs0Slave0.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds0");
+        masterDs0Slave0.setJdbcUrl("jdbc:postgresql://数据库地址/ds0");
         masterDs0Slave0.setUsername("postgres");
-        masterDs0Slave0.setPassword("mima");
+        masterDs0Slave0.setPassword("密码");
         result.put("master0_slave0", masterDs0Slave0);
 
 
         HikariDataSource masterDs0Slave1 = new HikariDataSource();
         masterDs0Slave1.setDriverClassName("org.postgresql.Driver");
-        masterDs0Slave1.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds0");
+        masterDs0Slave1.setJdbcUrl("jdbc:postgresql://数据库地址/ds0");
         masterDs0Slave1.setUsername("postgres");
-        masterDs0Slave1.setPassword("mima");
+        masterDs0Slave1.setPassword("密码");
         result.put("master0_slave1", masterDs0Slave1);
 
         // 第1套 主从数据源 
         HikariDataSource masterDs1 = new HikariDataSource();
         masterDs1.setDriverClassName("org.postgresql.Driver");
-        masterDs1.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds1");
+        masterDs1.setJdbcUrl("jdbc:postgresql://数据库地址/ds1");
         masterDs1.setUsername("postgres");
-        masterDs1.setPassword("mima");
+        masterDs1.setPassword("密码");
         result.put("master1", masterDs1);
 
         HikariDataSource masterDs1Slave0 = new HikariDataSource();
         masterDs1Slave0.setDriverClassName("org.postgresql.Driver");
-        masterDs1Slave0.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds1");
+        masterDs1Slave0.setJdbcUrl("jdbc:postgresql://数据库地址/ds1");
         masterDs1Slave0.setUsername("postgres");
-        masterDs1Slave0.setPassword("mima");
+        masterDs1Slave0.setPassword("密码");
         result.put("master1_slave0", masterDs1Slave0);
 
         HikariDataSource masterDs1Slave1 = new HikariDataSource();
         masterDs1Slave1.setDriverClassName("org.postgresql.Driver");
-        masterDs1Slave1.setJdbcUrl("jdbc:postgresql://10.10.10.42:5432/ds1");
+        masterDs1Slave1.setJdbcUrl("jdbc:postgresql://数据库地址/ds1");
         masterDs1Slave1.setUsername("postgres");
-        masterDs1Slave1.setPassword("mima");
+        masterDs1Slave1.setPassword("密码");
         result.put("master1_slave1", masterDs1Slave1);
 
         return result;

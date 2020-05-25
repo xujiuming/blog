@@ -33,3 +33,8 @@ date: 2020-05-25 10:01:18
 ##### git仓库
 此处使用gogs来部署  减少资源损耗 
 
+使用k8s部署gogs  使用ingress+service+local disk 构建  
+yaml配置如下:
+```yaml
+```
+

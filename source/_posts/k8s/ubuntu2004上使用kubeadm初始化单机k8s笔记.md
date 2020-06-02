@@ -316,6 +316,11 @@ kubectl create -f ./dashboard-role.yaml
 ![20200525155747](https://xujiuming.com/ming-static/vscode/f3f09730c1031d5032166b2fedce2da1.png)
 
 
+##### 重启服务器恢复K8s 
+```shell script
+docker start $(docker ps -a | awk '{print $1}' |tail -n +2)
+```
+
 #### 总结 
 网络上 大多是以centos 来举例  事实上ubuntu部署会比centos更加简单  因为版本迭代快 各种依赖、内核 都是最新的 
 使用kubeadm 部署一套单机环境 每什么大问题 主要还是配置好服务器 如关闭swap  selinux等常规要求   

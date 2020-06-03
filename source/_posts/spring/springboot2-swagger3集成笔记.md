@@ -22,6 +22,12 @@ spring boot2.x 由于多了个 webflux swagger在3.x的时候 也做出适配
             <id>jcenter-snapshots</id>
             <name>jcenter</name>
             <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
         ...
                 <!--swagger version -->
@@ -38,6 +44,12 @@ spring boot2.x 由于多了个 webflux swagger在3.x的时候 也做出适配
                     <artifactId>springfox-spring-webflux</artifactId>
                     <version>${swagger.version}</version>
                 </dependency>
+<!--            如果是使用servlet容器 需要将webflux替换为webmvc 配合注解 @EnableSwagger2WebMvc-->
+<!--        <dependency>-->
+<!--            <groupId>io.springfox</groupId>-->
+<!--            <artifactId>springfox-spring-webmvc</artifactId>-->
+<!--            <version>${swagger.version}</version>-->
+<!--        </dependency>-->
                 <dependency>
                     <groupId>io.springfox</groupId>
                     <artifactId>springfox-swagger-ui</artifactId>
@@ -92,6 +104,107 @@ public class SwaggerConfig {
 ##### 访问
 由于引入的有 swagger-ui模块 如果spring boot2.x 没有特殊的修改 直接访问/swagger-ui.html即可  
 > http://host:port/swagger-ui.html
+
+
+#### 异常处理
+##### 接口、swagger-ui.html 404
+```java
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //注册 swagger 相关页面
+        registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+```
+
+##### 出现提示框 
+
+一般是获取相关接口数据异常 主要看看 是不是被拦截、或者被修改了   
+
+* 接口被拦截器处理  
+```java
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor("拦截器").excludePathPatterns("classpath*:/static/**")
+                // swagger 排除规则
+                .excludePathPatterns("/swagger-ui.html")
+                .excludePathPatterns("/swagger-resources/**")
+                .excludePathPatterns("/error")
+                .excludePathPatterns("/webjars/**");;
+    }
+
+```
+
+* 接口被过滤器处理  
+```java
+        //如果是排除列表的 uri 前缀 不进行任何操作 只增强
+        for (String s : 排除uri列表) {
+            if (uri.matches(s)) {
+                chain.doFilter(result, response);
+                return;
+            }
+        }
+```
+* 存在全局的返回值处理  
+例如 spring 的controllerAdvice 
+跟过滤器类似 直接处理即可 
+```java
+        //如果是排除列表的 uri 前缀 不进行任何操作 只增强
+        for (String s : 排除uri列表) {
+            if (uri.matches(s)) {
+                chain.doFilter(result, response);
+                return;
+            }
+        }
+```
+##### 无法启动
+* spring plugin core版本异常
+提示如下:
+```log
+2020-06-03 14:01:46.323  INFO 35910 --- [  restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2020-06-03 14:01:46.328 ERROR 35910 --- [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+An attempt was made to call a method that does not exist. The attempt was made from the following location:
+
+    springfox.documentation.spring.web.plugins.DocumentationPluginsManager.createContextBuilder(DocumentationPluginsManager.java:154)
+
+The following method did not exist:
+
+    'org.springframework.plugin.core.Plugin org.springframework.plugin.core.PluginRegistry.getPluginOrDefaultFor(java.lang.Object, org.springframework.plugin.core.Plugin)'
+
+The method's class, org.springframework.plugin.core.PluginRegistry, is available from the following locations:
+
+    jar:file:/home/ming/.m2/repository/org/springframework/plugin/spring-plugin-core/1.2.0.RELEASE/spring-plugin-core-1.2.0.RELEASE.jar!/org/springframework/plugin/core/PluginRegistry.class
+
+It was loaded from the following location:
+
+    file:/home/ming/.m2/repository/org/springframework/plugin/spring-plugin-core/1.2.0.RELEASE/spring-plugin-core-1.2.0.RELEASE.jar
+
+
+Action:
+
+Correct the classpath of your application so that it contains a single, compatible version of org.springframework.plugin.core.PluginRegistry
+
+```
+解决办法:     
+根据提升调整 spring plugin core版本 
+```xml
+        <dependency>
+            <groupId>org.springframework.plugin</groupId>
+            <artifactId>spring-plugin-core</artifactId>
+            <version>2.0.0.RELEASE</version>
+        </dependency>
+```
 
 #### 总结   
 spring 在进步 swagger 也没有落下    

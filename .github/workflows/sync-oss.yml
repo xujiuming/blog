@@ -40,7 +40,7 @@ jobs:
       - name: 同步dist文件到oss上
         run: ossutil cp public/ oss://mingblog/ -rf
       - name: 刷新全部站点CDN
-        run: curl http://api.xujiuming.com/flush-all-cdn
+        run: curl http://api.xujiuming.com/api/cdn/flush-all
       - name: 成功通知
         if: success()
         run: |

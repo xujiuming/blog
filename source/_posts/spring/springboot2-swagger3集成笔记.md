@@ -58,7 +58,19 @@ spring boot2.x 由于多了个 webflux swagger在3.x的时候 也做出适配
         
 ```
 
-* 2020-07-22 更新使用springfox.boot.starter
+* 2020-07-22 更新使用springfox.boot.starter来接入swagger
+swagger其他参数不变 依赖改为   
+> 版本参考maven中央仓库版本即可: https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+
+```xml
+    <springfox.boot.version>3.0.0</springfox.boot.version>
+    ....
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${springfox.boot.version}</version>
+        </dependency>
+```
 
 
 ##### swagger配置

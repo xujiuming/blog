@@ -415,9 +415,9 @@ custom_logo:
   image: #/uploads/custom-logo.jpg
 
 # Code Highlight theme
-# Available values: normal | night | night eighties | night blue | night bright
+# Available values:night bright| normal | night | night eighties | night blue | night bright
 # https://github.com/chriskempson/tomorrow-theme
-highlight_theme: night bright
+highlight_theme: night
 
 # Enable "cheers" for archive page.
 cheers: true

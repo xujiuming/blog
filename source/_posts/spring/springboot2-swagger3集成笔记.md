@@ -57,6 +57,10 @@ spring boot2.x 由于多了个 webflux swagger在3.x的时候 也做出适配
                 </dependency>
         
 ```
+
+* 2020-07-22 更新使用springfox.boot.starter
+
+
 ##### swagger配置
 swagger2.x中启动swagger是使用 @EnableSwagger2注解 
 在swagger3.x中拆分为 @EnableSwagger2WebMvc(传统servlet模式) @EnableSwagger2WebFlux(webflux模式) 分别适配不同模式    

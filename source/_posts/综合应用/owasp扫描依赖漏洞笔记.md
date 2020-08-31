@@ -18,6 +18,7 @@ date: 2020-08-30 13:22:36
 #### 示例 
 ##### 增加owasp 依赖检查插件 
 > http://www.owasp.org.cn/
+
 ```xml
         <!--dependency check cve -->
         <owasp.dependency.check.version>5.3.2</owasp.dependency.check.version>

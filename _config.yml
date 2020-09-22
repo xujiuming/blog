@@ -108,8 +108,8 @@ deploy:
 #   message: hexo update
 # - type: ftpsync
 #   host: 127.0.0.1
-#   user: LTAIfPobPtdGeWGA/mingblog
-#   pass: QqRxEQWkkkpTAHE1DuTHqZjcpIGblK
+#   user:
+#   pass:
 #   port: 2048
 #   remote: /
 #   ignore: [ignore]
@@ -158,7 +158,7 @@ live2d:
   debug: false
   model:
     #参考 https://huaji8.top/post/live2d-plugin-2.0/
-    use: live2d-widget-model-hijiki
+    use: live2d-widget-model-wanko
   display:
     position: left
     width: 300

@@ -1,7 +1,7 @@
 ---
 title: 基于jenkins2.X和docker的持续集成的实例
 comments: true
-categories: 实例
+categories: 实战
 tags:
   - jenkins
   - docker

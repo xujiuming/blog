@@ -1,7 +1,7 @@
 ---
 title: linux进入单用户模式和救援模式
 comments: true
-categories: 实用
+categories: 实战
 tags:
   - linux
 abbrlink: f37a09c1

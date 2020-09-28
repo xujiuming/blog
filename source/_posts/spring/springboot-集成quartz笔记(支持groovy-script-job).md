@@ -1,6 +1,6 @@
 ---
 title: spring boot  + quartz实现 动态定时任务笔记及其想法
-categories: 骚想法
+categories: 实战
 tags:
   - spring
   - quartz

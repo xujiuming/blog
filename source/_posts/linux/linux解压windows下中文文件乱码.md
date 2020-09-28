@@ -1,6 +1,6 @@
 ---
 title: linux 解压windows文件乱码处理
-categories: 坑
+categories: 实战
 tags:
   - linux
 abbrlink: 5c7769e6

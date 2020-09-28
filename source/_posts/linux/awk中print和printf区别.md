@@ -1,7 +1,7 @@
 ---
 title: awk中print和printf区别
 comments: true
-categories: 坑
+categories: 实战
 tags:
   - linux
 abbrlink: '58835920'

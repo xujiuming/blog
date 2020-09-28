@@ -1,7 +1,7 @@
 ---
 title: redis深度历险-布隆过滤器笔记
 comments: true
-categories: redis
+categories: 笔记
 tags:
   - redis
   - 读书笔记

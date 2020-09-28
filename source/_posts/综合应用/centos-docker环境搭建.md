@@ -1,7 +1,7 @@
 ---
 title: centos-docker环境搭建
 comments: true
-categories: docker
+categories: 实战
 tags:
   - docker
   - linux

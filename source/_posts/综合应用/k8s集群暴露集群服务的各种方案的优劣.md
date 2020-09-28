@@ -1,7 +1,7 @@
 ---
 title: k8s集群暴露集群服务的各种方案的优劣
 comments: true
-categories: k8s
+categories: 实战
 tags:
   - k8s
   - docker

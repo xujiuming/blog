@@ -1,7 +1,7 @@
 ---
 title: redis深度历险-基础数据结构阅读笔记
 comments: true
-categories: redis
+categories: 笔记
 tags:
   - redis
   - 读书笔记

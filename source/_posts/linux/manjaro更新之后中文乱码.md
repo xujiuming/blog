@@ -1,7 +1,7 @@
 ---
 title: manjaro更新之后中文乱码
 comments: true
-categories: 坑
+categories: 实战
 tags:
   - 坑
   - linux

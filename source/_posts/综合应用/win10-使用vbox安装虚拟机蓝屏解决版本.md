@@ -1,6 +1,6 @@
 ---
 title: windows 安装虚拟化工具蓝屏
-categories: 坑
+categories: 实战
 tags:
   - windows
   - vbox

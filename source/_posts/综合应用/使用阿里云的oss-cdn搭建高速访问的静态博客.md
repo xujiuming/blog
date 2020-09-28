@@ -1,7 +1,7 @@
 ---
 title: 使用阿里云的oss+cdn搭建高速访问的静态博客
 comments: true
-categories: 骚想法
+categories: 实战
 tags:
   - cdn
   - oss

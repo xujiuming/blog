@@ -1,7 +1,7 @@
 ---
 title: k8s集群日志采集方案选择
 comments: true
-categories: 实用
+categories: 实战
 tags:
   - docker
   - k8s

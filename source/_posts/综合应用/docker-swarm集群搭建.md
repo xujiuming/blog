@@ -1,7 +1,7 @@
 ---
 title: docker-swarm集群搭建
 comments: true
-categories: docker
+categories: 实战
 tags:
   - docker
   - swarm

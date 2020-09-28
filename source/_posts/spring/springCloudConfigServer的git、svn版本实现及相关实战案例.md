@@ -1,7 +1,7 @@
 ---
 title: springCloudConfigServer的git、svn版本实现及相关实战案例
 comments: true
-categories: 实例
+categories: 实战
 tags:
   - 实用
   - spring cloud

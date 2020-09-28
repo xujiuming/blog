@@ -1,7 +1,7 @@
 ---
 title: spring-data-jpa封装复杂查询Specification示例
 comments: true
-categories: 示例
+categories: 实战
 tags:
   - spring-data-jpa
   - 示例

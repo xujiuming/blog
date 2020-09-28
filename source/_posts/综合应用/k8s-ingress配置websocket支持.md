@@ -1,7 +1,7 @@
 ---
 title: k8s-ingress配置websocket支持
 comments: true
-categories: k8s
+categories: 实战
 tags:
   - k8s
   - websocket

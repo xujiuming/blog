@@ -1,7 +1,7 @@
 ---
 title: minikube快速搭建k8s测试环境
 comments: true
-categories: k8s
+categories: 实战
 tags:
   - docker
   - k8s

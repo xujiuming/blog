@@ -1,7 +1,7 @@
 ---
 title: 使用jdk工具打包裁减项目示例
 comments: true
-categories: 示例
+categories: 实战
 tags:
   - jdk
 abbrlink: 99772ea2

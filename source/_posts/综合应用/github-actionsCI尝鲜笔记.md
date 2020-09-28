@@ -1,7 +1,7 @@
 ---
 title: github-actionsCI尝鲜笔记
 comments: true
-categories: github
+categories: 实战
 tags:
   - github apps
   - CI

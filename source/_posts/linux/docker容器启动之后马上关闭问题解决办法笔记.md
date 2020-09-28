@@ -1,6 +1,6 @@
 ---
 title: docker 运行秒退出解决办法
-categories: 坑
+categories: 实战
 tags:
   - docker
 abbrlink: 52ab603

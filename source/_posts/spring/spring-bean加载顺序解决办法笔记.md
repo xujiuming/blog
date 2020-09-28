@@ -1,6 +1,6 @@
 ---
 title: spring bean 加载顺序解决办法
-categories: 坑
+categories: 实战
 tags:
   - spring
 abbrlink: 50d1ed2b

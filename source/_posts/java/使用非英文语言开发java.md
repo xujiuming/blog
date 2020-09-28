@@ -1,6 +1,6 @@
 ---
 title: 中文写java
-categories: 骚想法
+categories: 实战
 tags:
   - java基础
 abbrlink: e8ebc393

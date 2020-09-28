@@ -1,6 +1,6 @@
 ---
 title: rocketmq使用docker运行出现重复消费
-categories: 坑
+categories: 实战
 tags:
   - docker
 abbrlink: 814d8f0a

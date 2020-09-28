@@ -1,6 +1,6 @@
 ---
 title: idea 常用插件
-categories: 工具
+categories: 笔记
 tags:
   - tools
 abbrlink: a365393a

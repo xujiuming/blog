@@ -3,7 +3,7 @@ title: redis深度历险-HyperLogLog笔记
 comments: true
 abbrlink: 1b3e547f
 date: 2019-09-16 13:35:12
-categories: redis
+categories: 笔记
 tags:
   - redis
   - 读书笔记

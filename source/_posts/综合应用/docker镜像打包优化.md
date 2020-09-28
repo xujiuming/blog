@@ -1,7 +1,7 @@
 ---
 title: docker镜像打包优化
 comments: true
-categories: 优化
+categories: 实战
 tags:
   - docker
   - 优化

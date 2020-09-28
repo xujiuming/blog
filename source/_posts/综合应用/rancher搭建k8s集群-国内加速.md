@@ -1,7 +1,7 @@
 ---
 title: rancher搭建k8s集群-国内加速
 comments: true
-categories: k8s
+categories: 实战
 tags:
   - k8s
   - rancher

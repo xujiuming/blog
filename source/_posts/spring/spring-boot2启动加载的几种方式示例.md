@@ -1,7 +1,7 @@
 ---
 title: spring-boot2启动加载的几种方式示例
 comments: true
-categories: 示例
+categories: 实战
 tags:
   - spring boot2
 abbrlink: 25b3aeb5

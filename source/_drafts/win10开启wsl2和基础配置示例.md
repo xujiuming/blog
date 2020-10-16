@@ -1,11 +1,12 @@
 ---
 title: win10开启wsl2和基础配置示例
 comments: true
-date: 2020-09-29 10:00:58
-categories: 实战 
+categories: 实战
 tags:
- - win10 
- - wsl
+  - win10
+  - wsl
+abbrlink: b741fd2
+date: 2020-09-29 10:00:58
 ---
 #### 前言  
 windows下面 wsl2 算是能还原大多数情况下的linux体验     

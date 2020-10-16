@@ -932,7 +932,7 @@ tabs:
 # So, you must install the dependency of pdf.js if you want to use pdf tag and make it available to all browsers.
 # See: https://github.com/theme-next/theme-next-pdf
 pdf:
-  enable: false
+  enable: true
   # Default height
   height: 500px
   pdfobject:
@@ -941,9 +941,9 @@ pdf:
 
 # Mermaid tag
 mermaid:
-  enable: false
+  enable: true
   # Available themes: default | dark | forest | neutral
-  theme: forest
+  theme: dark
   cdn: //cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js
   #cdn: //cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js
 

@@ -5,7 +5,7 @@ categories: 示例
 tags:
   - markdown
 abbrlink: 2761905d
-date: 2020-10-14 09:15:27
+date: 2020-10-22 13:15:27
 ---
 ### 前言 
 经常要绘制流程图、时序图来做一些讲解和演示 
@@ -37,8 +37,10 @@ mermaid:
   #绘图主题 按需选择 我个人使用的是default主题  
   theme: default
 ```
-#### vscode  
-#### idea   
+#### vscode    
+安装 \[Markdown Preview Mermaid Support] 或者类似插件即可     
+#### idea     
+idea 上mermaid 插件收费 这里不做演示  mmp 
 
 ### 绘图语法示例   
 此处全部参考 mermaid语法    参考官方文档即可 这里只作为速查    
@@ -544,12 +546,9 @@ sequenceDiagram
     b->>a:很好 
 ```
 
-#### 类图
-#### 状态图
-#### 实体关系图
-#### 用户旅程图
-#### 甘特图
-#### 指令图
-#### 饼图
+>  类图 状态图 实体关系图 用户旅程图 甘特图 指令图 饼图 不常用这里不做记录 需要的话直接去官网:https://mermaid-js.github.io/mermaid/#/
 
 ### 总结   
+mermaid 提供了一种markdown语法来描述常用的图 
+对于我来说 可能就流程图 和 时序图比较有用   
+至于其他的 用到的时候再说吧

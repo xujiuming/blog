@@ -36,16 +36,18 @@ chsh -s /bin/zsh
 ##### 安装oh my zsh 
 curl方式:
 ```shell script
-sh -c "$(curl -fsSL  https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL  https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 wget方式:
 ```shell script
-sh -c "$(wget  https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+sh -c "$(wget  https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 ```
 #### 配置
 编辑 ~/.zshrc文件
 * 个人常用配置 
 >需要安装 zsh-autosuggestions   和 source ~/.zshrc
+>git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+
 ```text
 ZSH_THEME="agnoster"
 

@@ -151,7 +151,80 @@ sudo  apt install -y python-gtk2
 使用idea系列的全家桶   
 安装 toolbox来管理idea系列的全家桶
    
-   
+#### 发行版安装脚本 
+##### manjaro 
+```shellscript
+## 安装要点
+#lvm 看情况开启 虚拟机可开可不开  物理机必须开 
+#分区策略和文件系统选择  默认即可   内存超过8g  不开启swap 
+#时区选择 Asia/Shanghai 
+#语言选择  china  
+## 初始化工作 
+#更新系统 
+sudo pacman -Syu 
+#安装中文字体 避开乱码 https://www.jianshu.com/p/26fa3a803439  
+sudo pacman -S ttf-roboto noto-fonts ttf-dejavu
+# 文泉驿
+sudo pacman -S wqy-bitmapfont wqy-microhei wqy-microhei-lite wqy-zenhei
+# 思源字体
+sudo pacman -S noto-fonts-cjk adobe-source-han-sans-cn-fonts adobe-source-han-serif-cn-fonts
+
+#安装aur相关工具 yay
+sudo pacman -Syu yay
+sudo pacman -Syu base-devel  vim  chromium git subversion  python-pip screenfetch  
+pip3 install jiuming-tools
+
+#切换pacman源
+sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak 
+sudo pacman-mirrors -i -c China -m rank
+cat /etc/pacman.d/mirrorlist
+#切换aur源  
+mkdir ~/.config/yay
+touch ~/.config/yay/config.json 
+yay --aururl “https://aur.tuna.tsinghua.edu.cn” --save
+yay -P -g  
+#~~安装搜狗输入法~~ 搜狗输入法跟idea老是卡死  切换为baidu输入法  
+yay -Syyu  fcitx fcitx-configtool fcitx-baidupinyin 
+#配置fcitx
+echo '
+#fcitx
+export GTK_IM_MODULE=fcitx 
+export QT_IM_MODULE=fcitx 
+export XMODIFIERS="@im=fcitx"
+' >> ~/.xprofile
+#配置zsh  
+cat $SHELL 
+#安装oh my zsh 
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+https://blog.xujiuming.com/ming/609f122f.html
+
+#安装java开发环境 
+#安装sdk man  安装 jvm相关工具 
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk version
+sdk install maven 
+sdk install gradle
+sdk list java 
+#sdk install java 版本号
+
+#安装docker
+sudo pacman -Syu docker 
+#初始化docker 加速配置
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://o4omo0yw.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl enable docker
+
+#重启
+reboot
+
+```   
 #### 常用可选工具   
 |名称|功能|使用方式|
 |:---|:--|:------

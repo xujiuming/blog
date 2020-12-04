@@ -31,6 +31,9 @@ jobs:
           hexo generate
       # 使用oss util 复制dist目录到oss
       - uses: manyuanrong/setup-ossutil@v1.0
+        env:
+          # 允许不安全操作指令
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
           # endpoint 可以去oss控制台上查看
           endpoint: "oss-cn-shanghai.aliyuncs.com"
@@ -39,9 +42,6 @@ jobs:
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
       - name: 同步dist文件到oss上
         run: ossutil cp public/ oss://mingblog/ -rf
-        env:
-          # 允许不安全操作指令
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       - name: 刷新全部站点CDN
         run: curl http://api.xujiuming.com/api/cdn/flush-all
       - name: 成功通知

@@ -29,7 +29,7 @@ jb公司 对于开源有支持  大多数开发者都可以很轻松的申请到
 |SequenceDiagram|自动生成时序图|光标选中函数 头部tools-> SequenceDiagram| 
 |git commit template |git 提交模板|提交message 的右上角有个新增模板的图标|
 |easy code|简易代码生成|定义代码模板 生成代码  功能一般 主要配合mybatis| 
-|grep console|控制台 过滤| 过滤查询终端数据| 
-
+|grep console|控制台 过滤| 过滤查询终端数据|
+|Jenkins Control Plugin|idea操控jenkins插件|方便操作jenkins task|
 #### 总结
 以上 是我个人常用的插件

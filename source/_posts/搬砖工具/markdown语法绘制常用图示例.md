@@ -1,7 +1,7 @@
 ---
 title: markdown语法绘制常用图示例
 comments: true
-categories: 示例
+categories: 笔记
 tags:
   - markdown
 abbrlink: 2761905d

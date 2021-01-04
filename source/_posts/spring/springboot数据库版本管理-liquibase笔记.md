@@ -13,6 +13,12 @@ date: 2021-01-04 14:32:42
 liquibase 和flyway 各有侧重点  flyway胜在简单粗暴  直接管理sql脚本  
 liquibase 胜在可以通过配置去管理db版本  可以不用写单一平台的sql脚本  如果项目用jpa 之类的  orm框架 那么更加适合liquibase 去管理  
 今天有时间  顺手记录一下 方便自己速查      
+
+
+liquibase 通过两张表来达到不重复执行 和执行锁定         
+默认表名:databasechangelog、databasechangeloglock
+   
+
 #### 示例 
 
 基于spring boot 2.x     

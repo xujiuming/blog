@@ -133,7 +133,7 @@ openssl pkcs12 -export -out ca.pfx -inkey ca.key -in ca.crt -certfile ca.crt
 keytool -importkeystore -srckeystore ca.pfx -srcstoretype PKCS12 -deststoretype JKS -destkeystore ca.jks
 ```
 
-![常用证书类型转换图](http://minginfo.xujiuming.com/private-asset/%E5%B8%B8%E7%94%A8%E8%AF%81%E4%B9%A6%E8%BD%AC%E6%8D%A2%E5%9B%BE.png?Expires=1609836626&OSSAccessKeyId=TMP.3KhT9ToPTpSpgEYxwPBKVnfLocz9Sxo5zvmKRSTH7ZGLgeTZWYEgWB8qoaDC5aUBDQbqw9QBd5YqvMczMvYtPJ3zxh2GnS&Signature=7Tp3NK%2Fps7HhumsMqgwjQLiRDNQ%3D)
+![常用证书类型转换图](https://xujiuming.com/ming-static/%E5%B8%B8%E7%94%A8%E8%AF%81%E4%B9%A6%E8%BD%AC%E6%8D%A2%E5%9B%BE.png)
 
 #### 总结 
 证书 用的地方很多     

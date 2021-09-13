@@ -1,11 +1,12 @@
 ---
 title: apache-IOUtils笔记
 comments: true
-date: 2021-06-17 16:04:36
 categories: 笔记
 tags:
- - apache
- - commons-io
+  - apache
+  - commons-io
+abbrlink: a0eb41ae
+date: 2021-06-17 16:04:36
 ---
 #### 前言
 最近使用了很多io相关操作 一直没记录 

@@ -58,7 +58,7 @@ sudo systemctl stop systemd-resolved
 
 编辑配置  
 ```shell
-vim /etc/systemc/resolved.conf
+vim /etc/systemd/resolved.conf
 ```
 ```text
 [Resolve]

@@ -1,11 +1,11 @@
 ---
-title: linux搭建docker-dnsmasq 
-comments: true 
-date: 2021-09-13 10:14:08 
-categories: 笔记 
+title: linux搭建docker-dnsmasq
+comments: true
+categories: 笔记
 tags:
-- dnsmasq
-
+  - dnsmasq
+abbrlink: d45e0e82
+date: 2021-09-13 10:14:08
 ---
 
 #### 前言

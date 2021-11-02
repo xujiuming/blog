@@ -5,6 +5,7 @@ categories: 实战
 tags:
   - spring
   - guava
+abbrlink: 3e6ecea1
 ---
 #### 前言   
 spring虽然也有事件 但是麻烦    

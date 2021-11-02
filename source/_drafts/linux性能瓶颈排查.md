@@ -1,11 +1,11 @@
 ---
-title: linux性能瓶颈排查 
-comments: true 
-date: 2021-08-26 10:17:25 
-categories: 笔记 
+title: linux性能瓶颈排查
+comments: true
+categories: 笔记
 tags:
-- linux
-
+  - linux
+abbrlink: 35fb180b
+date: 2021-08-26 10:17:25
 ---
 
 #### 前言

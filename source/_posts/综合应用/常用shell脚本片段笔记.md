@@ -43,6 +43,55 @@ nohup echo 'nihao'   > echo.out 2>&1 &
 nohup echo 'nihao' >/dev/null 2>&1 &
 ```
 
+##### 常用单机部署java的脚本
+
+* deploy.sh
+
+```shell
+#!/bin/bash
+#author ming
+# date 20211118
+
+
+# upload package name
+OLDJARNAME='xx-latest.jar'
+NAMEDEPLOY='xx.jar'
+
+# stop the process before
+ID=`ps -ef | grep "$OLDJARNAME" | grep -v "grep" | awk '{print $2}'`
+echo The process pid is $ID
+for id in $ID
+do
+    kill -9 $id
+    echo killed $id
+done
+
+# 备份当前上个版本的jar
+mv $OLDJARNAME $OLDJARNAME'.'`date '+%Y%m%d%H%M%S'`
+# 将刚刚上传的jar 更名为执行jar
+mv $NAMEDEPLOY $OLDJARNAME
+nohup  java -jar -Xmx1g $OLDJARNAME --spring.profiles.active=test  > nohup.out 2>&1 &
+```
+
+* upload.sh
+ 
+```shell
+#!/bin/bash
+#author ming
+# date 20211118
+
+SSH_HOST='user@host'
+WORKER_PATH='/data/xx'
+
+# 复制jar 到服务器
+scp  ./target/socket-server.jar $SSH_HOST':'$WORKER_PATH
+# 复制部署shell脚本到服务器
+scp  ./deploy.sh $SSH_HOST':'$WORKER_PATH
+# 授权
+ssh $SSH_HOST "cd ${WORKER_PATH} && chmod +x ./deploy.sh  && ./deploy.sh && tail -f ./nohup.out"
+
+```
+
 #### 总结 
 记录一下常用的shell 片段   
 免得要写的时候 一直找     

@@ -1,10 +1,11 @@
 ---
 title: 常用shell脚本片段笔记
 comments: true
-date: 2021-11-18 15:00:10
 categories: 笔记
 tags:
- - shell
+  - shell
+abbrlink: 5b91377c
+date: 2021-11-18 15:00:10
 ---
 #### 前言
 记录一下常用的shell片段 方便自己速查 

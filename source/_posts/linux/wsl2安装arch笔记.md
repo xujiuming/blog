@@ -1,11 +1,12 @@
 ---
-title: wsl2安装arch笔记 
-comments: true 
-date: 2022-01-05 13:39:39 
-categories: 笔记 
+title: wsl2安装arch笔记
+comments: true
+categories: 笔记
 tags:
- - wsl2
- - arch
+  - wsl2
+  - arch
+abbrlink: de6fce4f
+date: 2022-01-05 13:39:39
 ---
 
 #### 前言

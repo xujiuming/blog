@@ -1,10 +1,11 @@
 ---
 title: mapstruct笔记
 comments: true
-date: 2022-02-11 16:26:07
 categories: 笔记
 tags:
-  - mapstruct 
+  - mapstruct
+abbrlink: '1815854'
+date: 2022-02-11 16:26:07
 ---
 #### 前言
 对象属性转换 方式有很多 

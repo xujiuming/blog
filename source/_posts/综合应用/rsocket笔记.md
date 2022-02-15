@@ -220,6 +220,69 @@ Data:
 +--------+-------------------------------------------------+----------------+
 ```
 
+#### 开启另一个端口的rsocket服务
+
+> 因为roscket server 需要指定 实现协议内容 如果要同时支持 tcp  websocket之类的操作 
+> 那么必然要手动开启一个端口来处理  
+
+```java
+package com.ming.base.config;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.rsocket.context.RSocketServerBootstrap;
+import org.springframework.boot.rsocket.netty.NettyRSocketServerFactory;
+import org.springframework.boot.rsocket.server.RSocketServer;
+import org.springframework.boot.rsocket.server.RSocketServerCustomizer;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.reactive.ReactorResourceFactory;
+import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
+
+/**
+ * rsocket server配置
+ *
+ * @author ming
+ * @date 2021-12-27 13:51:44
+ */
+@Configuration
+@Slf4j
+public class RSocketServerTcpConfig implements CommandLineRunner {
+
+    @Autowired
+    private ReactorResourceFactory resourceFactory;
+    @Autowired
+    private ObjectProvider<RSocketServerCustomizer> customizers;
+    @Autowired
+    private RSocketMessageHandler rSocketMessageHandler;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    /**
+     * Callback used to run the bean.
+     *
+     * @param args incoming main method arguments
+     * @throws Exception on error
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        NettyRSocketServerFactory factory = new NettyRSocketServerFactory();
+        factory.setResourceFactory(resourceFactory);
+        factory.setTransport(RSocketServer.Transport.TCP);
+        factory.setPort(30000);
+        factory.setRSocketServerCustomizers(customizers.orderedStream().toList());
+        log.info("start tcp rsocket server ...........");
+        RSocketServerBootstrap rSocketServerBootstrap = new RSocketServerBootstrap(factory, rSocketMessageHandler.responder());
+        rSocketServerBootstrap.setApplicationEventPublisher(applicationEventPublisher);
+        rSocketServerBootstrap.start();
+    }
+
+
+}
+```
+
 #### 总结
 暂时只随便玩玩  深入的背压、租赁什么的 要用的时候 再深入看看  
 

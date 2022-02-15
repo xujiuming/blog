@@ -1,11 +1,12 @@
 ---
 title: springboot-使用druid连接池笔记
 comments: true
-date: 2022-02-15 10:31:23
-categories: 笔记 
+categories: 笔记
 tags:
- - druid 
- - springboot 
+  - druid
+  - springboot
+abbrlink: 86d1c1cf
+date: 2022-02-15 10:31:23
 ---
 #### 前言 
 druid连接池 没啥好说的 的确好用 虽然极限性能可能跟 hikari低点  但是功能多啊 

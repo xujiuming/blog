@@ -71,11 +71,25 @@ systemctl enable kubelet
 ```
 
 ##### 初始化集群
-```shell script
-kubeadm init --kubernetes-version=1.18.0 \
+
+> 生成配置 手动调整
+https://huangzhongde.cn/istio/Chapter2/Chapter2-4.html
+
+```shell
+kubeadm config print init-defaults --component-configs \
+KubeProxyConfiguration,KubeletConfiguration > kubeadm-config.yaml
+kubeadm init --config ./kubeadm-config.yaml  --kubernetes-version=1.18.0 \
 --pod-network-cidr 152.16.0.0/16  \
 --image-repository registry.aliyuncs.com/google_containers  
 ```
+
+```shell script
+kubeadm init  --kubernetes-version=1.18.0 \
+--pod-network-cidr 152.16.0.0/16  \
+--image-repository registry.aliyuncs.com/google_containers  
+```
+
+
 日志:
 ```text
 W0525 14:53:34.914975    8467 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
@@ -162,6 +176,15 @@ Then you can join any number of worker nodes by running the following on each as
 
 kubeadm join 172.23.50.141:6443 --token 58pvbb.xkvn7l91zil7kofv \
     --discovery-token-ca-cert-hash sha256:17780ec54bf6d118f95fa644b067504b3721fafdb95c8bd674c231192a763dfa 
+```
+
+* 出现无法启动kubelet   
+检查kubelet 和容器的 cgroupDriver是否一致  例如都是systemd 或者cgroupfs
+```shell
+# 配置docker的 /etc/docker/daemon.json 
+  "exec-opts": ["native.cgroupdriver=systemd"]
+# 配置kubelet的  配置kubeadm的配置文件 
+ cgroupDriver=systemd
 ```
 
 ##### 创建kubectl 

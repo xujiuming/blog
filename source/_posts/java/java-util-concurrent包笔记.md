@@ -393,8 +393,1062 @@ LongAdder只能针对数值的进行加减运算
 ```
 
 ##### 同步器框架
+
+|名称|功能|备注| 
+|:--|:--|:---| 
+|CountDownLatch|	倒数计数器，构造时设定计数值，当计数值归零后，所有阻塞线程恢复执行；其内部实现了AQS框架||
+|CyclicBarrier|	循环栅栏，构造时设定等待线程数，当所有线程都到达栅栏后，栅栏放行；其内部通过ReentrantLock和Condition实现同步||
+|Semaphore|	信号量，类似于“令牌”，用于控制共享资源的访问数量；其内部实现了AQS框架||
+|Exchanger|	交换器，类似于双向栅栏，用于线程之间的配对和数据交换；其内部根据并发情况有“单槽交换”和“多槽交换”之分||
+|Phaser|	多阶段栅栏，相当于CyclicBarrier的升级版，可用于分阶段任务的并发控制执行；其内部比较复杂，支持树形结构，以减少并发带来的竞争||
+
+* CountDownLatch    
+倒数计数器   
+基本上两种用法:    
+1:作为开关or入口      
+2:作为一个完成某些操作的信号   
+核心函数:
+await\():阻塞当前线程 一直到计数器归零
+countDown\();计数器计数-1
+```java
+    @SneakyThrows
+    @Test
+    public void countDownLatch() {
+        //作为开关or入口
+        CountDownLatch switcher = new CountDownLatch(1);
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> {
+                long now = System.currentTimeMillis();
+                System.out.println("进入子线程" + now);
+                try {
+                    switcher.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("继续执行子线程!" + now);
+            }).start();
+        }
+        //执行其他任务
+        System.out.println("执行其他任务........");
+        Thread.sleep(2000L);
+        //释放await的线程
+        switcher.countDown();
+        System.out.println("释放子线程任务。。。。。。");
+
+        // 作为完成信号
+        CountDownLatch overSignal = new CountDownLatch(10);
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> {
+                long now = System.currentTimeMillis();
+                System.out.println("执行任务:" + now);
+                overSignal.countDown();
+            }).start();
+        }
+        //等待十个任务执行完成
+        overSignal.await();
+        System.out.println("所有任务已执行完成!");
+    }
+```
+
+* CyclicBarrier
+循环栅格 当满足指定数量的参与者 执行一次放行的函数      
+await\()会抛出BrokenBarrierException表示当前的CyclicBarrier已经损坏了，可能等不到所有线程都到达栅栏了，所以已经在等待的线程也没必要再等了，可以散伙了。   
+出现以下几种情况之一时，当前等待线程会抛出BrokenBarrierException异常：  
+其它某个正在await等待的线程被中断了  
+其它某个正在await等待的线程超时了   
+某个线程重置了CyclicBarrier\(调用了reset方法，后面会讲到)  
+另外，只要正在Barrier上等待的任一线程抛出了异常，那么Barrier就会认为肯定是凑不齐所有线程了，就会将栅栏置为损坏（Broken）状态，并传播BrokenBarrierException给其它所有正在等待（await）的线程。   
+当一个线程中断了 会造成整个栅栏损坏 给其他未释放的线程发送 BrokenBarrierException  
+```java
+    @SneakyThrows
+    @Test
+    public void cyclicBarrier() {
+        int n = 100;
+        AtomicInteger atomicInteger = new AtomicInteger();
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(10, () -> {
+            System.out.println("========释放任务:" + atomicInteger.get());
+        });
+
+        for (int i = 0; i < n; i++) {
+            new Thread(() -> {
+                System.out.println("执行任务:" + atomicInteger.incrementAndGet());
+                ;
+                try {
+                    cyclicBarrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+        System.out.println("循环栅格是否损坏:" + cyclicBarrier.isBroken());
+        //阻塞主线程 等待循环栅格释放
+        Thread.sleep(10000L);
+        //await超时   线程中断   reset cyclicBarrier
+        Thread t = new Thread(() -> {
+            System.out.println("测试中断子线程");
+            try {
+                cyclicBarrier.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.out.println("线程中断!");
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+                System.out.println("BrokenBarrierException");
+            }
+        });
+        t.start();
+        t.interrupt();
+        System.out.println("循环栅格是否损坏:" + cyclicBarrier.isBroken());
+    }
+```
+
+* Semaphore
+信号量 用来控制稀缺资源使用量的 例如某函数最大并发 等等               
+acquire\() 申请 可以申请多个  申请不到就阻塞  可以使用tryAcquire\()   
+release\() 释放  可以归还多个                                        
+
+```java
+    @SneakyThrows
+    @Test
+    public void semaphore() {
+        //创建公平策略模式的信号量
+        //Semaphore semaphore  = new Semaphore(5,true);
+        //默认为非公平模式的信号量
+        Semaphore semaphore = new Semaphore(5);
+        //阻塞方式获取凭证
+        semaphore.acquire();
+        //阻塞方式一次性获取多个凭证
+        semaphore.acquire(2);
+        //尝试获取凭证
+        semaphore.tryAcquire();
+        //归还一个凭证
+        semaphore.release();
+        //一次性归还多个凭证
+        semaphore.release(2);
+    }
+```
+
+* Exchanger
+exchanger 交换就是 A B线程 一个个的互换数据   
+Exchanger有两种数据交换的方式，当并发量低的时候，内部采用“单槽位交换”；并发量高的时候会采用“多槽位交换”。  
+如果在单槽交换中，同时出现了多个配对线程竞争修改slot槽位，导致某个线程CAS修改slot失败时，就会初始化arena多槽数组，后续所有的交换都会走arenaExchange：  
+多槽交换方法arenaExchange的整体流程和slotExchange类似，主要区别在于它会根据当前线程的数据携带结点Node中的index字段计算出命中的槽位。                 
+如果槽位被占用，说明已经有线程先到了，之后的处理和slotExchange一样；                                                                           
+如果槽位有效且为null，说明当前线程是先到的，就占用槽位，然后按照：spin->yield->block这种锁升级的顺序进行优化的等待，等不到配对线程就会进入阻塞。             
+另外，由于arenaExchange利用了槽数组，所以涉及到槽数组的扩容和缩减问题，读者可以自己去研读源码。                                                         
+其次，在定位arena数组的有效槽位时，需要考虑缓存行的影响。由于高速缓存与内存之间是以缓存行为单位交换数据的，根据局部性原理，相邻地址空间的数据会被加载到高速缓存的同一个数据块上（缓存行），而数组是连续的（逻辑，涉及到虚拟内存）内存地址空间，因此，多个slot会被加载到同一个缓存行上，当一个slot改变时，会导致这个slot所在的缓存行上所有的数据（包括其他的slot）无效，需要从内存重新加载，影响性能。
+exchanger 和longAdder conCurrentMap 一样 在高并发情况下 使用无锁 + 分段处理                                                                       
+
+```java
+    @SneakyThrows
+    @Test
+    public void exchange() {
+        Exchanger<Object> exchanger = new Exchanger<>();
+        Thread t1 = new Thread(() -> {
+            String[] v = new String[]{"a", "b", "c", "d", "e", "f"};
+            for (String s : v) {
+                try {
+                    System.out.println(Thread.currentThread().getName() + "发送:" + s);
+                    Object obj = exchanger.exchange(s);
+                    System.out.println(Thread.currentThread().getName() + "交换获取的数据:" + obj);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            try {
+                Integer[] v = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+                for (Integer integer : v) {
+                    System.out.println(Thread.currentThread().getName() + "发送:" + integer);
+                    Object obj = exchanger.exchange(integer);
+                    System.out.println(Thread.currentThread().getName() + "交换获取的数据:" + obj);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        Thread.sleep(10000L);
+    }
+```
+
+* Phaser    
+设定阶段和每个阶段的参与者然后出发后续函数的一个同步器  
+
+CountDownLatch:	倒数计数器，初始时设定计数器值，线程可以在计数器上等待，当计数器值归0后，所有等待的线程继续执行  
+CyclicBarrier:	循环栅栏，初始时设定参与线程数，当线程到达栅栏后，会等待其它线程的到达，当到达栅栏的总数满足指定数后，所有等待的线程继续执行   
+Phaser:	多阶段栅栏，可以在初始时设定参与线程数，也可以中途注册/注销参与者，当到达的参与者数量满足栅栏设定的数量后，会进行阶段升级（advance）  
+ 1. phase\(阶段)   
+我们知道，在CyclicBarrier中，只有一个栅栏，线程在到达栅栏后会等待其它线程的到达。  
+Phaser也有栅栏，在Phaser中，栅栏的名称叫做phase\(阶段)，在任意时间点，Phaser只处于某一个phase\(阶段)，初始阶段为0，最大达到Integerr.MAX_VALUE，然后再次归零。当所有parties参与者都到达后，phase值会递增。
+如果看过之前关于CyclicBarrier的文章，就会知道，Phaser中的phase\(阶段)这个概念其实和CyclicBarrier中的Generation很相似，只不过Generation没有计数。
+ 2. parties\(参与者)
+parties(参与者)其实就是CyclicBarrier中的参与线程的概念。
+CyclicBarrier中的参与者在初始构造指定后就不能变更，而Phaser既可以在初始构造时指定参与者的数量，也可以中途通过register、bulkRegister、arriveAndDeregister等方法注册/注销参与者。
+arrive\(到达) / advance\(进阶)
+Phaser注册完parties（参与者）之后，参与者的初始状态是unarrived的，当参与者到达（arrive）当前阶段（phase）后，状态就会变成arrived。当阶段的到达参与者数满足条件后（注册的数量等于到达的数量），阶段就会发生进阶（advance）——也就是phase值+1。 
+Termination（终止）
+代表当前Phaser对象达到终止状态，有点类似于CyclicBarrier中的栅栏被破坏的概念。 
+ 3. Tiering（分层）
+Phaser支持分层（Tiering） —— 一种树形结构，通过构造函数可以指定当前待构造的Phaser对象的父结点。之所以引入Tiering，是因为当一个Phaser有大量参与者（parties）的时候，内部的同步操作会使性能急剧下降，而分层可以降低竞争，从而减小因同步导致的额外开销。
+在一个分层Phasers的树结构中，注册和撤销子Phaser或父Phaser是自动被管理的。当一个Phaser的参与者（parties）数量变成0时，如果有该Phaser有父结点，就会将它从父结点中溢移除。
+
+```java
+    @Test
+    @SneakyThrows
+    public void phaser() throws IOException {
+        {
+            //设定10个参与者  100个线程 应该是十个阶段
+            //注册参与者 可以初始化指定 也可以register、bulkRegister、arriveAndDeregister等方法注册/注销参与者
+            Phaser phaser = new Phaser(10);
+            List<Thread> threadList = Lists.newArrayList();
+
+            for (int i = 0; i < 100; i++) {
+                Thread t = new Thread(() -> {
+                    System.out.println("执行任务,当前阶段:" + phaser.arriveAndAwaitAdvance());
+                });
+                threadList.add(t);
+                t.start();
+            }
+            for (Thread thread : threadList) {
+                thread.join();
+            }
+        }
+        System.out.println("=====================================================================");
+        {
+            //满足指定条件 开始执行
+            Phaser phaser = new Phaser(1);
+            for (int i = 0; i < 10; i++) {
+                phaser.register();
+                new Thread(() -> {
+                    int n = phaser.arriveAndAwaitAdvance();
+                    System.out.println("执行任务,当前阶段:" + n);
+                }).start();
+            }
+            System.out.println("等待释放所有任务!");
+            // 打开开关
+            Thread.sleep(2000L);
+            //arriveAndDeregister方法不会阻塞，该方法会将到达数加1，同时减少一个参与者数量，最终返回线程到达时的phase值。
+            //相当于增加一个到达数量 并且减少一个参与者 达到阶段晋升的条件  从而释放所有的到达并且等待的线程
+            phaser.arriveAndDeregister();
+            System.out.println("主线程打开了开关");
+        }
+        System.out.println("=====================================================================");
+        {
+            //通过Phaser控制任务的执行轮数  重写onAdvance 返回true 中断执行器
+            int n = 3;
+            Phaser phaser = new Phaser() {
+                @Override
+                protected boolean onAdvance(int phase, int registeredParties) {
+                    System.out.println("当前执行阶段:" + phase + ",参与者数量:" + registeredParties);
+                    return phase + 1 >= n || registeredParties == 0;
+                }
+            };
+            for (int i = 0; i < 10; i++) {
+                phaser.register();
+                new Thread(() -> {
+                    while (!phaser.isTerminated()) {
+                        int a = phaser.arriveAndAwaitAdvance();
+                        System.out.println("thread-" + Thread.currentThread().getName() + ",当前参与者:" + a);
+                    }
+                }).start();
+            }
+
+            Thread.sleep(2000L);
+        }
+        System.out.println("=====================================================================");
+        {
+            //phaser分层结构  phaser 可以多层继承处理  最大可以Integer.MAX_VALUE 个phaser
+            //phaser分层 每个根节点是根据子节点的执行结果汇总  例如子节点三个节点都执行完毕 那么根节点认为都执行完毕
+            //演示使用两层树结构的phaser tree 来演示  理论上可以通过预估参与者来构建一个更加合理枝节点的tree
+            int n = 3;
+            //定义根节点 并且定义当满足执行条件的执行任务
+            Phaser rootPhaser = new Phaser() {
+                @Override
+                protected boolean onAdvance(int phase, int registeredParties) {
+                    System.out.println("当前执行阶段:" + phase + ",参与者数量:" + registeredParties);
+                    return phase + 1 >= n || registeredParties == 0;
+                }
+            };
+            //这里使用硬编码方式来演示
+            // 子节点1 分布4个任务
+            Phaser subPhaser1 = new Phaser(rootPhaser);
+            for (int i = 0; i < 4; i++) {
+                subPhaser1.register();
+                new Thread(()->{
+                    while (!subPhaser1.isTerminated()){
+                        int a = subPhaser1.arriveAndAwaitAdvance();
+                        System.out.println("subPhaser1-" + Thread.currentThread().getName() + ",当前参与者:" + a);
+                    }
+                }).start();
+            }
+
+            Phaser subPhaser2 = new Phaser(rootPhaser);
+            for (int i = 0; i < 5; i++) {
+                subPhaser2.register();
+                new Thread(()->{
+                    while (!subPhaser2.isTerminated()){
+                        int a = subPhaser2.arriveAndAwaitAdvance();
+                        System.out.println("subPhaser2-" + Thread.currentThread().getName() + ",当前参与者:" + a);
+                    }
+                }).start();
+            }
+            Phaser subPhaser3 = new Phaser(rootPhaser);
+            for (int i = 0; i < 1; i++) {
+                subPhaser3.register();
+                new Thread(()->{
+                    while (!subPhaser3.isTerminated()){
+                        int a = subPhaser3.arriveAndAwaitAdvance();
+                        System.out.println("subPhaser3-" + Thread.currentThread().getName() + ",当前参与者:" + a);
+                    }
+                }).start();
+            }
+
+            Thread.sleep(2000L);
+
+        }
+    }
+```
+
+
 ##### 集合框架 
-##### 执行器框架 
+常用队列比较:
+
+|队列特性|有界队列|近似无界队列|无界队列|	特殊队列|
+|:------|:-----|:-------------|:------|:------|
+|有锁算法|ArrayBlockingQueue|	LinkedBlockingQueue、LinkedBlockingDeque|	/|	PriorityBlockingQueue、DelayQueue|
+|无锁算法|/|	/|	LinkedTransferQueue	|SynchronousQueue|
+
+* ConcurrentMap
+1. 五种不同的Node
+```text
+  1. Node结点
+  Node结点的定义非常简单，也是其它四种类型结点的父类。
+  默认链接到table\[i]——桶上的结点就是Node结点。当出现hash冲突时，Node结点会首先以链表的形式链接到table上，当结点数量超过一定数目时，链表会转化为红黑树。因为链表查找的平均时间复杂度为O(n)，而红黑树是一种平衡二叉树，其平均时间复杂度为O(logn)。
+  2. TreeNode结点
+  TreeNode就是红黑树的结点，TreeNode不会直接链接到table\[i]——桶上面，而是由TreeBin链接，TreeBin会指向红黑树的根结点。
+  3. TreeBin结点
+  TreeBin相当于TreeNode的代理结点。TreeBin会直接链接到table\[i]——桶上面，该结点提供了一系列红黑树相关的操作，以及加锁、解锁操作。
+  4. ForwardingNode结点
+  ForwardingNode结点仅仅在扩容时才会使用
+  5. ReservationNode结点
+  保留结点，ConcurrentHashMap中的一些特殊方法会专门用到该类结点。
+```
+2. 常量解释
+```text
+基本上和 HashMap差不多  例如链表长度超过8 并且kv数量>64 才会转化treeNode节点  只是treeNode变更为链表的时候 一个是节点<6 还要判断kv数量<16才会转换为链表
+节点长度必须是2的n次方原因:
+因为计算索引方式为: i = \(n - 1) & hash
+n - 1 == table.length - 1，table.length 的大小必须为2的幂次的原因就在这里。
+读者可以自己计算下，当table.length为2的幂次时，\(table.length-1)的二进制形式的特点是除最高位外全部是1，
+配合这种索引计算方式可以实现key在table中的均匀分布，减少hash冲突——出现hash冲突时，
+结点就需要以链表或红黑树的形式链接到table\[i]，这样无论是插入还是查找都需要额外的时间。
+```
+
+3. putVal的四种情况
+```text
+1. 首次初始化 -懒加载
+sizeCtl控制table的初始化和扩容.
+0  : 初始默认值
+-1 : 有线程正在进行table的初始化
+\>0 : table初始化时使用的容量，或初始化/扩容完成后的threshold
+-\(1 + nThreads) : 记录正在执行扩容任务的线程数
+initTable\()   sizeCtl 的值最终需要变更为0.75 * n
+2. table\[i] 为空
+最简单的情况，直接CAS操作占用桶table\[i]即可。
+3. 发现ForwardingNode结点 证明当前容器正在迁移数据 尝试协助迁移数据
+ForwardingNode结点是ConcurrentHashMap中的五类结点之一，相当于一个占位结点，表示当前table正在进行扩容，当前线程可以尝试协助数据迁移。
+4. 出现hash冲突
+当table[i]的结点类型为Node——链表结点时，就会将新结点以“尾插法”的形式插入链表的尾部。
+当table[i]的结点类型为TreeBin——红黑树代理结点时，就会将新结点通过红黑树的插入方式插入。
+putVal方法的最后，涉及将链表转换为红黑树 —— treeifyBin ，但实际情况并非立即就会转换，当table的容量小于64时，出于性能考虑，只是对table数组扩容1倍——tryPresize：
+
+```
+
+4. 查询数据的逻辑:
+```text
+get方法的逻辑很简单，首先根据key的hash值计算映射到table的哪个桶——table[i]。
+如果table[i]的key和待查找key相同，那直接返回；
+如果table[i]对应的结点是特殊结点（hash值小于0），则通过find方法查找；
+如果table[i]对应的结点是普通链表结点，则按链表方式查找。
+find方法:
+Node节点: 直接链表操作查询
+TreeBin节点: TreeBin的查找比较特殊，我们知道当槽table[i]被TreeBin结点占用时，说明链接的是一棵红黑树。由于红黑树的插入、删除会涉及整个结构的调整，所以通常存在读写并发操作的时候，是需要加锁的。
+ConcurrentHashMap采用了一种类似读写锁的方式：当线程持有写锁（修改红黑树）时，如果读线程需要查找，不会像传统的读写锁那样阻塞等待，而是转而以链表的形式进行查找（TreeBin本身时Node类型的子类，所有拥有Node的所有字段）
+ForwardingNode节点: ForwardingNode是一种临时结点，在扩容进行中才会出现，所以查找也在扩容的table上进行
+ReservationNode节点: ReservationNode是保留结点，不保存实际数据，所以直接返回null
+```
+> sumCount() 和longAdder 一样 多段汇总
+
+5. 扩容机制:
+```text
+扩容思路
+Hash表的扩容，一般都包含两个步骤：
+①table数组的扩容
+table数组的扩容，一般就是新建一个2倍大小的槽数组，这个过程通过由一个单线程完成，且不允许出现并发。
+②数据迁移
+所谓数据迁移，就是把旧table中的各个槽中的结点重新分配到新table中。比如，单线程情况下，可以遍历原来的table，然后put到新table中。
+这一过程通常涉及到槽中key的rehash，因为key映射到桶的位置与table的大小有关，新table的大小变了，key映射的位置一般也会变化。
+ConcurrentHashMap在处理rehash的时候，并不会重新计算每个key的hash值，而是利用了一种很巧妙的方法。我们在上一篇说过，ConcurrentHashMap内部的table数组的大小必须为2的幂次，原因是让key均匀分布，减少冲突，这只是其中一个原因。另一个原因就是：
+当table数组的大小为2的幂次时，通过key.hash & table.length-1这种方式计算出的索引i，当table扩容后（2倍），新的索引要么在原来的位置i，要么是i+n。
+而且还有一个特点，扩容后key对应的索引如果发生了变化，那么其变化后的索引最高位一定是1（见扩容后key2的最高位）。
+这种处理方式非常利于扩容时多个线程同时进行的数据迁移操作，因为旧table的各个桶中的结点迁移不会互相影响，所以就可以用“分治”的方式，将整个table数组划分为很多部分，每一部分包含一定区间的桶，每个数据迁移线程处理各自区间中的结点，对多线程同时进行数据迁移非常有利，后面我们会详细介绍。
+已经有其它线程正在执行扩容了，则当前线程会尝试协助“数据迁移”；（多线程并发）
+没有其它线程正在执行扩容，则当前线程自身发起扩容。（单线程）
+注意：这两种情况都是调用了transfer方法，通过第二个入参nextTab进行区分（nextTab表示扩容后的新table数组，如果为null，表示首次发起扩容）。
+第二种情况下，是通过CAS和移位运算来保证仅有一个线程能发起扩容。
+
+```
+6. 扩容的原理
+```text
+CASE1：当前是最后一个迁移任务或出现扩容冲突
+我们刚才说了，调用transfer的线程会自动领用某个区段的桶，进行数据迁移操作，当区段的初始索引i变成负数的时候，说明当前线程处理的其实就是最后剩下的桶，并且处理完了。
+所以首先会更新sizeCtl变量，将扩容线程数减1，然后会做一些收尾工作：
+设置table指向扩容后的新数组，遍历一遍旧数组，确保每个桶的数据都迁移完成——被ForwardingNode占用。
+另外，可能在扩容过程中，出现扩容冲突的情况，比如多个线程领用了同一区段的桶，这时任何一个线程都不能进行数据迁移。
+CASE2：桶table[i]为空
+当旧table的桶table[i] == null，说明原来这个桶就没有数据，那就直接尝试放置一个ForwardingNode，表示这个桶已经处理完成。
+ForwardingNode我们在上一篇提到过，主要做占用位，多线程进行数据迁移时，其它线程看到这个桶中是ForwardingNode结点，就知道有线程已经在数据迁移了。
+另外，当最后一个线程完成迁移任务后，会遍历所有桶，看看是否都是ForwardingNode，如果是，那么说明整个扩容/数据迁移的过程就完成了。
+CASE3：桶table[i]已迁移完成
+没什么好说的，就是桶已经用ForwardingNode结点占用了，表示该桶的数据都迁移完了。
+CASE4：桶table[i]未迁移完成
+如果旧桶的数据未迁移完成，就要进行迁移，这里根据桶中结点的类型分为：链表迁移、红黑树迁移。
+①链表迁移
+链表迁移的过程如下，首先会遍历一遍原链表，找到最后一个相邻runBit不同的结点。
+runbit是根据key.hash和旧table长度n进行与运算得到的值，由于table的长度为2的幂次，所以runbit只可能为0或最高位为1
+然后，会进行第二次链表遍历，按照第一次遍历找到的结点为界，将原链表分成2个子链表，再链接到新table的槽中。可以看到，新table的索引要么是i，要么是i+n，
+②红黑树迁移
+红黑树的迁移按照链表遍历的方式进行，当链表结点超过/小于阈值时，涉及红黑树<->链表的相互转换
+```
+
+```java
+    @Test
+    public void conCurrentMap() {
+        ConcurrentMap<String, Object> concurrentMap = new ConcurrentHashMap<>();
+        //返回指定key对应的值；如果Map不存在该key，则返回defaultValue
+        //concurrentMap.getOrDefault(Object key, V defaultValue);
+        //遍历Map的所有Entry，并对其进行指定的aciton操作
+        //concurrentMap.forEach(BiConsumer action);
+        //如果Map不存在指定的key，则插入<K,V>；否则，直接返回该key对应的值
+        //concurrentMap.putIfAbsent(K key, V value);
+        //删除与<key,value>完全匹配的Entry，并返回true；否则，返回false
+        //concurrentMap.remove(Object key, Object value);
+        //如果存在key，且值和oldValue一致，则更新为newValue，并返回true；否则，返回false
+        //concurrentMap.replace(K key, V oldValue, V newValue);
+        //如果存在key，则更新为value，返回旧value；否则，返回null
+        //concurrentMap.replace(K key, V value);
+        //遍历Map的所有Entry，并对其进行指定的funtion操作
+        //concurrentMap.replaceAll(BiFunction function);
+        //如果Map不存在指定的key，则通过mappingFunction计算value并插入
+        //concurrentMap.computeIfAbsent(K key, Function mappingFunction);
+        //如果Map存在指定的key，则通过mappingFunction计算value并替换旧值
+        //concurrentMap.computeIfPresent(K key, BiFunction remappingFunction);
+        //根据指定的key，查找value；然后根据得到的value和remappingFunction重新计算新值，并替换旧值
+        //concurrentMap.compute(K key, BiFunction remappingFunction);
+        //如果key不存在，则插入value；否则，根据key对应的值和remappingFunction计算新值，并替换旧值
+        //concurrentMap.merge(K key, V value, BiFunction remappingFunction);
+    }
+```
+
+* ConcurrentSkipListMap
+跳表map 实现ConcurrentNavigableMap 是一个key有序的map
+跳表由很多层组成；
+每一层都是一个有序链表；
+对于每一层的任意结点，不仅有指向下一个结点的指针，也有指向其下一层的指针。
+ConcurrentSkipListMap内部一共定义了3种不同类型的结点，元素的增删改查都从最上层的head指针指向的结点开始：
+结点定义:
+```text
+普通结点：Node
+普通结点——Node，也就是ConcurrentSkipListMap最底层链表中的结点，保存着实际的键值对，如果单独看底层链，其实就是一个按照Key有序排列的单链表：
+索引结点：Index
+Index结点是除底层链外，其余各层链表中的非头结点（见示意图中的蓝色结点）。每个Index结点包含3个指针：down、right、node。
+down和right指针分别指向下层结点和后继结点，node指针指向其最底部的node结点。
+头索引结点：HeadIndex
+HeadIndex结点是各层链表的头结点，它是Index类的子类，唯一的区别是增加了一个level字段，用于表示当前链表的级别，越往上层，level值越大。
+```
+```java
+    @Test
+    public void concurrentSkipListMap() {
+         <String, Object> concurrentSkipListMap = new ConcurrentSkipListMap<>();
+        //put
+        //concurrentSkipListMap.put(key ,value );
+        //get
+        //concurrentSkipListMap.get(key);
+        //remove
+        //concurrentSkipListMap.remove(key);
+        //第一个节点
+        //concurrentSkipListMap.firstEntry();
+        //最后一个节点
+        //concurrentSkipListMap.lastEntry();
+        //第一个key
+        //concurrentSkipListMap.firstKey();
+        //最后一个key
+        //concurrentSkipListMap.lastKey();
+    }
+```
+
+* ConcurrentSkipListSet
+并发控制的跳表顺序set
+类似于 treeSet 和NavigableMap treeMap的关系
+内部直接使用  ConcurrentSkipListMap使用
+ConcurrentSkipListMap对键值对的要求是均不能为null，所以ConcurrentSkipListSet在插入元素的时候，用一个Boolean.TRUE对象（相当于一个值为true的Boolean型对象）作为value，同时putIfAbsent可以保证不会存在相同的Key。
+所以，最终跳表中的所有Node结点的Key均不会相同，且值都是Boolean.True。
+```java
+    @Test
+    public void concurrentSkipListSet() {
+        ConcurrentSkipListSet<String> concurrentSkipListSet = new ConcurrentSkipListSet<>();
+    }
+```
+
+* CopyOnWriteArrayList
+  写入加锁的arrayList 
+每次写入或者删除的时候 先获取旧的数组 然后使用 ReentrantLock  直接锁定 保证写入原子性  操作完成之后将新数组替换到原本的读数组
+CopyOnWriteArrayList的思想和实现整体上还是比较简单，它适用于处理“读多写少”的并发场景。通过上述对CopyOnWriteArrayList的分析，读者也应该可以发现该类存在的一些问题：
+1. 内存的使用
+由于CopyOnWriteArrayList使用了“写时复制”，所以在进行写操作的时候，内存里会同时存在两个array数组，如果数组内存占用的太大，那么可能会造成频繁GC,所以CopyOnWriteArrayList并不适合大数据量的场景。
+2. 数据一致性
+CopyOnWriteArrayList只能保证数据的最终一致性，不能保证数据的实时一致性——读操作读到的数据只是一份快照。所以如果希望写入的数据可以立刻被读到，那CopyOnWriteArrayList并不适合。
+```java
+    @Test
+    public void copyOnWriteArrayList() {
+        CopyOnWriteArrayList<String> copyOnWriteArrayList = new CopyOnWriteArrayList();
+    }
+```
+
+* CopyOnWriteArraySet
+CopyOnWriteArraySet，从名字上可以看出，也是基于“写时复制”的思想。事实上
+CopyOnWriteArraySet内部引用了一个CopyOnWriteArrayList对象，以“组合”方式，
+委托CopyOnWriteArrayList对象实现了所有API功能。
+```java
+    @Test
+    public void copyOnWriteArraySet() {
+        CopyOnWriteArraySet<String> copyOnWriteArraySet = new CopyOnWriteArraySet<>();
+    }
+```
+
+* ConcurrentLinkedQueue
+无锁队列
+ConcurrentLinkedQueue底层是基于链表实现的。
+Doug Lea在实现ConcurrentLinkedQueue时，并没有利用锁或底层同步原语，而是完全基于自旋+CAS的方式实现了该队列。回想一下AQS，AQS内部的CLH等待队列也是利用了这种方式。
+由于是完全基于无锁算法实现的，所以当出现多个线程同时进行修改队列的操作（比如同时入队），很可能出现CAS修改失败的情况，那么失败的线程会进入下一次自旋，再尝试入队操作，直到成功。所以，在并发量适中的情况下，ConcurrentLinkedQueue一般具有较好的性能。
+ConcurrentLinkedQueue使用了自旋+CAS的非阻塞算法来保证线程并发访问时的数据一致性。由于队列本身是一种链表结构，所以虽然算法看起来很简单，但其实需要考虑各种并发的情况，实现复杂度较高，并且ConcurrentLinkedQueue不具备实时的数据一致性，实际运用中，队列一般在生产者-消费者的场景下使用得较多，所以ConcurrentLinkedQueue的使用场景并不如阻塞队列那么多。
+另外，关于ConcurrentLinkedQueue还有以下需要注意的几点：
+ConcurrentLinkedQueue的迭代器是弱一致性的，这在并发容器中是比较普遍的现象，主要是指在一个线程在遍历队列结点而另一个线程尝试对某个队列结点进行修改的话不会抛出ConcurrentModificationException，这也就造成在遍历某个尚未被修改的结点时，在next方法返回时可以看到该结点的修改，但在遍历后再对该结点修改时就看不到这种变化。
+size方法需要遍历链表，所以在并发情况下，其结果不一定是准确的，只能供参考。
+```java
+    @Test
+    public void concurrentLinkedQueue() {
+        ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
+        //加入队列  add底层直接调用offer
+        //queue.add();
+        //queue.addAll();
+        //queue.offer();
+        //poll：将首个元素从队列中弹出，如果队列是空的，就返回null
+        queue.poll();
+        //peek：查看首个元素，不会移除首个元素，如果队列是空的就返回null
+        queue.peek();
+        //element：查看首个元素，不会移除首个元素，如果队列是空的就抛出异常NoSuchElementException
+        queue.element();
+        //是否包含元素
+        //queue.contains();
+        //删除元素 下一个poll出来的元素
+        queue.remove();
+        //清理整个队列
+        queue.clear();
+    }
+```
+
+* ConcurrentLinkedDeque
+无锁双端队列
+提供双端进出的操作的 linkedQueue版本
+实现了Deque接口的功能
+```java
+    @Test
+    public void concurrentLinkedDeque() {
+        ConcurrentLinkedDeque<String> deque = new ConcurrentLinkedDeque<>();
+        //加入队列  add=addLast 都是直接调用linkLast函数  
+        //deque.add();
+        //deque.push();
+        //deque.addFirst();
+        //deque.addLast();
+        //deque.addAll();
+        //poll：将首个元素从队列中弹出，如果队列是空的，就返回null poll = pollFirst
+        deque.poll();
+        deque.pollFirst();
+        deque.pollLast();
+        //peek：查看首个元素，不会移除首个元素，如果队列是空的就返回null  peek = peekFirst
+        deque.peek();
+        deque.peekFirst();
+        deque.peekLast();
+        //element：查看首个元素，不会移除首个元素，如果队列是空的就抛出异常NoSuchElementException
+        //element getXXXX 都是调用的peek函数只是判断了如果是空抛出NoSuchElementException 
+        deque.element();
+        deque.getFirst();
+        deque.getLast();
+        //是否包含元素
+        //deque.contains()
+        //删除元素 下一个poll出来的元素
+        deque.remove();
+        deque.removeFirst();
+        deque.removeLast();
+        deque.pop();
+        //deque.removeAll();
+        //从头部开始删除第一个eq元素的
+        //deque.removeFirstOccurrence();
+        //从尾部部开始删除第一个eq元素的
+        //deque.removeLastOccurrence();
+        //清理整个队列
+        deque.clear();
+    }
+```
+ 
+* BlockingQueue
+阻塞队列 只是个接口  主要定义实现阻塞类队列的queue 和deque   
+```java
+    @SneakyThrows
+    @Test
+    public void blockingQueue() {
+        @AllArgsConstructor
+        class Channel {
+            private final BlockingQueue<String> blockingQueue;
+
+            @SneakyThrows
+            public void put(String str) {
+                blockingQueue.put(str);
+            }
+
+            @SneakyThrows
+            public String take() {
+                return blockingQueue.take();
+            }
+        }
+        Channel channel = new Channel(new ArrayBlockingQueue<String>(1024));
+        Thread produceThread = new Thread(() -> {
+            while (true) {
+                var str = "生产数据:" + System.currentTimeMillis();
+                System.out.println(Thread.currentThread().getName() + "线程生产消息:" + str);
+                channel.put(str);
+                //表示愿意放弃当前cpu对当前线程的使用
+                Thread.yield();
+            }
+        });
+        Thread consumerThread = new Thread(() -> {
+            while (true) {
+                System.out.println(Thread.currentThread().getName() + "线程生产消息:" + "消费数据:" + channel.take());
+                Thread.yield();
+            }
+        });
+        //启动生产者和消费者
+        produceThread.start();
+        consumerThread.start();
+
+        //利用consumer线程无限循环的特性 卡住主线程
+        consumerThread.join();
+    }
+```
+* ArrayBlockingQueue
+基于环形数组实现的阻塞队列 
+内部是一个环形数组
+利用takeIndex 和putIndex来表示写入和取出的坐标
+内部直接使用ReentrantLock 来处理并发
+ArrayBlockingQueue利用了ReentrantLock来保证线程的安全性，针对队列的修改都需要加全局锁。在一般的应用场景下已经足够。对于超高并发的环境，由于生产者-消息者共用一把锁，可能出现性能瓶颈。
+另外，由于ArrayBlockingQueue是有界的，且在初始时指定队列大小，所以如果初始时需要限定消息队列的大小，则ArrayBlockingQueue 比较合适。
+```java
+    @Test
+    public void arrayBlockingQueue() {
+        //初始化queue 指定队列长度 和 公平/非公平策略 以及初始化的集合
+        ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(1024, true, Lists.newArrayList());
+        //添加数据
+        //queue.add();
+        //queue.offer();
+        //queue.put();
+        //获取数据
+        //queue.poll();
+        //queue.take();
+        queue.remove();
+        queue.clear();
+    }
+```
+
+* LinkedBlockingQueue
+基于链表实现的阻塞队列 
+近似无界阻塞队列
+如果初始化不指定大小 则默认大小为 Integer.MAX_VALUE
+<p>
+LinkedBlockingQueue除了底层数据结构（单链表）与ArrayBlockingQueue不同外，另外一个特点就是：
+它维护了两把锁——takeLock和putLock。
+takeLock用于控制出队的并发，putLock用于入队的并发。这也就意味着，同一时刻，只能只有一个线程能执行入队/出队操作，其余入队/出队线程会被阻塞；但是，入队和出队之间可以并发执行，即同一时刻，可以同时有一个线程进行入队，另一个线程进行出队，这样就可以提升吞吐量。
+
+```java
+    @Test
+    public void linkedBlockingQueue() {
+        LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+        //queue.put();
+        //queue.take();
+    }
+```
+
+* PriorityBlockingQueue 
+基于堆实现的无界队列 堆能有多大队列能有多长
+而且可以按照优先级去消费  
+PriorityBlockingQueue是一种无界阻塞队列，在构造的时候可以指定队列的初始容量。具有如下特点：
+PriorityBlockingQueue与之前介绍的阻塞队列最大的不同之处就是：它是一种优先级队列，也就是说元素并不是以FIFO的方式出/入队，而是以按照权重大小的顺序出队；
+PriorityBlockingQueue是真正的无界队列（仅受内存大小限制），它不像ArrayBlockingQueue那样构造时必须指定最大容量，也不像LinkedBlockingQueue默认最大容量为Integer.MAX_VALUE；
+由于PriorityBlockingQueue是按照元素的权重进入排序，所以队列中的元素必须是可以比较的，也就是说元素必须实现Comparable接口；
+由于PriorityBlockingQueue无界队列，所以插入元素永远不会阻塞线程；
+PriorityBlockingQueue底层是一种基于数组实现的堆结构。
+注意：堆分为“大顶堆”和“小顶堆”，PriorityBlockingQueue会依据元素的比较方式选择构建大顶堆或小顶堆。比如：如果元素是Integer这种引用类型，那么默认就是“小顶堆”，也就是每次出队都会是当前队列最小的元素。
+插入元素——put(E e)
+PriorityBlockingQueue插入元素不会阻塞线程，put(E e)方法内部其实是调用了offer(E e)方法：
+首先获取全局锁（对于队列的修改都要获取这把锁），然后判断下队列是否已经满了，如果满了就先进行一次内部数组的扩容
+PriorityBlockingQueue属于比较特殊的阻塞队列，适用于有元素优先级要求的场景。它的内部和ArrayBlockingQueue一样，使用一个了全局独占锁来控制同时只有一个线程可以进行入队和出队，另外由于该队列是无界队列，所以入队线程并不会阻塞。
+PriorityBlockingQueue始终保证出队的元素是优先级最高的元素，并且可以定制优先级的规则，内部通过使用堆（数组形式）来维护元素顺序，它的内部数组是可扩容的，扩容和出/入队可以并发进行。
+
+```java
+    @Test
+    public void priorityBlockingQueue() {
+        //提供初始化的大小  默认为11   和比较器
+        PriorityBlockingQueue<String> queue = new PriorityBlockingQueue<>(1024, String::compareTo);
+        //queue.put();
+        //queue.take();
+    }
+```
+
+* SynchronousQueue
+同步数据队列
+SynchronousQueue的底层实现包含两种数据结构——栈和队列。这是一种非常特殊的阻塞队列，它的特点简要概括如下：
+入队线程和出队线程必须一一匹配，否则任意先到达的线程会阻塞。比如ThreadA进行入队操作，在有其它线程执行出队操作之前，ThreadA会一直等待，反之亦然；
+SynchronousQueue内部不保存任何元素，也就是说它的容量为0，数据直接在配对的生产者和消费者线程之间传递，不会将数据缓冲到队列中。
+SynchronousQueue支持公平/非公平策略。其中非公平模式，基于内部数据结构——“栈”来实现，公平模式，基于内部数据结构——“队列”来实现；
+SynchronousQueue基于一种名为“Dual stack and Dual queue”的无锁算法实现。
+公平策略，内部构造了一个TransferQueue对象，
+而非公平策略则是构造了TransferStack对象。
+这两个类都继承了内部类Transferer，SynchronousQueue中的所有方法，其实都是委托调用了TransferQueue/TransferStack的方法
+TransferStack一共定义了三种结点类型，任何线程对TransferStack的操作都会创建下述三种类型的某种结点：
+```text
+REQUEST：表示未配对的消费者（当线程进行出队操作时，会创建一个mode值为REQUEST的SNode结点 ）
+DATA：表示未配对的生产者（当线程进行入队操作时，会创建一个mode值为DATA的SNode结点 ）
+FULFILLING：表示配对成功的消费者/生产者
+```
+
+整个transfer方法考虑了限时等待的情况，且入队/出队其实都是调用了同一个方法，其主干逻辑就是在一个自旋中完成以下三种情况之一的操作，直到成功，或者被中断或超时取消：
+栈为空，或栈顶结点类型与当前入队结点相同。这种情况，调用线程会阻塞；
+栈顶结点还未配对成功，且与当前入队结点可以配对。这种情况，直接进行配对操作；
+栈顶结点正在配对中。这种情况，直接进行下一个结点的配对。
+
+```java
+    @Test
+    public void synchronousQueue() throws InterruptedException {
+        //对于公平策略，内部构造了一个TransferQueue对象，而非公平策略则是构造了TransferStack对象
+        SynchronousQueue<String> queue = new SynchronousQueue<>(true);
+        Thread putThread = new Thread(() -> {
+            var str = "putThread:" + System.currentTimeMillis();
+            try {
+                queue.put(str);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + ":" + str);
+        });
+        Thread takeThread = new Thread(() -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + ":takeThread:" + queue.take());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        putThread.start();
+        System.out.println("putThreadStart");
+        Thread.sleep(2000L);
+        takeThread.start();
+        System.out.println("takeThreadStart");
+
+
+        putThread.join();
+        takeThread.join();
+    }
+```
+
+* DelayQueue
+无界延时阻塞队列
+DelayQueue每次出队只会删除有效期最小且已经过期的元素
+内部的PriorityQueue并非在构造时创建，而是对象创建时生成
+leader字段，DelayQueue每次只会出队一个过期的元素，如果队首元素没有过期，就会阻塞出队线程，让线程在available这个条件队列上无限等待。
+为了提升性能，DelayQueue并不会让所有出队线程都无限等待，而是用leader保存了第一个尝试出队的线程，该线程的等待时间是队首元素的剩余有效期。
+这样，一旦leader线程被唤醒（此时队首元素也失效了），就可以出队成功，然后唤醒一个其它在available条件队列上等待的线程。之后，
+会重复上一步，新唤醒的线程可能取代成为新的leader线程。这样，就避免了无效的等待，提升了性能。这其实是一种名为“Leader-Follower pattern”的多线程设计模式。
+
+> 必须要实现Delayed接口的class才能丢进延时队列  
+
+```java
+    @SneakyThrows
+    @Test
+    public void delayQueue() {
+
+        @lombok.Data
+        @AllArgsConstructor
+        class Data implements Delayed {
+            private long time;
+            private String content;
+
+
+            @Override
+            public long getDelay(TimeUnit unit) {
+                return unit.convert(this.time - System.nanoTime(), TimeUnit.NANOSECONDS);
+            }
+
+
+            @Override
+            public int compareTo(Delayed o) {
+                if (o == this) {
+                    return 0;
+                }
+                if (o instanceof Data) {
+                    Data d = (Data) o;
+                    long diff = this.time - d.getTime();
+                    if (diff > 0) {
+                        return 1;
+                    } else if (diff < 0) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    throw new RuntimeException("不是Data类型");
+                }
+            }
+        }
+
+        DelayQueue<Data> queue = new DelayQueue<>();
+        Thread produceThread = new Thread(() -> {
+            while (true) {
+                var str = System.currentTimeMillis() + "";
+                System.out.println("produce:" + str);
+                Data d = new Data(System.nanoTime() + TimeUnit.SECONDS.toNanos(1), str);
+                queue.put(d);
+                Thread.yield();
+            }
+        });
+
+        Thread consumerThread = new Thread(() -> {
+            while (true) {
+                try {
+                    System.out.println(System.currentTimeMillis() + "consumer:" + queue.take());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Thread.yield();
+            }
+        });
+
+        produceThread.start();
+        consumerThread.start();
+
+        produceThread.join();
+        consumerThread.join();
+    }
+```
+
+* LinkedBlockingDeque
+基于双链表实现的有界双端阻塞队列
+双链表 + ReentrantLock  所有对队列的修改操作都需要先获取这把全局锁
+LinkedBlockingDeque作为一种阻塞双端队列，提供了队尾删除元素和队首插入元素的阻塞方法。该类在构造时一般需要指定容量，如果不指定，则最大容量为Integer.MAX_VALUE。另外，由于内部通过ReentrantLock来保证线程安全，所以LinkedBlockingDeque的整体实现时比较简单的。
+另外，双端队列相比普通队列，主要是多了【队尾出队元素】/【队首入队元素】的功能。
+阻塞队列我们知道一般用于“生产者-消费者”模式，而双端阻塞队列在“生产者-消费者”就可以利用“双端”的特性，从队尾出队元素。
+考虑下面这样一种场景：有多个消费者，每个消费者有自己的一个消息队列，生产者不断的生产数据扔到队列中，消费者消费数据有快又慢。为了提升效率，速度快的消费者可以从其它消费者队列的队尾出队元素放到自己的消息队列中，由于是从其它队列的队尾出队，这样可以减少并发冲突（其它消费者从队首出队元素），又能提升整个系统的吞吐量。这其实是一种“工作窃取算法”的思路。
+
+```java
+    @SneakyThrows
+    @Test
+    public void linkedBlockingDeque() {
+        LinkedBlockingDeque<String> deque = new LinkedBlockingDeque<>();
+        //生产者 1s生产1个消息
+        Thread produceThread = new Thread(() -> {
+            while (true) {
+                var str = "produce:" + System.currentTimeMillis();
+                deque.addFirst(Thread.currentThread().getName() + ":" + str);
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //消费者1 3s消费一个消息
+        Thread consumer1 = new Thread(() -> {
+            while (true) {
+                try {
+                    System.out.println("consumer:" + deque.takeFirst());
+                    Thread.sleep(5000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        //消费者2 窃取消息 每2s消费一次
+        Thread consumer2 = new Thread(() -> {
+            while (true) {
+                try {
+                    System.out.println("窃取consumer1的消息:" + deque.takeLast());
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        produceThread.start();
+        consumer1.start();
+        consumer2.start();
+
+        produceThread.join();
+    }
+```
+
+* LinkedTransferQueue
+基于链表实现的  包含synchronousQueue的功能的无界无锁阻塞队列
+而LinkedTransferQueue的transfer方法则比较特殊：
+当有消费者线程阻塞等待时，调用transfer方法的生产者线程不会将元素存入队列，而是直接将元素传递给消费者；
+如果调用transfer方法的生产者线程发现没有正在等待的消费者线程，则会将元素入队，然后会阻塞等待，直到有一个消费者线程来获取该元素。
+LinkedTransferQueue的特点简要概括如下：
+LinkedTransferQueue是一种无界阻塞队列，底层基于单链表实现；
+LinkedTransferQueue中的结点有两种类型：数据结点、请求结点；
+LinkedTransferQueue基于无锁算法实现。
+Node结点，有以下几点需要特别注意：
+Node结点有两种类型：数据结点、请求结点，通过字段isData区分，只有不同类型的结点才能相互匹配；
+Node结点的值保存在item字段，匹配前后值会发生变化；
+private static final int NOW   = 0; // for untimed poll, tryTransfer
+private static final int ASYNC = 1; // for offer, put, add
+private static final int SYNC  = 2; // for transfer, take
+private static final int TIMED = 3; // for timed poll, tryTransfer
+NOW表示即时操作（可能失败），即不会阻塞调用线程：
+poll（获取并移除队首元素，如果队列为空，直接返回null）；tryTransfer（尝试将元素传递给消费者，如果没有等待的消费者，则立即返回false，也不会将元素入队）
+ASYNC表示异步操作（必然成功）：
+offer（插入指定元素至队尾，由于是无界队列，所以会立即返回true）；put（插入指定元素至队尾，由于是无界队列，所以会立即返回）；add（插入指定元素至队尾，由于是无界队列，所以会立即返回true）
+SYNC表示同步操作（阻塞调用线程）：
+transfer（阻塞直到出现一个消费者线程）；take（从队首移除一个元素，如果队列为空，则阻塞线程）
+TIMED表示限时同步操作（限时阻塞调用线程）：
+poll(long timeout, TimeUnit unit)；tryTransfer(E e, long timeout, TimeUnit unit)
+LinkedTransferQueue其实兼具了SynchronousQueue的特性以及无锁算法的性能，并且是一种无界队列：
+和SynchronousQueue相比，LinkedTransferQueue可以存储实际的数据；
+和其它阻塞队列相比，LinkedTransferQueue直接用无锁算法实现，性能有所提升。
+另外，由于LinkedTransferQueue可以存放两种不同类型的结点，所以称之为“Dual Queue”：
+内部Node结点定义了一个 boolean 型字段——isData，表示该结点是“数据结点”还是“请求结点”。
+为了节省 CAS 操作的开销，LinkedTransferQueue使用了松弛（slack）操作：
+在结点被匹配（被删除）之后，不会立即更新队列的head、tail，而是当 head、tail结点与最近一个未匹配的结点之间的距离超过“松弛阀值”后才会更新（默认为 2）。这个“松弛阀值”一般为1到3，如果太大会增加沿链表查找未匹配结点的时间，太小会增加 CAS 的开销。
+
+```java
+    @SneakyThrows
+    @Test
+    public void linkedTransferQueue() {
+        LinkedTransferQueue<String> queue = new LinkedTransferQueue<>();
+        {
+            //当常规队列使用
+//            queue.put();
+//            queue.take();
+        }
+        {
+            //当作synchronousQueue使用
+            Thread putThread = new Thread(() -> {
+                var str = "putThread:" + System.currentTimeMillis();
+                try {
+                    //使用transfer 及其重载函数
+                    queue.transfer(str);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + ":" + str);
+            });
+            Thread takeThread = new Thread(() -> {
+                try {
+                    System.out.println(Thread.currentThread().getName() + ":takeThread:" + queue.take());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            putThread.start();
+            System.out.println("putThreadStart");
+            Thread.sleep(2000L);
+            takeThread.start();
+            System.out.println("takeThreadStart");
+
+            putThread.join();
+            takeThread.join();
+        }
+    }
+```
+
+
+##### 执行器框架及其相关的功能  
+* Executors
+executors 创建常用的线程池类型
+ThreadPoolExecutor在以下两种情况下会执行拒绝策略：
+1.当核心线程池满了以后，如果任务队列也满了，首先判断非核心线程池有没满，没有满就创建一个工作线程（归属非核心线程池）， 否则就会执行拒绝策略；
+2.提交任务时，ThreadPoolExecutor已经关闭了。
+拒绝策略:
+```text
+AbortPolicy（默认）:AbortPolicy策略其实就是抛出一个RejectedExecutionException异常：
+DiscardPolicy: DiscardPolicy策略其实就是无为而治，什么都不做，等任务自己被回收：
+DiscardOldestPolicy:DiscardOldestPolicy策略是丢弃任务队列中的最近一个任务，并执行当前任务：
+CallerRunsPolicy: CallerRunsPolicy策略相当于以自身线程来执行任务，这样可以减缓新任务提交的速度。
+```
+通过executors创建不同执行器方式:
+```text
+//多个线程的执行器
+Executors.newFixedThreadPool(5);
+//单个线程的执行器
+Executors.newSingleThreadExecutor();
+//单个线程的定时执行器
+Executors.newSingleThreadScheduledExecutor();
+//缓存 线程超过指定时间没有被使用回收
+Executors.newCachedThreadPool();
+//定时线程池
+Executors.newScheduledThreadPool(5);
+//创建fork/join线程池
+Executors.newWorkStealingPool();
+```
+```java
+    @Test
+    public void executorsTest() {
+        //executors 工具类创建
+        //多个线程的执行器
+        Executors.newFixedThreadPool(5);
+        //单个线程的执行器
+        Executors.newSingleThreadExecutor();
+        //单个线程的定时执行器
+        Executors.newSingleThreadScheduledExecutor();
+        //缓存 线程超过指定时间没有被使用回收
+        Executors.newCachedThreadPool();
+        //定时线程池
+        Executors.newScheduledThreadPool(5);
+        //创建fork/join线程池
+        Executors.newWorkStealingPool();
+
+
+        //手动创建
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("demo-pool-%d").build();
+        //Common Thread Pool
+        ExecutorService pool = new ThreadPoolExecutor(5, 200,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+        pool.execute(() -> System.out.println(Thread.currentThread().getName()));
+        pool.shutdown();//gracefully shutdown
+
+    }
+```
+
+* ThreadPoolExecutor
+* ScheduledThreadPoolExecutor
+* Future
+* ForkJoinPool
 
 #### 常用功能代码 
 ##### 多线程执行

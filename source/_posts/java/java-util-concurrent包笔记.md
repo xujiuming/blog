@@ -1446,9 +1446,297 @@ Executors.newWorkStealingPool();
 ```
 
 * ThreadPoolExecutor
+普通线程池
+线程池的引入，主要解决以下问题：
+减少系统因为频繁创建和销毁线程所带来的开销；
+自动管理线程，对使用方透明，使其可以专注于任务的构建。
+ThreadPoolExecutor内部定义了一个AtomicInteger变量——ctl，通过按位划分的方式，在一个变量中记录线程池状态和工作线程数——低29位保存线程数，高3位保存线程池状态：
+ThreadPoolExecutor一共定义了5种线程池状态：
+```text
+RUNNING : 接受新任务, 且处理已经进入阻塞队列的任务
+SHUTDOWN : 不接受新任务, 但处理已经进入阻塞队列的任务
+STOP : 不接受新任务, 且不处理已经进入阻塞队列的任务, 同时中断正在运行的任务
+TIDYING : 所有任务都已终止, 工作线程数为0, 线程转化为TIDYING状态并准备调用terminated方法
+TERMINATED : terminated方法已经执行完成
+```
+
+拒绝策略:
+```text
+AbortPolicy（默认）:AbortPolicy策略其实就是抛出一个RejectedExecutionException异常：
+DiscardPolicy: DiscardPolicy策略其实就是无为而治，什么都不做，等任务自己被回收：
+DiscardOldestPolicy:DiscardOldestPolicy策略是丢弃任务队列中的最近一个任务，并执行当前任务：
+CallerRunsPolicy: CallerRunsPolicy策略相当于以自身线程来执行任务，这样可以减缓新任务提交的速度。
+```
+
+```java
+    @SneakyThrows
+    @Test
+    public void threadPoolExecutor() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(5,
+                10,
+                0L,
+                TimeUnit.HOURS,
+                new LinkedBlockingQueue<Runnable>(),
+                new ThreadFactoryBuilder()
+                        .setNameFormat("demo-")
+                        .build(),
+                new ThreadPoolExecutor.AbortPolicy());
+        executor.submit(() -> {
+            System.out.println("執行任務");
+        });
+        Future<Long> longFuture = executor.submit(System::currentTimeMillis);
+        System.out.println(longFuture.get(1L, TimeUnit.SECONDS));
+        //关闭线程池
+        executor.shutdown();
+    }
+```
+
 * ScheduledThreadPoolExecutor
+ThreadPoolExecutor中提交的任务都是实现了Runnable接口，但是ScheduledThreadPoolExecutor比较特殊，由于要满足任务的延迟/周期调度功能，它会对所有的Runnable任务都进行包装，包装成一个RunnableScheduledFuture任务。
+ThreadPoolExecutor中，需要指定一个阻塞队列作为任务队列。ScheduledThreadPoolExecutor中也一样，不过特殊的是，ScheduledThreadPoolExecutor中的任务队列是一种特殊的延时队列（DelayQueue）。
+ScheduledThreadPoolExecutor在内部定义了DelayQueue的变种——DelayedWorkQueue，它和DelayQueue类似，只不过要求所有入队元素必须实现RunnableScheduledFuture接口。
+ScheduledThreadPoolExecutor的主要特点：
+```text
+对Runnable任务进行包装，封装成ScheduledFutureTask，该类任务支持任务的周期执行、延迟执行；
+采用DelayedWorkQueue作为任务队列。该队列是无界队列，所以任务一定能添加成功，但是当工作线程尝试从队列取任务执行时，只有最先到期的任务会出队，如果没有任务或者队首任务未到期，则工作线程会阻塞；
+ScheduledThreadPoolExecutor的任务调度流程与ThreadPoolExecutor略有区别，最大的区别就是，先往队列添加任务，然后创建工作线程执行任务。
+另外，maximumPoolSize这个参数对ScheduledThreadPoolExecutor其实并没有作用，因为除非把corePoolSize设置为0，这种情况下ScheduledThreadPoolExecutor只会创建一个属于非核心线程池的工作线程；否则，ScheduledThreadPoolExecutor只会新建归属于核心线程池的工作线程，一旦核心线程池满了，就不再新建工作线程。
+```
+
+```java
+    @SneakyThrows
+    @Test
+    public void scheduledThreadPoolExecutor() {
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10,
+                new ThreadFactoryBuilder()
+                        .setNameFormat("demo-")
+                        .build(), new ThreadPoolExecutor.DiscardPolicy());
+        //执行定时任务 初始执行时间1s 间隔时间1s
+        executor.scheduleAtFixedRate(() -> {
+            System.out.println("执行任务" + System.currentTimeMillis());
+        }, 1, 1, TimeUnit.SECONDS);
+
+        Thread.sleep(5000L);
+        executor.shutdown();
+    }
+```
+
 * Future
+FutureTask一共给任务定义了7种状态：
+```text
+NEW：表示任务的初始化状态；
+COMPLETING：表示任务已执行完成（正常完成或异常完成），但任务结果或异常原因还未设置完成，属于中间状态；
+NORMAL：表示任务已经执行完成（正常完成），且任务结果已设置完成，属于最终状态；
+EXCEPTIONAL：表示任务已经执行完成（异常完成），且任务异常已设置完成，属于最终状态；
+CANCELLED：表示任务还没开始执行就被取消（非中断方式），属于最终状态；
+INTERRUPTING：表示任务还没开始执行就被取消（中断方式），正式被中断前的过渡状态，属于中间状态；
+INTERRUPTED：表示任务还没开始执行就被取消（中断方式），且已被中断，属于最终状态。
+```
+
+```java
+    @SneakyThrows
+    @Test
+    public void future() {
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        List<Future<String>> futures = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            futures.add(executor.submit(() -> "future任务:" + System.currentTimeMillis()));
+        }
+
+        for (Future<String> future : futures) {
+            System.out.println(future.get());
+            //取消
+            //future.cancel();
+            //如果此任务在正常完成之前被取消，则返回true
+            //future.isCancelled();
+            //如果此任务完成，则返回true 。完成可能是由于正常终止、异常或取消——在所有这些情况下，此方法都将返回true 。
+            //future.isDone();
+        }
+    }
+```
+
 * ForkJoinPool
+forkJoin 执行器 
+一般的线程池只有一个任务队列，但是对于Fork/Join框架来说，由于Fork出的各个子任务其实是平行关系，为了提高效率，减少线程竞争，应该将这些平行的任务放到不同的队列中去，如上图中，大任务分解成三个子任务：子任务1、子任务2、子任务3，那么就创建三个任务队列，然后再创建3个工作线程与队列一一对应。
+由于线程处理不同任务的速度不同，这样就可能存在某个线程先执行完了自己队列中的任务的情况，这时为了提升效率，我们可以让该线程去“窃取”其它任务队列中的任务，这就是所谓的工作窃取算法。
+Fork/Join框架 自己实现了 类似 linkedBlockingDeque 来提升性能和实现工作窃取
+核心组件:
+```text
+ForkJoinPool：ExecutorService的实现类，负责工作线程的管理、任务队列的维护，以及控制整个任务调度流程；
+ForkJoinTask：Future接口的实现类，fork是其核心方法，用于分解任务并异步执行；而join方法在任务结果计算完毕之后才会运行，用来合并或返回计算结果；
+ForkJoinWorkerThread：Thread的子类，作为线程池中的工作线程（Worker）执行任务；
+WorkQueue：任务队列，用于保存任务；
+```
+
+3类外部提交任务的方法：invoke、execute、submit，它们的主要区别在于任务的执行方式上。
+```text
+通过invoke方法提交的任务，调用线程直到任务执行完成才会返回，也就是说这是一个同步方法，且有返回结果；
+通过execute方法提交的任务，调用线程会立即返回，也就是说这是一个异步方法，且没有返回结果；
+通过submit方法提交的任务，调用线程会立即返回，也就是说这是一个异步方法，且有返回结果（返回Future实现类，可以通过get获取结果）。
+```
+ForkJoinPool对象的构建有两种方式：
+ 1. 通过3种构造器的任意一种进行构造；
+ 2. 通过ForkJoinPool.commonPool()静态方法构造。
+构造参数说明:
+parallelism：默认值为CPU核心数，ForkJoinPool里工作线程数量与该参数有关，但它不表示最大线程数；
+factory：工作线程工厂，默认是DefaultForkJoinWorkerThreadFactory，其实就是用来创建工作线程对象——ForkJoinWorkerThread；
+handler：异常处理器；
+config：保存parallelism和mode信息，供后续读取；
+ctl：线程池的核心控制字段
+asyncMode这个字段是指worker的同步异步模式，ForkJoinPool支持两种模式：
+同步模式（默认方式）
+异步模式
+mode = asyncMode ? FIFO_QUEUE : LIFO_QUEUE
+注意：这里的同步/异步并不是指F/J框架本身是采用同步模式还是采用异步模式工作，而是指其中的工作线程的工作方式。在F/J框架中，每个工作线程（Worker）都有一个属于自己的任务队列（WorkQueue），这是一个底层采用数组实现的双向队列。
+同步是指：对于工作线程（Worker）自身队列中的任务，采用后进先出（LIFO）的方式执行；异步是指：对于工作线程（Worker）自身队列中的任务，采用先进先出（FIFO）的方式执行。
+异步模式比较适合于那些不需要返回结果的任务。其实如果将队列中的任务看成一棵树（无环连通图）的话，异步模式类似于图的广度优先遍历，同步模式类似于图的深度优先遍历
+
+ForkJoinTask实现了Future接口，是一个异步任务，我们在使用Fork/Join框架时，一般需要使用线程池来调度任务，线程池内部调度的其实都是ForkJoinTask任务（即使提交的是一个Runnable或Callable任务，也会被适配成ForkJoinTask）。
+除了ForkJoinTask，Fork/Join框架还提供了两个它的抽象实现，我们在自定义ForkJoin任务时，一般继承这两个类：
+RecursiveAction：表示没有返回结果的ForkJoin任务
+RecursiveTask：表示具有返回结果的ForkJoin任务
+调用task的fork()方法会ForkJoinPool.commonPool()方法创建线程池，然后将自己作为任务提交给线程池。
+
+ForkJoinWorkerThread
+Fork/Join框架中，每个工作线程（Worker）都有一个自己的任务队列（WorkerQueue）， 所以需要对一般的Thread做些特性化处理，J.U.C提供了ForkJoinWorkerThread类作为ForkJoinPool中的工作线程
+ForkJoinWorkerThread 在构造过程中，会保存所属线程池信息和与自己绑定的任务队列信息。同时，它会通过ForkJoinPool的registerWorker方法将自己注册到线程池中。
+线程池中的每个工作线程（ForkJoinWorkerThread）都有一个自己的任务队列（WorkQueue），工作线程优先处理自身队列中的任务（LIFO或FIFO顺序，由线程池构造时的参数 mode 决定），自身队列为空时，以FIFO的顺序随机窃取其它队列中的任务。
+
+WorkQueue
+任务队列（WorkQueue）是ForkJoinPool与其它线程池区别最大的地方，在ForkJoinPool内部，维护着一个WorkQueue[]数组，它会在外部首次提交任务）时进行初始化：
+volatile WorkQueue[] workQueues; // main registry
+当通过线程池的外部方法（submit、invoke、execute）提交任务时，如果WorkQueue[]没有初始化，则会进行初始化；然后根据数组大小和线程随机数（ThreadLocalRandom.probe）等信息，计算出任务队列所在的数组索引（这个索引一定是偶数），如果索引处没有任务队列，则初始化一个，再将任务入队。也就是说，通过外部方法提交的任务一定是在偶数队列，没有绑定工作线程。
+WorkQueue作为ForkJoinPool的内部类，表示一个双端队列。双端队列既可以作为栈使用(LIFO)，也可以作为队列使用(FIFO)。ForkJoinPool的“工作窃取”正是利用了这个特点，当工作线程从自己的队列中获取任务时，默认总是以栈操作（LIFO）的方式从栈顶取任务；当工作线程尝试窃取其它任务队列中的任务时，则是FIFO的方式。
+我们在ForkJoinPool一节中曾讲过，可以指定线程池的同步/异步模式（mode参数），其作用就在于此。同步模式就是“栈操作”，异步模式就是“队列操作”，影响的就是工作线程从自己队列中取任务的方式。
+ForkJoinPool中的工作队列可以分为两类：
+有工作线程（Worker）绑定的任务队列：数组下标始终是奇数，称为task queue，该队列中的任务均由工作线程调用产生（工作线程调用FutureTask.fork方法）；
+没有工作线程（Worker）绑定的任务队列：数组下标始终是偶数，称为submissions queue，该队列中的任务全部由其它线程提交（也就是非工作线程调用execute/submit/invoke或者FutureTask.fork方法）。
+
+F/J框架的核心来自于它的工作窃取及调度策略，可以总结为以下几点：
+```text
+每个Worker线程利用它自己的任务队列维护可执行任务；
+任务队列是一种双端队列，支持LIFO的push和pop操作，也支持FIFO的take操作；
+任务fork的子任务，只会push到它所在线程（调用fork方法的线程）的队列；
+工作线程既可以使用LIFO通过pop处理自己队列中的任务，也可以FIFO通过poll处理自己队列中的任务，具体取决于构造线程池时的asyncMode参数；
+当工作线程自己队列中没有待处理任务时，它尝试去随机读取（窃取）其它任务队列的base端的任务；
+当线程进入join操作，它也会去处理其它工作线程的队列中的任务（自己的已经处理完了），直到目标任务完成（通过isDone方法）；
+当一个工作线程没有任务了，并且尝试从其它队列窃取也失败了，它让出资源（通过使用yields, sleeps或者其它优先级调整）并且随后会再次激活，直到所有工作线程都空闲了——此时，它们都阻塞在等待另一个顶层线程的调用。
+```
+
+任务提交
+任务提交是整个调度流程的第一步，F/J框架所调度的任务来源有两种：*
+①外部提交任务
+所谓外部提交任务，是指通过ForkJoinPool的execute/submit/invoke方法提交的任务，或者非工作线程（ForkJoinWorkerThread）直接调用ForkJoinTask的fork/invoke方法提交的任务：
+clipboard.png
+外部提交的任务的特点就是调用线程是非工作线程。这个过程涉及以下方法：
+ForkJoinPool.submit
+ForkJoinPool.invoke
+ForkJoinPool.execute
+ForkJoinTask.fork
+ForkJoinTask.invoke
+ForkJoinPool.externalPush
+ForkJoinPool.externalSubmit
+②工作线程fork任务
+所谓工作线程fork任务，是指由ForkJoinPool所维护的工作线程（ForkJoinWorkerThread）从自身任务队列中获取任务（或从其它任务队列窃取），然后执行任务。
+工作线程fork任务的特点就是调用线程是工作线程。这个过程涉及以下方法：
+ForkJoinTask.doExec
+WorkQueue.push
+
+创建工作线程
+任务提交完成后，ForkJoinPool会根据情况创建或唤醒工作线程，以便执行任务。
+ForkJoinPool并不会为每个任务都创建工作线程，而是根据实际情况（构造线程池时的参数）确定是唤醒已有空闲工作线程，还是新建工作线程。这个过程还是涉及任务队列的绑定、工作线程的注销等过程：
+ForkJoinPool.signalWork
+ForkJoinPool.tryAddWorker
+ForkJoinPool.createWorker
+ForkJoinWorkerThread.registerWorker
+ForkJoinPool.deregisterWorker
+
+任务执行
+任务入队后，由工作线程开始执行，这个过程涉及任务窃取、工作线程等待等过程：
+ForkJoinWorkerThread.run
+ForkJoinPool.runWorker
+ForkJoinPool.scan
+ForkJoinPool.runTask
+ForkJoinTask.doExec
+ForkJoinPool.execLocalTasks
+ForkJoinPool.awaitWork
+
+任务结果获取
+任务结果一般通过ForkJoinTask的join方法获得，其主要流程如下图：
+任务结果获取的核心涉及两点：
+互助窃取：ForkJoinPool.helpStealer
+算力补偿：ForkJoinPool.tryCompensate
+
+```java
+    @SneakyThrows
+    @Test
+    public void forkJoin() {
+        @Data
+        @AllArgsConstructor
+        class MyTask extends RecursiveTask<Long> {
+            private final int[] arr;
+            private final int begin;
+            private final int end;
+            private final static int THRESHOLD = 100;
+
+
+            @Override
+            protected Long compute() {
+                long sum = 0L;
+                //如果任务足够小 则执行任务
+                if ((end - begin) + 1 < THRESHOLD) {
+                    for (int i = begin; i <= end; i++) {
+                        sum += arr[i];
+                    }
+                } else {
+                    //任务大于阈值 拆分两个任务处理
+                    int middle = (end + begin) / 2;
+                    MyTask task1 = new MyTask(arr, begin, middle);
+                    MyTask task2 = new MyTask(arr, middle + 1, end);
+
+                    //执行任务
+                    task1.fork();
+                    task2.fork();
+
+                    sum = task1.join() + task2.join();
+                }
+                return sum;
+            }
+        }
+
+        //此示例 要注意超出number限制的问题
+        int len = 10000;
+        int[] arr = new int[len];
+        for (int i = 0; i < len; i++) {
+            arr[i] = i;
+        }
+
+        //初始化fork join pool
+        ForkJoinPool pool = new ForkJoinPool(100);
+        StopWatch forkJoinStopWatch = new StopWatch();
+        forkJoinStopWatch.start();
+        ForkJoinTask<Long> forkJoinTask = pool.submit(new MyTask(arr, 0, arr.length - 1));
+
+        //判断是否有异常或者取消执行
+        if (forkJoinTask.isCompletedAbnormally()) {
+            System.out.println("任务执行异常或者取消:" + forkJoinTask.getException());
+        }
+        //获取结果
+        forkJoinStopWatch.stop();
+        System.out.println("获取任务执行结果:" + forkJoinTask.get() + ",耗时:" + forkJoinStopWatch.getTotalTimeNanos() + "ns");
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        long result = Arrays.stream(arr).sum();
+        stopWatch.stop();
+        System.out.println("使用并行集合处理:" + result + ",耗时:" + stopWatch.getTotalTimeNanos() + "ns");
+        System.out.println("使用并行stream汇总计算:" + Arrays.stream(arr).parallel().sum());
+        //在超过1w的数据汇总的时候 才能明显看到fk框架比直接sum快很多
+        //所以在使用fk框架的时候 要根据预估的任务量、类型、和计算难度去评估并行程度 也就是并行任务拆分的细粒度和执行线程数
+    }
+```
+
+
 
 #### 常用功能代码 
 ##### 多线程执行

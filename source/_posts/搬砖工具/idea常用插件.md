@@ -6,11 +6,14 @@ tags:
 abbrlink: a365393a
 date: 2017-11-11 00:00:00
 ---
+
 #### 前言
+
 idea 当今java开发第一ide 应该没人反对  
-jb公司 对于开源有支持  大多数开发者都可以很轻松的申请到jb的正式版本   
+jb公司 对于开源有支持 大多数开发者都可以很轻松的申请到jb的正式版本
 
 #### 列表
+
 | 名称                     | 功能                  | 快捷键                              |备注|
 |:-----------------------|:--------------------|:---------------------------------|:------|
 | ace jump               | 文件中匹配字符串跳转          | ctrl+;                           |常用在代码中匹配跳转|
@@ -26,12 +29,13 @@ jb公司 对于开源有支持  大多数开发者都可以很轻松的申请到
 | grazie                 | 语法错误检查插件            | 通过配置安装多种语言来对语法进行监测               |
 | leet code editor       | leet code 插件        | 在ide中刷leet code 安装后配置帐号密码即可      |
 | Statistic              | 统计项目各种文件信息 如行数 大小等等 | 安装后在有个statistic窗口点开即可            |
-| SequenceDiagram        | 自动生成时序图             | 光标选中函数 头部tools-> SequenceDiagram | 
+| SequenceDiagram        | 自动生成时序图             | 光标选中函数 头部tools-> SequenceDiagram |
 | git commit template    | git 提交模板            | 提交message 的右上角有个新增模板的图标          |
-| easy code              | 简易代码生成              | 定义代码模板 生成代码  功能一般 主要配合mybatis    | 
+| easy code              | 简易代码生成              | 定义代码模板 生成代码  功能一般 主要配合mybatis    |
 | grep console           | 控制台 过滤              | 过滤查询终端数据                         |
 | Jenkins Control Plugin | idea操控jenkins插件     | 方便操作jenkins task                 |
 | jclasslib is a bytecode viewer| idea查看字节码的工具        | 视图->show byteCode with jclasslib |
 
 #### 总结
+
 以上 是我个人常用的插件

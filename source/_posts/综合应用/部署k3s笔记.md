@@ -1,12 +1,13 @@
 ---
 title: 部署k3s笔记
 comments: true
-date: 2022-05-12 15:18:19
 categories: 笔记
 tags:
- - k3s
- - docker
- - k8s
+  - k3s
+  - docker
+  - k8s
+abbrlink: e158597d
+date: 2022-05-17 15:18:19
 ---
 #### 前言  
 想部署一个k8s实验环境 

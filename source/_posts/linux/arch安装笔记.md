@@ -220,6 +220,37 @@ systemctl enable gdm
 reboot now  
 ```
 
+* 增加中文社区仓库 
+在/etc/pacman.d/mirrorlist中增加
+```text
+[archlinuxcn]
+Server = https://mirrors.zju.edu.cn/archlinuxcn/$arch
+# Server = https://cdn.repo.archlinuxcn.org/$arch
+```
+```shell
+sudo pacman -Syy
+sudo pacman -Syu
+sudo pacman -S archlinuxcn-keyring
+sudo pacman -S archlinuxcn-mirrorlist-git
+```
+
+* 安装aur助手 
+yay paru 都可以  yay粗暴点 
+```shell
+#配置了中文社区仓库 可以直接安装 
+sudo pacman -S yay
+yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
+yay -Syy
+yay  
+# 未配置中文社区仓库 
+git clone https://aur.archlinux.org/yay
+cd yay
+# 配置go的代理  
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn
+makepkg -si
+```
+
 #### 总结 
 安装过很多次 arch  一直懒的记笔记  
 就是一个系统安装 按照wiki来   

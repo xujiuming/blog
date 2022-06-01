@@ -53,26 +53,26 @@ rfkill unblock wifi
 
 * 查看分区信息  
 ```shell
-# 看硬件 一般是 /dev/sdaX 或者/dev/nvme01n1 这样的   我的笔记本是nvme01n1 也就是nvme的固态第一个硬盘
+# 看硬件 一般是 /dev/sdaX 或者/dev/nvme0n1 这样的   我的笔记本是nvme0n1 也就是nvme的固态第一个硬盘
 fdisk -l 
 ```
 * 分区   
 分区有很多工具  我比较喜欢用cfdisk    
 ```shell
-cfdisk /dev/nvme01n1 
+cfdisk /dev/nvme0n1 
 # 删除所有硬盘分区 
 # 新增一个efi格式的 500MB boot盘  
 # 剩下的全部分区为一个系统盘  
-# 保存之后 使用 fdisk -l 查看  应该会看到 一个nvme01n1p1的efi盘 和nvme01n1p2的file system类型的盘 
+# 保存之后 使用 fdisk -l 查看  应该会看到 一个nvme0n1p1的efi盘 和nvme0n1p2的file system类型的盘 
 ```
 
 * 格式化   
 文件系统 选择一个喜欢用的就行  ext4 、zfs、 btrfs 个人选择ext4       
 ```shell
 # 格式化 efi盘 
-mkfs.fat -F 32 /dev/nvme01n1p1 
+mkfs.fat -F 32 /dev/nvme0n1p1 
 # 格式化系统盘 
-mkfs.ext4 /dev/nvme01n1p2   
+mkfs.ext4 /dev/nvme0n1p2   
 # 如果有swap分区 
 mkswap /dev/[swap盘符]
 ```
@@ -86,9 +86,9 @@ timedatectl set-ntp true
 /mnt 为以后arch系统的/分区 /mnt/boot 对应/boot 为efi分区       
 ```shell
 # 注意 先挂载系统分区 
-mount /dev/nvme01n1p2 /mnt 
+mount /dev/nvme0n1p2 /mnt 
 # 挂载efi分区 
-mount --mkdir /dev/nvme01n1p1 /mnt/boot
+mount --mkdir /dev/nvme0n1p1 /mnt/boot
 #如果有swap 挂载swap 
 swapon /dev/[swap盘符] 
 ```
@@ -104,9 +104,7 @@ vim /etc/pacman.d/mirrorlist
 * 安装基本系统和工具 
 ```shell
 # arch 的最基本的系统 
-pacstrap /mnt base base-devel linux  linux-firmware linux-header 
-# 安装一些其他的工具 
-pacstrap /mnt dhcpcd iwd networkmanager   bash-comletion   vim 
+pacstrap /mnt base base-devel linux  linux-firmware 
 ```
 
 * 写入分区信息 
@@ -153,9 +151,14 @@ vim /etc/hostname
 passwd 
 ```
 
+* 安裝基本组件
+```shell
+pacman -S iwd networkmanager   bash-comletion   vim 
+```
+
 * 安装微指令 
 ```shell
-# 因特尔cpu
+# intel cpu
 pacman -S intel-ucode
 # amd cpu 
 pacman -S amd-ucode 
@@ -172,11 +175,21 @@ grub-mkconfig -o /boot/grub/grub.cfg
 cat /boot/grub/grub.cfg         
 ```
 
+* 设置必要开机启动
+```shell
+# 设置网络管理器
+systemctl enable NetworkManager
+systemctl start NetworkManager
+# 设置dhcpcd 
+systemctl enable dhcpcd 
+systemctl start dhcpcd 
+```
+
 * 重启  
 ```shell
 # 卸载  
-umount /dev/nvme01n1p2 
-umount /dev/nvme01n1p1 
+umount /dev/nvme0n1p2 
+umount /dev/nvme0n1p1 
 ```
 断电之后拔u盘 然后启动的时候 看到grub引导页面 选择第一个就行 
 
@@ -242,7 +255,7 @@ sudo pacman -S yay
 yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 yay -Syy
 yay  
-# 未配置中文社区仓库 
+########## 未配置中文社区仓库 
 git clone https://aur.archlinux.org/yay
 cd yay
 # 配置go的代理  

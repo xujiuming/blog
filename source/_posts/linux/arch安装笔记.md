@@ -13,7 +13,10 @@ tags:
 主要参考 arch  wiki 
 > https://wiki.archlinux.org/
 
-#### 安装
+#### 安装    
+安装arch系统 也跟其他系统一样     
+准备启动盘  引导、分区、安装基本系统、安装组件、配置  只不过要全手动去选择配置      
+
 ##### 准备iso、写入u盘、引导启动安装系统 
 * 下载iso   
   https://developer.aliyun.com/mirror/ 选择最新的arch镜像下载下来  

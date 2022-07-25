@@ -246,6 +246,14 @@ Server = https://mirrors.zju.edu.cn/archlinuxcn/$arch
 ```shell
 sudo pacman -Syy
 sudo pacman -Syu
+# 避免安装archlinuxcn的秘钥异常 执行如下操作
+pacman -Syu haveged
+systemctl start haveged
+systemctl enable haveged
+rm -fr /etc/pacman.d/gnupg
+pacman-key --init
+pacman-key --populate archlinux
+pacman-key --populate archlinuxcn
 sudo pacman -S archlinuxcn-keyring
 sudo pacman -S archlinuxcn-mirrorlist-git
 ```

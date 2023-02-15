@@ -6,12 +6,14 @@ tags:
   - wsl2
   - arch
 abbrlink: de6fce4f
-date: 2022-01-05 13:39:39
+date: 2023-02-15 13:39:39
 ---
 
 #### 前言
 
 一直在用wsl2-ubuntu 感觉没劲 干脆重装arch 记录一下使用的指令 方便速查
+
+> wsl常用命令: https://learn.microsoft.com/zh-cn/windows/wsl/basic-commands?source=recommendations  
 
 #### 安装
 
@@ -117,6 +119,63 @@ sdk install maven
 sdk install mvnd 
 sdk install groovy 
 ```
+
+#### wsl高级配置
+>参考资料:      
+> https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/#set-the-systemd-flag-set-in-your-wsl-distro-settings     
+> https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config#wslconf    
+
+.wslconfig ，用于在 WSL 2 上运行的所有已安装分发版 全局 配置设置。
+wsl.conf 为 WSL 1 或 WSL 2 上运行的 Linux 发行版配置 每个分发 版的设置。
+
+##### 开启systemd 
+* 当前linux版本生效   
+在linux内部输入
+```shell
+echo '[boot]
+systemd=true' > /etc/wsl.conf
+```
+* 所有wsl 子系统生效 新增 c://user/【用户名】/.wslconfig 文件
+```text
+[boot]
+systemd=true
+```
+
+> 重启wsl 在powershell中输入 【 wsl --shutdown】 关机之后等8s    
+> 查看启动的systemd情况 【systemctl】
+
+##### wsl2开启GPU加速 
+> https://devblogs.microsoft.com/commandline/d3d12-gpu-video-acceleration-in-the-windows-subsystem-for-linux-now-available/
+
+* 前置要求
+```text
+wsl version >= 1.1.0   
+安装支持linux gpu的linux 版本  尽量使用微软商店的版本  
+wsl 启动systemd  
+```
+* ubuntu下需要安装的组件 
+```shell
+sudo apt update 
+# 检查mesa 
+sudo apt list mesa-va-drivers -a  
+# 安装ppa  
+sudo add-apt-repository ppa:oibaf/graphics-drivers
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install ppa-purge
+sudo ppa-purge ppa:oibaf/graphics-drivers
+sudo apt-get update && sudo apt-get upgrade
+# wslg设置视频加速  
+#安装 vainfo（和 libva 依赖项）
+sudo apt-get install vainfo
+#安装台面库 *（如果从台面源代码构建，请跳过此操作）
+sudo apt-get mesa-va-drivers
+#配置 libva 环境。你可能希望在 ~/.bashrc 文件中添加它，因为它在每个新的 WSL 控制台会话上都是必需的。
+export LIBVA_DRIVER_NAME=d3d12
+#枚举当前硬件的 libva 功能
+vainfo --display drm --device /dev/dri/card0
+```
+
+> 使用wsl gpu加速 要去查看和验证当前显卡和驱动 是否支持  
 
 #### 总结
 wsl 安装arch 各种大神 已经打包了很多方式了 

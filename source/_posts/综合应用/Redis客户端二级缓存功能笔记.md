@@ -1,11 +1,12 @@
 ---
-title: Redis客户端二级缓存功能笔记 
-comments: true 
-categories: 笔记 
+title: Redis客户端二级缓存功能笔记
+comments: true
+categories: 笔记
 tags:
   - redis
   - client side caching tracking
   - 多级缓存
+abbrlink: 442ac57
 date: 2023-03-03 11:00:00
 ---
 

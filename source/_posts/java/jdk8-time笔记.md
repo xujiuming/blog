@@ -6,7 +6,7 @@ tags:
   - jdk8
   - time
 abbrlink: 9c26946f
-date: 2018-07-09 12:47:13
+date: 2023-03-06 18:47:13
 ---
 #### 前言
 在jdk8之前 如果要使用date 的类型 就需要把java.util.Date 之类的类组合起来使用   
@@ -99,17 +99,20 @@ LocalDate#isLeapYear();
 
 #### 实际案例
 ```
-package com.ming;
+package com.ming.admin;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
+import java.util.Date;
 
 /**
+ * 时间示例 测试用例
  * 该包的API提供了大量相关的方法，这些方法一般有一致的方法前缀：
  * <p>
  * of：静态工厂方法。
@@ -134,9 +137,196 @@ import java.time.temporal.TemporalAdjusters;
  * <p>
  *
  * @author ming
- * @date 2018-06-30 15:33:10
+ * @date 2023-03-06 15:19:56
  */
-public class TestTime {
+public class DateExampleTest {
+
+    /**
+     * 基础用法
+     *
+     * @author ming
+     * @date 2023-03-06 18:49:09
+     */
+    @Test
+    public void basicUsage() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        System.out.println("获取年月日:" + localDateTime.toLocalDate());
+        System.out.println("获取时分秒:" + localDateTime.toLocalTime());
+        System.out.println("获取当天最早时间:" + LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
+        System.out.println("获取当天最晚时间:" + LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+        //格式化
+        System.out.println("格式化年月日时分秒:" + localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        //加减时间
+        System.out.println("加1(TemporalAmount及其子类):" + localDateTime.plus(Duration.ofDays(1)));
+        System.out.println("加1(ChronoUnit):" + localDateTime.plus(1, ChronoUnit.DAYS));
+        System.out.println("加1纳秒:" + localDateTime.plusNanos(1));
+        System.out.println("加1秒:" + localDateTime.plusSeconds(1));
+        System.out.println("加1分:" + localDateTime.plusMinutes(1));
+        System.out.println("加1小时:" + localDateTime.plusHours(1));
+        System.out.println("加1天:" + localDateTime.plusDays(1));
+        System.out.println("加1周:" + localDateTime.plusWeeks(1));
+        System.out.println("加1月:" + localDateTime.plusMonths(1));
+        System.out.println("加1年:" + localDateTime.plusYears(1));
+        System.out.println("减1(TemporalAmount及其子类):" + localDateTime.minus(Duration.ofDays(1)));
+        System.out.println("减1(ChronoUnit):" + localDateTime.minus(1, ChronoUnit.DAYS));
+        System.out.println("减1纳秒:" + localDateTime.minusNanos(1));
+        System.out.println("减1秒:" + localDateTime.minusSeconds(1));
+        System.out.println("减1分:" + localDateTime.minusMinutes(1));
+        System.out.println("减1小时:" + localDateTime.minusHours(1));
+        System.out.println("减1天:" + localDateTime.minusDays(1));
+        System.out.println("减1周:" + localDateTime.minusWeeks(1));
+        System.out.println("减1月:" + localDateTime.minusMonths(1));
+        System.out.println("减1年:" + localDateTime.minusYears(1));
+
+        //修改部分时间
+        System.out.println("修改为第1纳秒:" + localDateTime.withNano(1));
+        System.out.println("修改为第1秒:" + localDateTime.withSecond(1));
+        System.out.println("修改为第1分钟:" + localDateTime.withMinute(1));
+        System.out.println("修改为第1小时:" + localDateTime.withHour(1));
+        System.out.println("修改为第1月:" + localDateTime.withMonth(1));
+        System.out.println("修改为第1年:" + localDateTime.withYear(1));
+        System.out.println("修改为当周第1天:" + localDateTime.with(WeekFields.ISO.dayOfWeek(), 1));
+        System.out.println("修改为当月第1天:" + localDateTime.withDayOfMonth(1));
+        System.out.println("修改为当年第1天:" + localDateTime.withDayOfYear(1));
+
+        //判断时间先后顺序
+        LocalDateTime localDateTime1 = LocalDateTime.now();
+        LocalDateTime localDateTime2 = LocalDateTime.now().plusDays(1);
+        System.out.println("localDateTime1是否在localDateTime2之前:" + localDateTime1.isBefore(localDateTime2));
+        System.out.println("localDateTime1是否在localDateTime2之后:" + localDateTime1.isAfter(localDateTime2));
+        System.out.println("localDateTime1和localDateTime2是否相等:" + localDateTime1.isEqual(localDateTime2));
+        System.out.println("localDateTime1和localDateTime2是否相等:" + localDateTime1.equals(localDateTime2));
+    }
+
+
+    /**
+     * 时间戳和LocalDateTime 互转
+     *
+     * @author ming
+     * @date 2023-03-06 15:27:25
+     */
+    @Test
+    public void timeMillisConvertEachOtherLocalDateTime() {
+        ZoneOffset zoneOffset = ZoneOffset.of("+8");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        System.out.println("当前时间:" + localDateTime);
+        long timeMillis = localDateTime.toInstant(zoneOffset).toEpochMilli();
+        System.out.println("转换为时间戳:" + timeMillis);
+        System.out.println("时间戳再次转换为时间" + LocalDateTime.ofEpochSecond(timeMillis / 1000, 0, zoneOffset));
+    }
+
+    /**
+     * date和LocalDateTime 互转
+     *
+     * @author ming
+     * @date 2023-03-06 15:27:25
+     */
+    @Test
+    public void dateConvertEachOtherLocalDateTime() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        //localDateTime转instant 然后Date#from
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println("转换date:" + date);
+        //date转instant 然后LocalDateTime#ofInstant
+        System.out.println("转换localDateTime:" + LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+    }
+
+    /**
+     * timestamp和LocalDateTime 互转
+     *
+     * @author ming
+     * @date 2023-03-06 15:27:25
+     */
+    @Test
+    public void timestampConvertEachOtherLocalDateTime() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(localDateTime);
+        System.out.println("转换为timestamp:" + timestamp);
+        System.out.println("转换为localDateTime" + timestamp.toLocalDateTime());
+    }
+
+
+    /**
+     * 获取周的第N天
+     *
+     * @author ming
+     * @date 2023-03-06 17:49:54
+     */
+    @Test
+    public void getWeekDay() {
+        LocalDate localDate = LocalDate.now();
+        System.out.println("周一:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.MONDAY.getValue()));
+        System.out.println("周二:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.TUESDAY.getValue()));
+        System.out.println("周三:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.WEDNESDAY.getValue()));
+        System.out.println("周四:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.THURSDAY.getValue()));
+        System.out.println("周五:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.FRIDAY.getValue()));
+        System.out.println("周六:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SATURDAY.getValue()));
+        System.out.println("周日:" + localDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SUNDAY.getValue()));
+        //获取上周
+        LocalDate lastWeekLocalDate = localDate.minusWeeks(1);
+        System.out.println("上周一:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.MONDAY.getValue()));
+        System.out.println("上周二:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.TUESDAY.getValue()));
+        System.out.println("上周三:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.WEDNESDAY.getValue()));
+        System.out.println("上周四:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.THURSDAY.getValue()));
+        System.out.println("上周五:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.FRIDAY.getValue()));
+        System.out.println("上周六:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SATURDAY.getValue()));
+        System.out.println("上周日:" + lastWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SUNDAY.getValue()));
+        //获取下周
+        LocalDate nextWeekLocalDate = localDate.plusWeeks(1);
+        System.out.println("下周一:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.MONDAY.getValue()));
+        System.out.println("下周二:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.TUESDAY.getValue()));
+        System.out.println("下周三:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.WEDNESDAY.getValue()));
+        System.out.println("下周四:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.THURSDAY.getValue()));
+        System.out.println("下周五:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.FRIDAY.getValue()));
+        System.out.println("下周六:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SATURDAY.getValue()));
+        System.out.println("下周日:" + nextWeekLocalDate.with(WeekFields.ISO.dayOfWeek(), DayOfWeek.SUNDAY.getValue()));
+    }
+
+    /**
+     * 获取月的第N天
+     *
+     * @author ming
+     * @date 2023-03-06 17:49:54
+     */
+    @Test
+    public void getMonthDay() {
+        LocalDate localDate = LocalDate.now();
+        System.out.println("当月第一天:" + localDate.with(TemporalAdjusters.firstDayOfMonth()));
+        System.out.println("当月最后一天:" + localDate.with(TemporalAdjusters.lastDayOfMonth()));
+        System.out.println("当月第十天:" + localDate.withDayOfMonth(10));
+        //上月
+        LocalDate lastMonthLocalDate = localDate.minusMonths(1);
+        System.out.println("上月第一天:" + lastMonthLocalDate.with(TemporalAdjusters.firstDayOfMonth()));
+        System.out.println("上月最后一天:" + lastMonthLocalDate.with(TemporalAdjusters.lastDayOfMonth()));
+        //下月
+        LocalDate nextMonthLocalDate = localDate.plusMonths(1);
+        System.out.println("下月第一天(方法1):" + localDate.with(TemporalAdjusters.firstDayOfNextMonth()));
+        System.out.println("下月第一天(方法2):" + nextMonthLocalDate.with(TemporalAdjusters.firstDayOfMonth()));
+        System.out.println("下月最后一天:" + nextMonthLocalDate.with(TemporalAdjusters.lastDayOfMonth()));
+    }
+
+    /**
+     * 获取年的第N天
+     *
+     * @author ming
+     * @date 2023-03-06 17:49:54
+     */
+    @Test
+    public void getYearDay() {
+        LocalDate localDate = LocalDate.now();
+        System.out.println("当年第一天" + localDate.with(TemporalAdjusters.firstDayOfYear()));
+        System.out.println("当年最后一天" + localDate.with(TemporalAdjusters.lastDayOfYear()));
+        System.out.println("当年第十天:" + localDate.withDayOfYear(10));
+        //上年
+        LocalDate lastYearLocalDate = localDate.minusYears(1);
+        System.out.println("上年第一天" + lastYearLocalDate.with(TemporalAdjusters.firstDayOfYear()));
+        System.out.println("上年最后一天" + lastYearLocalDate.with(TemporalAdjusters.lastDayOfYear()));
+        //下年
+        LocalDate nextYearLocalDate = localDate.plusYears(1);
+        System.out.println("下年第一天" + nextYearLocalDate.with(TemporalAdjusters.firstDayOfYear()));
+        System.out.println("下年最后一天" + nextYearLocalDate.with(TemporalAdjusters.lastDayOfYear()));
+    }
 
     /**
      * 获取当前时间
@@ -180,92 +370,6 @@ public class TestTime {
 
 
     /**
-     * 将指定的文本转换成 指定格式的 time对象
-     *
-     * @author ming
-     * @date 2018-07-02 14:41:23
-     */
-    @Test
-    public void testParse() {
-        System.out.println(LocalDateTime.parse("2011-12-03T10:15:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        //.....略  跟 of差不多 主要是解析字符串成时间相关对象
-
-    }
-
-
-    /**
-     * 根据时间对象获取 属性
-     *
-     * @author ming
-     * @date 2018-07-05 16:49:34
-     */
-    @Test
-    public void testGet() {
-        System.out.println("获取当前时间点的时间戳(s)" + Instant.now().getEpochSecond());
-        System.out.println(LocalDateTime.now().getDayOfWeek());
-    }
-
-
-    /**
-     * 判断某些属性  例如判断时间前后
-     *
-     * @author ming
-     * @date 2018-07-05 16:50:06
-     */
-    @Test
-    public void testIs() {
-        System.out.println(Instant.now().isAfter(Instant.now()));
-        System.out.println(Instant.now().isBefore(Instant.now()));
-    }
-
-    /**
-     * 获取一些特殊的时间点
-     *
-     * @author ming
-     * @date 2018-07-05 16:51:36
-     */
-    @Test
-    public void testWith() {
-        System.out.println(LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()));
-    }
-
-    /**
-     * 时间相加
-     *
-     * @author ming
-     * @date 2018-07-05 16:52:49
-     */
-    @Test
-    public void testPlus() {
-        System.out.println(Instant.now().plusMillis(999999));
-    }
-
-    /**
-     * 时间相减
-     *
-     * @author ming
-     * @date 2018-07-05 16:52:59
-     */
-    @Test
-    public void testMinus() {
-        System.out.println(Instant.now().minusMillis(99999999));
-    }
-
-
-    /**
-     * 将时间对象转换成其他的time对象
-     *
-     * @author ming
-     * @date 2018-07-05 16:53:16
-     */
-    @Test
-    public void testTo() {
-        System.out.println(Instant.now().toEpochMilli());
-        System.out.println(LocalDateTime.now().toLocalTime());
-    }
-
-
-    /**
      * 设置时区
      *
      * @author ming
@@ -275,35 +379,6 @@ public class TestTime {
     public void testAt() {
         System.out.println(Instant.now().atOffset(ZoneOffset.UTC));
         System.out.println(Instant.now().atZone(ZoneId.systemDefault()));
-    }
-
-    /**
-     * 时间加减
-     * ChronoUnit来控制加减的量级
-     *
-     * @author ming
-     * @date 2018-07-05 16:58:19
-     * @see ChronoUnit#NANOS 纳秒
-     * @see ChronoUnit#MICROS 微秒
-     * @see ChronoUnit#MILLIS 毫秒
-     * @see ChronoUnit#SECONDS 秒
-     * @see ChronoUnit#MINUTES 分
-     * @see ChronoUnit#HOURS 小时
-     * @see ChronoUnit#HALF_DAYS 半天  12小时
-     * @see ChronoUnit#DAYS 一天  24小时
-     * @see ChronoUnit#WEEKS 一周
-     * @see ChronoUnit#MONTHS 一月
-     * @see ChronoUnit#YEARS 一年
-     * @see ChronoUnit#DECADES 十年
-     * @see ChronoUnit#CENTURIES 百年
-     * @see ChronoUnit#MILLENNIA 千年
-     * @see ChronoUnit#ERAS 十亿年
-     * @see ChronoUnit#FOREVER 永远 Long.MAX_VALUE
-     */
-    @Test
-    public void testPlusAndMinus() {
-        System.out.println("加一天" + LocalDateTime.now().plus(1, ChronoUnit.DAYS));
-        System.out.println("减一天" + LocalDateTime.now().minus(1, ChronoUnit.DAYS));
     }
 
     /**
@@ -354,38 +429,6 @@ public class TestTime {
     @Test
     public void testFormat() {
         System.out.println(LocalDate.parse("20181111", DateTimeFormatter.BASIC_ISO_DATE));
-    }
-
-    /**
-     * 将时间 按照格式 格式化成string
-     *
-     * @author ming
-     * @date 2018-07-05 18:23:40
-     */
-    @Test
-    public void testFormatString() {
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
-    }
-
-
-    /**
-     * jdk8的time 和jdk8之前的date相关的类型转换
-     *
-     * @author ming
-     * @date 2018-07-05 18:29:21
-     */
-    @Test
-    public void testConverter() {
-        //jdk8 time 转换成Date
-        java.util.Date juDate = java.util.Date.from(Instant.now());
-        System.out.println(juDate);
-        java.util.Date juDate1 = java.util.Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-        System.out.println(juDate1);
-
-        //Date 转换成jdk8 time
-        java.util.Date date = new java.util.Date();
-        System.out.println(date.toInstant());
-        System.out.println(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     }
 }
 

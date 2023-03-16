@@ -24,7 +24,8 @@ date: 2022-05-17 15:18:19
 
 ```shell
 # 官方脚本部署  
-curl -sfL https://get.k3s.io | INSTALL_K3S_MIRROR=cn sh -
+# 中国加速 curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh -
+curl -sfL https://get.k3s.io | sh -
 # 查看部署的k8s 集群信息 
 k3s kubectl get all --all-namespaces 
 # 增加一些常用的别名 

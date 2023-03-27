@@ -84,15 +84,14 @@ sudo setcap -r [命令地址]
 > java本身有个bug   授权java cap属性会导致无法连接libjli.so 库  所以需要重写这个库的配置    
 > 参考: https://www.cnblogs.com/chenxueqiang/p/13653623.html  setcap java报错解决   
 ```shell
-# 重写java依赖的libjli.so的地址     
-sudo  cat '/home/ubuntu/.sdkman/candidates/java/17.0.1-open/lib' >  /etc/ld.so.conf.d/java.conf
-# 重新加载ldconfig   
+sudo  echo '/home/ubuntu/.sdkman/candidates/java/17.0.6-zulu/lib' >  /etc/ld.so.conf.d/java.conf
+# 重载  
 ldconfig -p | grep libjli
-# 给java指令添加  cap_net_bind_service属性  
-sudo setcap cap_net_bind_service=+eip  .sdkman/candidates/java/17.0.1-open/bin/java
-# 查看java指令的 cap属性  
-getcap .sdkman/candidates/java/17.0.1-open/bin/java
-# sudo   setcap -r .sdkman/candidates/java/17.0.1-open/bin/java
+#/home/ubuntu/.sdkman/candidates/java/17.0.6-zulu/lib/libjli.so
+sudo setcap cap_net_bind_service=+eip  /home/ubuntu/.sdkman/candidates/java/17.0.6-zulu/bin/java
+getcap /home/ubuntu/.sdkman/candidates/java/17.0.6-zulu/bin/java
+#删除cap配置     
+#sudo   setcap -r /home/ubuntu/.sdkman/candidates/java/17.0.6-zulu/bin/java
 ```
 
 #### 总结  

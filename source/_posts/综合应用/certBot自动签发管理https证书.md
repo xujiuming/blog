@@ -34,12 +34,13 @@ sudo apt install nginx
 >  https://certbot.eff.org/  在官网选择 nginx或者其他系统和操作系统及其安装方式   
 
 ```shell
-# debian 默认是 snap方式  不想用  直接安装 python版本 pip安装 没使用官方的文档 直接搜索 ppa里面的    
+# debian 默认是 snap方式  不想用  直接安装 python版本 pip安装 没使用官方的文档 直接搜索 deb仓库里面的    
 sudo apt install certbot python3-certbot-nginx  
 ```
 
-* 配置nginx    
-> 配置文件在/etc/nginx/conf.d 新增show.conf    
+* 配置nginx       
+
+> 配置文件在/etc/nginx/conf.d 新增show.conf      
 
 ```nginx configuration
 server {
@@ -61,17 +62,20 @@ server {
 ```
 
 
-* certBot自动配置Nginx 
-> 如果是国内必须确定是否可以访问443端口   自动配置会验证443端口可用性  
-> 例如未备案被拦截 或者被阻止访问 都无法申请成功  
+* certBot自动配置Nginx    
+
+> 如果是国内必须确定是否可以访问443端口   自动配置会验证443端口可用性    
+> 例如未备案被拦截 或者被阻止访问 都无法申请成功     
 
 ```shell
 # 开始自动配置  会要求输入邮箱 选择各种方式  按照提示选择即可   实在不会 参考: https://www.jianshu.com/p/4d4f9376fe20
 sudo certbot --nginx   
 ```
+ 
+* 验证结果      
 
-* 验证结果   
-1. 查看nginx配置 是否存在 开放443端口和相关证书配置   
+1. 查看nginx配置 是否存在 开放443端口和相关证书配置      
+
 ```nginx configuration
 server {
     server_name  show.xujiuming.com;
@@ -110,11 +114,14 @@ server {
 }   
 ```
 
-2. 访问443端口 
+2. 访问443端口   
+
 ```shell
 curl https://show.xujiuming.com 
 ```
-3. 查看certBot自动续期任务是否存在 
+
+3. 查看certBot自动续期任务是否存在    
+
 ```shell
 # 模拟运行 自动续期
 sudo certbot renew --dry-run
@@ -125,6 +132,7 @@ sudo systemctl  list-timers |grep certbot
 ```
 
 #### 常用命令 
+
 ```shell
 #给nginx自动配置   
 certbot --nginx 
@@ -138,6 +146,7 @@ certbot renew --dry-run
 certbot --help 
 ```  
 
-#### 总结 
+#### 总结    
+
 certBot 自动处理证书相关配置  简单粗暴 适合懒狗使用  
 

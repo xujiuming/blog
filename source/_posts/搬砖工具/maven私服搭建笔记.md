@@ -6,7 +6,7 @@ tags:
   - maven
   - 私有化部署
   - 工具
-  - ci/cd
+  - CI/CD
 abbrlink: fb79c020
 date: 2019-07-11 10:51:29
 ---

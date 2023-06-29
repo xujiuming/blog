@@ -3,8 +3,10 @@ title: docker启动jenkins
 comments: true
 abbrlink: 5e5f86c0
 date: 2018-02-09 16:17:08
-categories:
+categories: 笔记
 tags:
+  - docker
+  - jenkins 
 ---
 ####在2.x版本jenkins 中 出现了 pipe 所以决定通过较为新的方式去从新部署一套基于jenkins 的docker 项目 自动化部署
 https://dzone.com/refcardz/continuous-delivery-with-jenkins-workflow

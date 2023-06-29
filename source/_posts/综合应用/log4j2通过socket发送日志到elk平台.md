@@ -3,9 +3,9 @@ title: log4j2通过socket发送日志到elk平台
 comments: true
 categories: 实战
 tags: 
-  -log4j2 
-  -socket 
-  -elk
+  - log4j2 
+  - socket 
+  - elk
 abbrlink: b83d1b10
 date: 2018-06-25 14:09:00
 ---

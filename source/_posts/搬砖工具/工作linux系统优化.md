@@ -3,7 +3,7 @@ title: 工作linux系统初始化
 comments: true
 categories: 实战
 tags: 
-  -linux 
+  - linux 
 abbrlink: fbab8e0
 date: 2019-01-29 10:45:26
 ---

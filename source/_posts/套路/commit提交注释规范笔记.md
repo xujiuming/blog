@@ -10,7 +10,7 @@ date: 2019-07-15 11:21:25
 ---
 #### 前言 
 commit的时候 老是各有各的玩法 千奇百怪 
-只好找个相对比较合适的规范 来约束大家的提交日志格式  也为了后续方便将commit log 接入到ci/cd流程中  
+只好找个相对比较合适的规范 来约束大家的提交日志格式  也为了后续方便将commit log 接入到CI/CD流程中  
 参考资料: 
 http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html  
 #### 内容

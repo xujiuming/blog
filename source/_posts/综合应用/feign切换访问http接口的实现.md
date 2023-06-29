@@ -3,7 +3,7 @@ title: feign切换访问http接口的实现
 comments: true
 categories: 实战
 tags: 
-  -spring cloud 
+  - spring cloud 
   - feign 
   - http
 abbrlink: 47a3a555

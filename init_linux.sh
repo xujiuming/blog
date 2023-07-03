@@ -22,6 +22,7 @@ npm install hexo-generator-searchdb -S   --registry=https://registry.npm.taobao.
 npm install hexo-generator-seo-friendly-sitemap -S   --registry=https://registry.npm.taobao.org
 npm install hexo-helper-live2d -S   --registry=https://registry.npm.taobao.org
 npm install live2d-widget-model-wanko -S   --registry=https://registry.npm.taobao.org
+npm install hexo-symbols-count-time -S   --registry=https://registry.npm.taobao.org
 
 
 

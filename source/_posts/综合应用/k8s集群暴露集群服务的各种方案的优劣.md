@@ -176,7 +176,6 @@ nginx+config server
 ```
 3:登陆 nginx-all容器 修改/etc/nginx/conf.d/default.conf  这一步 可以通过配合config server 来实现重启容器更新配置来实现配置的刷新
 
-{% post_link 综合应用/非java应用接入springConfigServer11 %} 
 
 ```
 server {

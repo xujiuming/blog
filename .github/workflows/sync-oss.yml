@@ -14,7 +14,7 @@ jobs:
       # 安装node 指定版本
       - uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: 18
       - name: 开始部署ming-blog
         run: |
           curl 'https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_ACCESS_TOKEN }}' -H 'Content-Type: application/json' -d '{"msgtype": "text",

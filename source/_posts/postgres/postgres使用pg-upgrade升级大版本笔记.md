@@ -104,7 +104,9 @@ pg_ctl start  -D /var/lib/pgsql/11/data
 无法加载库 "$libdir/pg_stat_statements": 错误:  无法访问文件 "$libdir/pg_stat_statements": 没有那个文件或目录
 ```
 参考   
-{% post_link linux/postgres安装插件笔记 %}     
+
+{% post_link postgres/postgres安装插件笔记 %}     
+
 安装插件即可 
 
 #### 总结 

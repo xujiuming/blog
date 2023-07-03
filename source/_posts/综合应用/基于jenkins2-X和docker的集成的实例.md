@@ -488,7 +488,7 @@ def codeReview() {
 sshKey 是jenkins配置sshAgent插件的id 
 
 3:安装启动 jenkins 
-docker 方式启动 参考: {% post_link docker启动jenkins docker启动jenkins %}
+docker 方式启动 参考: {% post_link  综合应用/docker启动jenkins %}
 
 4: 安装插件
 主要是要安装 sshAgent 、 docker相关插件、

@@ -1,9 +1,11 @@
 ---
-title: dockerDesktop开启k8s笔记 comments: true date: 2021-11-18 15:22:29 categories: 笔记 tags:
-
-- k8s
-- docker
-
+title: dockerDesktop开启k8s笔记 
+comments: true 
+date: 2021-11-18 15:22:29 
+categories: 笔记 
+tags:
+    - k8s
+    - docker
 ---
 
 #### 前言

@@ -266,7 +266,7 @@ yay paru 都可以  yay粗暴点
 ```shell
 #配置了中文社区仓库 可以直接安装 
 sudo pacman -S yay
-yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
+yay --aururl "https://mirrors.aliyun.com/archlinuxcn" --save
 yay -Syy
 yay  
 ########## 未配置中文社区仓库 

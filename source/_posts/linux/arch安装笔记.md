@@ -156,7 +156,7 @@ passwd
 
 * 安裝基本组件
 ```shell
-pacman -S iwd networkmanager   bash-comletion   vim 
+pacman -S iwd networkmanager vi  vim   zsh 
 ```
 
 * 安装微指令 
@@ -186,6 +186,9 @@ systemctl start NetworkManager
 # 设置dhcpcd 
 systemctl enable dhcpcd 
 systemctl start dhcpcd 
+# 设置iwd 
+systemctl enable iwd 
+systemctl start iwd 
 ```
 
 * 重启  
@@ -213,7 +216,7 @@ sudo pacman -Syyu
 # 新增ming 用户组
 groupadd ming 
 # 新增用户 
-useradd -m -G ming ming                
+useradd -m -g ming ming                
 # 设置ming用户的密码 
 passwd ming 
 # 配置sudo
@@ -273,6 +276,23 @@ cd yay
 export GO111MODULE=on
 export GOPROXY=https://goproxy.cn
 makepkg -si
+```
+
+* 中文化  
+
+安装字体和输入法      
+
+```shell
+# 安装中文字体 
+sudo pacman -S wqy-zenhei 
+# 安装fcitx5 输入法框架  
+sudo pacman -S fcitx5  fcitx5-qt fcitx5-gtk fcitx5-configtool fcitx5-rime 
+echo 'export INPUT_METHOD=fcitx5
+export GTK_IM_MODULE=fcitx5
+export QT_IM_MODULE=fcitx5
+export XMODIFIERS=@im=fcitx5
+fcitx5 & 
+' > ~/.xprofile
 ```
 
 #### 总结 

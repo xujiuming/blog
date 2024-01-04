@@ -1,0 +1,70 @@
+# 参考: https://www.jianshu.com/p/99952652b2dd
+name: sync-oss
+# 监听master分支push事件
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - uses: actions/checkout@v1
+      # 安装node 指定版本
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - name: 开始部署ming-blog
+        run: |
+          curl 'https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_ACCESS_TOKEN }}' -H 'Content-Type: application/json' -d '{"msgtype": "text",
+                          "text": {
+                               "content": "ming-blog开始部署"
+                          }
+                        }'
+      # 构建
+      - name: 构建hexo博客
+        run: |
+          npm install hexo-cli -g
+          npm install
+          hexo clean
+          hexo generate
+      # 使用oss util 复制dist目录到oss
+      - uses: manyuanrong/setup-ossutil@v1.0
+        env:
+          # 允许不安全操作指令
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        with:
+          # endpoint 可以去oss控制台上查看
+          endpoint: "oss-cn-shanghai.aliyuncs.com"
+          # 使用我们之前配置在secrets里面的accesskeys来配置ossutil
+          access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+      - name: 同步dist文件到服务器上
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ming
+          server: blog1.xujiuming.com
+          port: 22
+          local_path: './public/*'
+          remote_path: '/home/ming/blog'
+          sftp_only: true
+          password: ${{ secrets.SFTP_PASSWORD }}
+      - name: 刷新全部站点CDN
+        run: curl http://api.xujiuming.com/api/cdn/flush-all
+      - name: 成功通知
+        if: success()
+        run: |
+          curl 'https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_ACCESS_TOKEN }}' -H 'Content-Type: application/json' -d '{"msgtype": "text",
+                                      "text": {
+                                           "content": "ming-blog部署成功"
+                                      }
+                                            }'
+      - name: 失败通知
+        if: failure()
+        run: |
+          curl 'https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_ACCESS_TOKEN }}' -H 'Content-Type: application/json' -d '{"msgtype": "text",
+                                      "text": {
+                                           "content": "ming-blog部署失败!请登录github查看"
+                                      }
+                                            }'
